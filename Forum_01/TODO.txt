@@ -1,0 +1,24 @@
+> Creation de post
+> Possibilitée de supprimer le post [ou le modifier] (-> l'user en question / moderator / admin)
+> Like un post
+> Commenter un post
+> Partager un post
+> Signaler un post
+#---------------------------------------#
+> Reception des notifs via un post (if (post) > notif à l'user [possibilitée d'envoyer une notif aux users qui ont commenter le post])
+> (+) log de ce que l'utilisateur à fait
+#---------------------------------------#
+> Sign in (>check username is valid | mdp strong)
+> Encryption des mdp
+> Envoie mail de verification 
+#---------------------------------------#
+> Login/log out > Changement de css selon le grade du user (gestion des cookies)
+#---------------------------------------#
+> Panel ADMIN Possibilitée de crée user + grade | FAKE-(Taux de visite / backup ect ...)
+#---------------------------------------#
+> corrige redirect
+#---------------------------------------#
+> Profile page (+ modif) + img
+#---------------------------------------#
+> Possibilitée dark / light
+> reponsive
