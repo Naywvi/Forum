@@ -141,17 +141,15 @@ func ADDUserToBDD(name string, pswd string, email string) {
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ For login ↓
-func Check_If_Login_Exist(I *Instance, identifier string, pswd string) bool { //log
+func Check_If_Login_Exist(I *Instance, identifier string, pswd string, hash_pswd string) bool { //log
 	for _, i := range I.I {
 		if identifier == i.Email || identifier == i.Name {
-			if pswd == i.Pswd {
-				return true
-			}
+			return CheckPasswordHash(pswd, hash_pswd)
 		}
 	}
 	return false
 }
-func CheckIfExistLogin(input_mail string, input_pswd string) bool { //Permet d'instancier User struct et de tout récup + check all cases
+func CheckIfExistLogin(input_mail, input_pswd, hash_pswd string) bool { //Permet d'instancier User struct et de tout récup + check all cases
 	var (
 		I       = Instance{}
 		u       = User{}
@@ -170,5 +168,5 @@ func CheckIfExistLogin(input_mail string, input_pswd string) bool { //Permet d'i
 			log.Fatal(err)
 		}
 	}
-	return Check_If_Login_Exist(&I, input_m, input_p)
+	return Check_If_Login_Exist(&I, input_m, input_p, hash_pswd)
 }

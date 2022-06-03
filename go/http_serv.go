@@ -22,7 +22,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 		template.Must(template.ParseFiles(filepath.Join(templatesDir, "../templates/login.html"))).Execute(w, " ")
 	} else if r.Method == "POST" {
 		r.ParseForm()
-		user_exist := CheckIfExistLogin(r.Form["mail_login"][0], r.Form["password_login"][0])
+		user_exist := CheckIfExistLogin(r.Form["mail_login"][0], r.Form["password_login"][0], initHashPswd(r.Form["password_login"][0])) //<-- check witch hash pswd
 		if user_exist == true {
 			fmt.Fprint(w, "Connection > redirection + token")
 		} else {
@@ -46,17 +46,15 @@ func register(w http.ResponseWriter, r *http.Request) {
 		mail_not_exist := CheckIfExist(r.Form["email_register"][0], "Email", "user")
 		if user_not_exist == true && mail_not_exist == true {
 			fmt.Fprint(w, "Enregistrer > redirection + token")
-			ADDUserToBDD(r.Form["username_register"][0], r.Form["password_register"][0], r.Form["email_register"][0])
+			ADDUserToBDD(r.Form["username_register"][0], initHashPswd(r.Form["password_register"][0]), r.Form["email_register"][0]) //<-- Add hash pswd
 		} else {
 			if mail_not_exist == false {
 				fmt.Fprint(w, "<script> window.alert('This email is already in use, try again'); </script>")
 			} else if user_not_exist == false {
 				fmt.Fprint(w, "<script> window.alert('This username is already in use, try again'); </script>")
 			}
-
 			template.Must(template.ParseFiles(filepath.Join(templatesDir, "../templates/register.html"))).Execute(w, " ")
 		}
-
 	} else {
 		checkHttpError(w, r)
 		return
