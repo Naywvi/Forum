@@ -27,7 +27,7 @@ func CheckPasswordHash(password, hash string) bool { // fonction qui nous permet
 	return err == nil
 }
 
-func main() {
+func httpServ() {
 
 	fs := http.FileServer(http.Dir("../static")) // <- ce qu'on envoie en static vers le serv
 	http.Handle("/", fs)
