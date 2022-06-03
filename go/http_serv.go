@@ -6,9 +6,12 @@ import (
 	"os"
 	"path/filepath"
 	"text/template"
+	"time"
 )
 
 var templatesDir = os.Getenv("TEMPLATES_DIR")
+
+//#------------------------------------------------------------------------------------------------------------# ↓ cookie ↓
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Return error html ↓
 func checkHttpError(w http.ResponseWriter, r *http.Request) {
@@ -24,6 +27,11 @@ func login(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		user_exist := CheckIfExistLogin(r.Form["mail_login"][0], r.Form["password_login"][0], initHashPswd(r.Form["password_login"][0])) //<-- check witch hash pswd
 		if user_exist == true {
+			//
+			expiration := time.Now().Add(365 * 24 * time.Hour)
+			cookie := http.Cookie{Name: "username", Value: "astaxie", Expires: expiration}
+			http.SetCookie(w, &cookie)
+			//
 			fmt.Fprint(w, "Connection > redirection + token")
 		} else {
 			fmt.Fprint(w, "<script> window.alert('Bad password or bad identification, try again.'); </script>")
@@ -33,7 +41,6 @@ func login(w http.ResponseWriter, r *http.Request) {
 		checkHttpError(w, r)
 		return
 	}
-
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Register ↓ //+check if not exist in bdd
@@ -63,7 +70,6 @@ func register(w http.ResponseWriter, r *http.Request) {
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Pages Selection & init http_serv ↓
 func httpServ() {
-
 	fs := http.FileServer(http.Dir("../static")) // <- ce qu'on envoie en static vers le serv
 	http.Handle("/", fs)
 	http.HandleFunc("/login", login)

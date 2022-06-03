@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -18,6 +16,5 @@ func CheckPasswordHash(password, hash string) bool {
 
 func initHashPswd(pswd string) string {
 	hash, _ := HashPassword(pswd) // ignore error for the sake of simplicity
-	fmt.Println(hash)
 	return hash
 }
