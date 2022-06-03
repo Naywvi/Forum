@@ -37,7 +37,6 @@ func initDatabase(database string, table_name string, txt string) *sql.DB {
 		log.Fatal(err)
 	}
 	sql := "CREATE TABLE IF NOT EXISTS " + table_name + "(" + txt + ")"
-	fmt.Print(sql)
 	db.Exec(sql)
 	return db
 }
@@ -55,23 +54,23 @@ func InsterInTo(db *sql.DB, var_receive string, table_name string, table_field s
 func categorie() {
 	InsterInTo(initDatabase("dbtest.db", "categorie", SqlExtract("../bdd/categorie_table.sql", 0, 2)), SqlExtract("../bdd/categorie_table.sql", 8, 10), "categorie", SqlExtract("../bdd/categorie_table.sql", 5, 6))
 	fmt.Println("> Categorie Table was successfully created")
-	fmt.Println("-> test_categorie was successfully created")
+	fmt.Println("-> test_categorie was successfully created\n")
 }
 func post() {
 	InsterInTo(initDatabase("dbtest.db", "post", SqlExtract("../bdd/post_table.sql", 0, 6)), SqlExtract("../bdd/post_table.sql", 13, 14), "post", SqlExtract("../bdd/post_table.sql", 9, 10))
 	fmt.Println("> Post Table was successfully created")
-	fmt.Println("-> Test_post was successfully created")
+	fmt.Println("-> Test_post was successfully created\n")
 }
 func user() {
 	InsterInTo(initDatabase("dbtest.db", "user", SqlExtract("../bdd/user_table.sql", 0, 8)), SqlExtract("../bdd/user_table.sql", 15, 16), "user", SqlExtract("../bdd/user_table.sql", 11, 12))
 	fmt.Println("> User Table was successfully created")
-	fmt.Println("-> User test was successfully created | Login : Naywvi | pswd : 1230 |")
+	fmt.Println("-> User test was successfully created | Login : Naywvi | pswd : 1230 |\n")
 }
 func rank() {
 	for i := 1; i < 5; i++ {
 		InsterInTo(initDatabase("dbtest.db", "rank", SqlExtract("../bdd/rank_table.sql", 0, 10)), SqlExtract("../bdd/rank_table.sql", 15+2*i, 16+2*i), "rank", SqlExtract("../bdd/rank_table.sql", 13, 14))
 	}
-	fmt.Println("> Rank Table was successfully created")
+	fmt.Println("> Rank Table was successfully created\n")
 }
 
 /*
@@ -87,14 +86,14 @@ tout en une ligne ;)
 //Init bdd
 func InitBDD() {
 	if _, err := os.Stat("./dbtest.db"); err == nil { //if bdd exist
-		print("The bdd is already here")
+		fmt.Println("The bdd is already here")
 
 	} else if errors.Is(err, os.ErrNotExist) { //if bdd not exist > Re create
 		rank()
 		user()
 		categorie()
 		post()
-		fmt.Println("Bdd was successfully created")
+		fmt.Println("Bdd was successfully created, you are ready :)\n")
 	}
 
 }

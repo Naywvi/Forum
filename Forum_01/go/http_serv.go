@@ -31,7 +31,7 @@ func httpServ() {
 
 	fs := http.FileServer(http.Dir("../static")) // <- ce qu'on envoie en static vers le serv
 	http.Handle("/", fs)
-
+	fmt.Println("Started https serv successfully on http://localhost:1010")
 	http.ListenAndServe(":1010", nil)
-	fmt.Print("Started https serv successfully on http://localhost:1010")
+
 }
