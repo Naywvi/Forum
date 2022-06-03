@@ -1,80 +1,100 @@
 package main
 
 import (
+	"bufio"
 	"database/sql"
+	"errors"
+	"fmt"
 	"log"
+	"os"
 )
 
-func initDatabase(database string) *sql.DB { // ici on créé une fonction qui initialise une nouvelle database
-	db, err := sql.Open("sqlite3", database) // on ouvre une nouvelle database avec sqlite3 qu'on nomme par le paramètre qu'on donne à notre fonction
+//Extract sql-file & return it (select interval in file with end/ start)
+func SqlExtract(file_sql string, start int, end int) string {
+	text := ""
+	count := 0
+	file, _ := os.Open(file_sql)
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanLines)
+	for scanner.Scan() {
+		if count == end {
+			return text
+		}
+		if count >= start-1 {
+			text += scanner.Text() + "\n"
+		}
+		count++
+	}
+	return text
+}
+
+//#------------------------------------------------------------------------------------------------------------#
+
+//Auto-Create Table
+func initDatabase(database string, table_name string, txt string) *sql.DB {
+	db, err := sql.Open("sqlite3", database)
 	if err != nil {
 		log.Fatal(err)
 	}
-	sqlStmt := `
-				PRAGMA foreign_keys = ON;
-				
-				CREATE TABLE IF NOT EXISTS rank (
-					Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-					Name TEXT NOT NULL
-					Create_post INTEGER NOT NULL
-					Del_profile INTEGER NOT NULL
-					Signal_post INTEGER NOT NULL
-					Moove_post INTEGER NOT NULL
-					Comment_post INTEGER NOT NULL
-					Del_post INTEGER NOT NULL
-					Del_post_user INTEGER NOT NULL
-					Admin INTEGER NOT NULL
-				);
-
-				CREATE TABLE IF NOT EXISTS user (
-					Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-					Name TEXT NOT NULL
-					Pswd TEXT NOT NULL
-					Desc TEXT NOT NULL
-					Email TEXT NOT NULL
-					Profile_Picture TEXT NOT NULL
-					Rank_id INTEGER NOT NULL,
-					FOREIGN KEY (Rank_id) REFERENCES rank(Id)
-				);
-
-				CREATE TABLE IF NOT EXISTS categorie (
-					Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-					Name TEXT NOT NULL
-				);
-
-				CREATE TABLE IF NOT EXISTS post (
-					Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-					Id_catego INTEGER NOT NULL,
-					FOREIGN KEY (Id_catego) REFERENCES categorie(Id),
-					Name TEXT NOT NULL
-					Contenu TEXT NOT NULL
-					Likes INTEGER NOT NULL
-					User_id INTEGER NOT NULL,
-					FOREIGN KEY (User_id) REFERENCES user(Id)
-				);
-				`
-	//PRAGMA foreign_keys = ON; permet de donner à sql l'accès aux tables reliers entres elles
-	//FOREIGN KEY permet de relierles tables entre elles (type_id) pointe vers > (id) de la table types
-	db.Exec(sqlStmt) // On affiche l'erreur si ça merde
+	sql := "CREATE TABLE IF NOT EXISTS " + table_name + "(" + txt + ")"
+	fmt.Print(sql)
+	db.Exec(sql)
 	return db
 }
 
-func insertIntoRank(db *sql.DB, name string, create_post int, del_profile int, signal_post int, moove_post int, comment_post int, del_post_user int, admin int) (int64, error) { // Ici une fonction qui nous permet d'insérer un nouveau nom  de rang dans la table "rank" de notre database
-	result, _ := db.Exec(`INSERT INTO rank (Name,Create_post,Del_profile,Signal_post,Moove_post,Comment_post,Del_post_user,Admin) VALUES (?,?,?,?,?,?,?,?)`, name, create_post, del_profile, signal_post, moove_post, comment_post, del_post_user, admin)
+//Auto increment field & Value on table
+func InsterInTo(db *sql.DB, var_receive string, table_name string, table_field string) (int64, error) { //
+	result, err := db.Exec("INSERT INTO " + table_name + " (" + table_field + ")" + " VALUES (" + var_receive + ")")
+	if err != nil {
+		log.Fatal(err)
+	}
 	return result.LastInsertId()
 }
 
-func insertIntoUser(db *sql.DB, name string, pswd string, desc string, email string, profile_picture string, rank_id int) (int64, error) { // Ici une fonction qui nous permet d'insérer un nouveau type dans la table "Types"(ou autres) de notre database
-	result, _ := db.Exec(`INSERT INTO user (Name,Pswd,Desc,Email,Profile_picture,Rank_id) VALUES (?,?,?,?,?,?)`, name, pswd, desc, email, profile_picture, rank_id)
-	return result.LastInsertId()
+//#------------------------------------------------------------------------------------------------------------#
+func categorie() {
+	InsterInTo(initDatabase("dbtest.db", "categorie", SqlExtract("../bdd/categorie_table.sql", 0, 2)), SqlExtract("../bdd/categorie_table.sql", 8, 10), "categorie", SqlExtract("../bdd/categorie_table.sql", 5, 6))
+	fmt.Println("> Categorie Table was successfully created")
+	fmt.Println("-> test_categorie was successfully created")
+}
+func post() {
+	InsterInTo(initDatabase("dbtest.db", "post", SqlExtract("../bdd/post_table.sql", 0, 6)), SqlExtract("../bdd/post_table.sql", 13, 14), "post", SqlExtract("../bdd/post_table.sql", 9, 10))
+	fmt.Println("> Post Table was successfully created")
+	fmt.Println("-> Test_post was successfully created")
+}
+func user() {
+	InsterInTo(initDatabase("dbtest.db", "user", SqlExtract("../bdd/user_table.sql", 0, 8)), SqlExtract("../bdd/user_table.sql", 15, 16), "user", SqlExtract("../bdd/user_table.sql", 11, 12))
+	fmt.Println("> User Table was successfully created")
+	fmt.Println("-> User test was successfully created | Login : Naywvi | pswd : 1230 |")
+}
+func rank() {
+	for i := 1; i < 5; i++ {
+		InsterInTo(initDatabase("dbtest.db", "rank", SqlExtract("../bdd/rank_table.sql", 0, 10)), SqlExtract("../bdd/rank_table.sql", 15+2*i, 16+2*i), "rank", SqlExtract("../bdd/rank_table.sql", 13, 14))
+	}
+	fmt.Println("> Rank Table was successfully created")
 }
 
-func insertIntoPost(db *sql.DB, id_catego int, name string, contenu string, likes int, user_id int) (int64, error) { // Ici une fonction qui nous permet d'insérer un nouveau type dans la table "Types"(ou autres) de notre database
-	result, _ := db.Exec(`INSERT INTO user (Id_catego,Name,Contenu,Likes,User_id) VALUES (?,?,?,?,?)`, id_catego, name, contenu, likes, user_id)
-	return result.LastInsertId()
-}
+/*
+Exemple create / insert : bdd_name | table |field
+SqlExtract > Récup dans le fichier avec un interval
+> Renvoie à InserInTo([Nom base de donnée].db , '[Nom de la table voulu]')
+> Renvoie à initDataBase([db] , [Var recup de sqlextract()] , [name table] , [var field récup de sqlextract()])
+tout en une ligne ;)
+*/
 
-func insertIntoCategorie(db *sql.DB, name string) (int64, error) { // Ici une fonction qui nous permet d'insérer un nouveau type dans la table "Types"(ou autres) de notre database
-	result, _ := db.Exec(`INSERT INTO user (Name) VALUES (?)`, name)
-	return result.LastInsertId()
+//#------------------------------------------------------------------------------------------------------------#
+
+//Init bdd
+func InitBDD() {
+	if _, err := os.Stat("./dbtest.db"); err == nil { //if bdd exist
+		print("The bdd is already here")
+
+	} else if errors.Is(err, os.ErrNotExist) { //if bdd not exist > Re create
+		rank()
+		user()
+		categorie()
+		post()
+		fmt.Println("Bdd was successfully created")
+	}
+
 }
