@@ -15,10 +15,10 @@ Name, Create_post, Del_profile, Signal_post, Moove_post, Comment_post, Del_post,
 
 --Rank with perm | Admin -> 17-18 | Modo 19-20 | User 21-22 | Default 23-24
 
-'Admin', 1, 1, 1, 1, 1, 1, 1, 1
+'Admin', '1', '1', '1', '1', '1', '1', '1', '1'
 
-'Modo', 1, 1, 1, 1, 1, 1, 1, 0
+'Modo', '1', '1', '1', '1', '1', '1', '1', '0'
 
-'User', 1, 0, 1, 0, 1, 1, 0, 0
+'User', '1', '0', '1', '0', '1', '1', '0', '0'
 
-'Default', 0, 0, 1, 0, 0, 0, 0, 0
+'Default', '0', '0', '1', '0', '0', '0', '0', '0'

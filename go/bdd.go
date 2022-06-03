@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 )
 
 //Extract sql-file & return it (select interval in file with end/ start)
@@ -28,7 +29,29 @@ func SqlExtract(file_sql string, start int, end int) string {
 	return text
 }
 
-//#------------------------------------------------------------------------------------------------------------#
+//#------------------------------------------------------------------------------------------------------------# ↓ Func used ↓
+func Checkalacon(result_table []string, input string) bool { //Check in lower case to be sure
+	input = strings.ToLower(input)
+	for i := range result_table {
+		low := strings.ToLower(result_table[i])
+		if low == input {
+			return false
+		}
+	}
+	return true
+}
+
+//#------------------------------------------------------------------------------------------------------------# ↓ Select on table ↓
+func SelectAllFrom(db *sql.DB, table string) *sql.Rows {
+	result, _ := db.Query("SELECT * FROM " + table)
+	return result
+}
+func SelectFieldFrom(db *sql.DB, field string, table string) *sql.Rows {
+	result, _ := db.Query("SELECT " + field + " FROM " + table)
+	return result
+}
+
+//#------------------------------------------------------------------------------------------------------------# ↓ Add to table func ↓
 
 //Auto-Create Table
 func initDatabase(database string, table_name string, txt string) *sql.DB {
@@ -50,7 +73,7 @@ func InsterInTo(db *sql.DB, var_receive string, table_name string, table_field s
 	return result.LastInsertId()
 }
 
-//#------------------------------------------------------------------------------------------------------------#
+//#------------------------------------------------------------------------------------------------------------# ↓ Init db_test to start ↓
 func categorie() {
 	InsterInTo(initDatabase("dbtest.db", "categorie", SqlExtract("../bdd/categorie_table.sql", 0, 2)), SqlExtract("../bdd/categorie_table.sql", 8, 10), "categorie", SqlExtract("../bdd/categorie_table.sql", 5, 6))
 	fmt.Println("> Categorie Table was successfully created")
@@ -73,15 +96,7 @@ func rank() {
 	fmt.Println("> Rank Table was successfully created\n")
 }
 
-/*
-Exemple create / insert : bdd_name | table |field
-SqlExtract > Récup dans le fichier avec un interval
-> Renvoie à InserInTo([Nom base de donnée].db , '[Nom de la table voulu]')
-> Renvoie à initDataBase([db] , [Var recup de sqlextract()] , [name table] , [var field récup de sqlextract()])
-tout en une ligne ;)
-*/
-
-//#------------------------------------------------------------------------------------------------------------#
+//#------------------------------------------------------------------------------------------------------------# ↓ init bd ↓
 
 //Init bdd
 func InitBDD() {
@@ -96,4 +111,33 @@ func InitBDD() {
 		fmt.Println("Bdd was successfully created, you are ready :)\n")
 	}
 
+}
+
+//#------------------------------------------------------------------------------------------------------------# ↓ For register / Login ↓
+func CheckIfExist(input string) bool { //HORRIBLE !!!!
+	var (
+		result_check []string
+		u            User
+	)
+	db, _ := sql.Open("sqlite3", "dbtest.db")
+	rows := SelectFieldFrom(db, "name", "user")
+
+	for rows.Next() {
+		err := rows.Scan(&u.Name)
+		if err != nil {
+			log.Fatal(err)
+		}
+		result_check = append(result_check, u.Name)
+	}
+
+	return Checkalacon(result_check, input)
+}
+
+func SendUserToBDD(name string, pswd string, email string) {
+	db, err := sql.Open("sqlite3", "dbtest.db") // init lg & ddb name
+	if err != nil {
+		log.Fatal(err)
+	}
+	var_send := []string{"'" + name + "',", "'" + pswd + "',", "'none_desc',", "'" + email + "',", "'none_picture',", "'3'"}
+	InsterInTo(db, strings.Join(var_send, ""), "user", SqlExtract("../bdd/user_table.sql", 11, 12))
 }

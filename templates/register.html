@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <!-- Design by foolishdeveloper.com -->
+    <title>Register</title>
+    <link  href="./assets_global/css/register.css"rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="background">
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    <form action="/register" method="post">
+      <!--Start register-->
+        <h3>Register here</h3>
+
+        <label for="username_register">Username</label>
+        <input type="text" required placeholder="Username.." id="username_register" name="username_register">
+
+        <label for="email_register">Email</label>
+        <input type="email" required placeholder="Email.." id="email_register" name="email_register">
+
+        <label for="password_register">Password</label>
+        <input type="password" required placeholder="Password.." id="password_register">
+
+        <label for="confirm_password_register">Confirm Password</label>
+        <input type="password" *required placeholder="Confirm Password.." id="confirm_password_register" name="password_register">
+
+        <button type="submit">Register here</button>
+        
+        <p class="regp">Register with</p>
+        <div class="social" value="register">
+          <div class="go"><i class="fab fa-google"></i>  Google</div>
+          <div class="fb"><i class="fab fa-facebook"></i>  Facebook</div>
+        </div>
+        <!--End register-->
+        <br><br>
+        <p class="login"><a href="/login">Click here to login</a></p>
+    </form>
+</body>
+</html>
