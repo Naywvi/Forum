@@ -30,7 +30,9 @@ type Rank struct {
 		Admin         int
 	}
 }
-
+type Instance struct {
+	I []User
+}
 type User struct {
 	Id              int
 	Name            string

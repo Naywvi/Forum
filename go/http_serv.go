@@ -22,28 +22,38 @@ func login(w http.ResponseWriter, r *http.Request) {
 		template.Must(template.ParseFiles(filepath.Join(templatesDir, "../templates/login.html"))).Execute(w, " ")
 	} else if r.Method == "POST" {
 		r.ParseForm()
-		// SEND TO BDD
-		fmt.Println("username:", r.Form["mail_login"])
-		fmt.Println("password:", r.Form["password_login"])
+		user_exist := CheckIfExistLogin(r.Form["mail_login"][0], r.Form["password_login"][0])
+		if user_exist == true {
+			fmt.Fprint(w, "Connection > redirection + token")
+		} else {
+			fmt.Fprint(w, "<script> window.alert('Bad password or bad identification, try again.'); </script>")
+			template.Must(template.ParseFiles(filepath.Join(templatesDir, "../templates/login.html"))).Execute(w, " ")
+		}
 	} else {
 		checkHttpError(w, r)
 		return
 	}
-	//Recup input
+
 }
 
-//#------------------------------------------------------------------------------------------------------------# ↓ Register ↓
+//#------------------------------------------------------------------------------------------------------------# ↓ Register ↓ //+check if not exist in bdd
 func register(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		template.Must(template.ParseFiles(filepath.Join(templatesDir, "../templates/register.html"))).Execute(w, " ")
 	} else if r.Method == "POST" {
 		r.ParseForm()
-		user_not_exist := CheckIfExist(r.Form["username_register"][0])
-		if user_not_exist == true {
+		user_not_exist := CheckIfExist(r.Form["username_register"][0], "name", "user")
+		mail_not_exist := CheckIfExist(r.Form["email_register"][0], "Email", "user")
+		if user_not_exist == true && mail_not_exist == true {
 			fmt.Fprint(w, "Enregistrer > redirection + token")
-			SendUserToBDD(r.Form["username_register"][0], r.Form["password_register"][0], r.Form["email_register"][0])
+			ADDUserToBDD(r.Form["username_register"][0], r.Form["password_register"][0], r.Form["email_register"][0])
 		} else {
-			fmt.Fprint(w, "<script> window.alert('This username is already in use'); </script>")
+			if mail_not_exist == false {
+				fmt.Fprint(w, "<script> window.alert('This email is already in use, try again'); </script>")
+			} else if user_not_exist == false {
+				fmt.Fprint(w, "<script> window.alert('This username is already in use, try again'); </script>")
+			}
+
 			template.Must(template.ParseFiles(filepath.Join(templatesDir, "../templates/register.html"))).Execute(w, " ")
 		}
 

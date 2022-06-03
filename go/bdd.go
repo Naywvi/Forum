@@ -110,17 +110,16 @@ func InitBDD() {
 		post()
 		fmt.Println("Bdd was successfully created, you are ready :)\n")
 	}
-
 }
 
-//#------------------------------------------------------------------------------------------------------------# ↓ For register / Login ↓
-func CheckIfExist(input string) bool { //HORRIBLE !!!!
+//#------------------------------------------------------------------------------------------------------------# ↓ For register ↓
+func CheckIfExist(input string, check_field string, In_This_Table string) bool { //HORRIBLE !!!!
 	var (
+		db, _        = sql.Open("sqlite3", "dbtest.db")
+		rows         = SelectFieldFrom(db, check_field, In_This_Table)
 		result_check []string
 		u            User
 	)
-	db, _ := sql.Open("sqlite3", "dbtest.db")
-	rows := SelectFieldFrom(db, "name", "user")
 
 	for rows.Next() {
 		err := rows.Scan(&u.Name)
@@ -129,15 +128,47 @@ func CheckIfExist(input string) bool { //HORRIBLE !!!!
 		}
 		result_check = append(result_check, u.Name)
 	}
-
 	return Checkalacon(result_check, input)
 }
 
-func SendUserToBDD(name string, pswd string, email string) {
+func ADDUserToBDD(name string, pswd string, email string) {
 	db, err := sql.Open("sqlite3", "dbtest.db") // init lg & ddb name
 	if err != nil {
 		log.Fatal(err)
 	}
 	var_send := []string{"'" + name + "',", "'" + pswd + "',", "'none_desc',", "'" + email + "',", "'none_picture',", "'3'"}
 	InsterInTo(db, strings.Join(var_send, ""), "user", SqlExtract("../bdd/user_table.sql", 11, 12))
+}
+
+//#------------------------------------------------------------------------------------------------------------# ↓ For login ↓
+func Check_If_Login_Exist(I *Instance, identifier string, pswd string) bool { //log
+	for _, i := range I.I {
+		if identifier == i.Email || identifier == i.Name {
+			if pswd == i.Pswd {
+				return true
+			}
+		}
+	}
+	return false
+}
+func CheckIfExistLogin(input_mail string, input_pswd string) bool { //Permet d'instancier User struct et de tout récup + check all cases
+	var (
+		I       = Instance{}
+		u       = User{}
+		db, _   = sql.Open("sqlite3", "dbtest.db")
+		rows    = SelectAllFrom(db, "user")
+		input_m = strings.ToLower(input_mail)
+		input_p = strings.ToLower(input_pswd)
+	)
+
+	for rows.Next() {
+		err := rows.Scan(&u.Id, &u.Name, &u.Pswd, &u.Desc, &u.Email, &u.Profile_Picture, &u.Rank_id)
+		u.Name = strings.ToLower(u.Name)
+		u.Email = strings.ToLower(u.Email)
+		I.I = append(I.I, u)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+	return Check_If_Login_Exist(&I, input_m, input_p)
 }
