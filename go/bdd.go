@@ -95,6 +95,9 @@ func rank() {
 	}
 	fmt.Println("> Rank Table was successfully created\n")
 }
+func email_verification() {
+	InsterInTo(initDatabase("dbtest.db", "email_owner", SqlExtract("../bdd/email_verification_table.sql", 0, 2)), reveive_email_verification(), "email_owner", SqlExtract("../bdd/email_verification_table.sql", 5, 6)) //<-- Os.Args email verification
+}
 
 //#------------------------------------------------------------------------------------------------------------# ↓ init bd ↓
 
@@ -104,6 +107,7 @@ func InitBDD() {
 		fmt.Println("The bdd is already here")
 
 	} else if errors.Is(err, os.ErrNotExist) { //if bdd not exist > Re create
+		email_verification()
 		rank()
 		user()
 		categorie()
