@@ -95,13 +95,17 @@ func register(w http.ResponseWriter, r *http.Request) {
 
 		} else { // <-- Check the wrong selection
 
+			error_message := ""
+
 			if Check_Email == false && Check_User == false {
-				fmt.Fprint(w, "<script> window.alert('retard'); </script>")
+				error_message = "email and username are"
 			} else if Check_Email == false {
-				fmt.Fprint(w, "<script> window.alert('This email is already in use, try again'); </script>")
+				error_message = "email is"
 			} else if Check_User == false {
-				fmt.Fprint(w, "<script> window.alert('This username is already in use, try again'); </script>")
+				error_message = "username is"
 			}
+
+			fmt.Fprint(w, "<script> window.alert('This "+error_message+" already in use, try again'); </script>")
 
 			Return_To_Page(w, r, "../templates/register.html")
 		}

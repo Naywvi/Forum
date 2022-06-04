@@ -46,6 +46,7 @@ func ADD_User_To_BDD(name, pswd, email string) {
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Select on table ↓
+
 func Select_All_From_DB(db *sql.DB, table string) *sql.Rows {
 	result, _ := db.Query("SELECT * FROM " + table)
 	return result
@@ -100,8 +101,9 @@ func post() {
 	Is_Ok("Post", "Test_post")
 }
 func user() {
-	Inser_In_To_DB(Init_Database("dbtest.db", "user", Extract_File("../bdd/user_table.sql", 0, 8)), Extract_File("../bdd/user_table.sql", 15, 16), "user", Extract_File("../bdd/user_table.sql", 11, 12))
-	Is_Ok("User", "User_test > Login : Naywvi | pswd : 1230 |")
+
+	Inser_In_To_DB(Init_Database("dbtest.db", "user", Extract_File("../bdd/user_table.sql", 0, 8)), Terminal_Init_Table("add_user_table"), "user", Extract_File("../bdd/user_table.sql", 11, 12))
+	Is_Ok("User", "")
 }
 func rank() {
 	for i := 1; i < 5; i++ {
@@ -111,7 +113,7 @@ func rank() {
 }
 
 func email_verification() {
-	Inser_In_To_DB(Init_Database("dbtest.db", "email_owner", Extract_File("../bdd/email_verification_table.sql", 0, 2)), reveive_email_verification(), "email_owner", Extract_File("../bdd/email_verification_table.sql", 5, 6)) //<-- Os.Args email verification
+	Inser_In_To_DB(Init_Database("dbtest.db", "email_owner", Extract_File("../bdd/email_verification_table.sql", 0, 2)), Terminal_Init_Table("email_verification_table"), "email_owner", Extract_File("../bdd/email_verification_table.sql", 5, 6)) //<-- Os.Args email verification
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ init bd ↓
