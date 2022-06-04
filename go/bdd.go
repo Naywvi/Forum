@@ -182,6 +182,7 @@ func InitBDD() {
 		fmt.Println("The bdd, " + Bdd.Name + " is already here")
 
 	} else if errors.Is(err, os.ErrNotExist) { //<-- If bdd not exist > Re create
+		fmt.Println("--->Create a new db<--- ?")
 		email_verification()
 		rank()
 		user()

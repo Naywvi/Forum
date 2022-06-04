@@ -13,7 +13,7 @@ import (
 func Check_If_Exist(input, input2, check_field, In_This_Table, Who_Want string) bool {
 
 	var (
-		db, _ = sql.Open("sqlite3", "dbtest.db")
+		db, _ = sql.Open(Bdd.Langage, Bdd.Name)
 		Rows  []string
 		rows  *sql.Rows
 		I     = Instance{}
