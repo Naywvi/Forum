@@ -29,11 +29,12 @@ func Extract_File(file_sql string, start int, end int) string {
 	return text
 }
 
-//#------------------------------------------------------------------------------------------------------------# ↓ Func used ↓
+//#------------------------------------------------------------------------------------------------------------# ↓ Add user to table ↓
+
 //Add default user to bdd
 func ADD_User_To_BDD(name, pswd, email string) {
 	var (
-		db, err          = sql.Open("sqlite3", "dbtest.db")
+		db, err          = sql.Open(Bdd.Langage, Bdd.Name)
 		Default_user_arr = []string{"'" + name + "',", "'" + pswd + "',", "'none_desc',", "'" + email + "',", "'none_picture',", "'3'"}
 		Default_user     = strings.Join(Default_user_arr, "")
 	)
@@ -56,11 +57,11 @@ func Select_Field_From_DB(db *sql.DB, field string, table string) *sql.Rows {
 	return result
 }
 
-//#------------------------------------------------------------------------------------------------------------# ↓ Add to table func ↓
+//#------------------------------------------------------------------------------------------------------------# ↓ Init Add to table ↓
 
 //Auto-Create Table
-func Init_Database(database string, table_name string, txt string) *sql.DB {
-	db, err := sql.Open("sqlite3", database)
+func Init_Database(table_name string, txt string) *sql.DB {
+	db, err := sql.Open(Bdd.Langage, Bdd.Name)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -78,14 +79,14 @@ func Inser_In_To_DB(db *sql.DB, var_receive string, table_name string, table_fie
 	return result.LastInsertId()
 }
 
-//#------------------------------------------------------------------------------------------------------------# ↓ Init db_test & featers ↓
+//#------------------------------------------------------------------------------------------------------------# ↓ Init dbb & featers ↓
 
 //Selection input of shell during init bdd
-func Terminal_Init_Table(who_whant string) string {
+func Terminal_Init_Table(who_want string) string {
 
 	fmt.Println("---------------------")
 
-	if who_whant == "add_user_table" {
+	if who_want == "add_user_table" {
 
 		fmt.Println("Create a default user to connect on the web site.")
 		fmt.Print("username ->")
@@ -108,7 +109,7 @@ func Terminal_Init_Table(who_whant string) string {
 
 		return "'" + username + "','" + pswd + "','none_desc','" + mail + "','none_picture','3'"
 
-	} else if who_whant == "email_verification_table" {
+	} else if who_want == "email_verification_table" {
 
 		fmt.Println("Write your mail to send request register.")
 		fmt.Print("email ->")
@@ -125,8 +126,12 @@ func Terminal_Init_Table(who_whant string) string {
 		fmt.Println("---------------------")
 
 		return "'" + mail + "','" + pswd + "'"
+	} else if who_want == "Bdd_Name" {
+		fmt.Println("Choose name of your Data_Base.")
+		Name_Bd, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+		Bdd.Name = strings.TrimSpace(Name_Bd) + ".db"
+		Bdd.Langage = "sqlite3"
 	}
-
 	return ""
 }
 
@@ -145,36 +150,36 @@ func Is_Ok(Printable string, Second_Printable string) {
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Init db_test to start ↓
 func categorie() {
-	Inser_In_To_DB(Init_Database("dbtest.db", "categorie", Extract_File("../bdd/categorie_table.sql", 0, 2)), Extract_File("../bdd/categorie_table.sql", 8, 10), "categorie", Extract_File("../bdd/categorie_table.sql", 5, 6))
+	Inser_In_To_DB(Init_Database("categorie", Extract_File("../bdd/categorie_table.sql", 0, 2)), Extract_File("../bdd/categorie_table.sql", 8, 10), "categorie", Extract_File("../bdd/categorie_table.sql", 5, 6))
 	Is_Ok("categorie", "test_categorie")
 }
 
 func post() {
-	Inser_In_To_DB(Init_Database("dbtest.db", "post", Extract_File("../bdd/post_table.sql", 0, 6)), Extract_File("../bdd/post_table.sql", 13, 14), "post", Extract_File("../bdd/post_table.sql", 9, 10))
+	Inser_In_To_DB(Init_Database("post", Extract_File("../bdd/post_table.sql", 0, 6)), Extract_File("../bdd/post_table.sql", 13, 14), "post", Extract_File("../bdd/post_table.sql", 9, 10))
 	Is_Ok("Post", "Test_post")
 }
 func user() {
 
-	Inser_In_To_DB(Init_Database("dbtest.db", "user", Extract_File("../bdd/user_table.sql", 0, 8)), Terminal_Init_Table("add_user_table"), "user", Extract_File("../bdd/user_table.sql", 11, 12))
+	Inser_In_To_DB(Init_Database("user", Extract_File("../bdd/user_table.sql", 0, 8)), Terminal_Init_Table("add_user_table"), "user", Extract_File("../bdd/user_table.sql", 11, 12))
 	Is_Ok("User", "")
 }
 func rank() {
 	for i := 1; i < 5; i++ {
-		Inser_In_To_DB(Init_Database("dbtest.db", "rank", Extract_File("../bdd/rank_table.sql", 0, 10)), Extract_File("../bdd/rank_table.sql", 15+2*i, 16+2*i), "rank", Extract_File("../bdd/rank_table.sql", 13, 14))
+		Inser_In_To_DB(Init_Database("rank", Extract_File("../bdd/rank_table.sql", 0, 10)), Extract_File("../bdd/rank_table.sql", 15+2*i, 16+2*i), "rank", Extract_File("../bdd/rank_table.sql", 13, 14))
 	}
 	Is_Ok("Rank", "")
 }
 
 func email_verification() {
-	Inser_In_To_DB(Init_Database("dbtest.db", "email_owner", Extract_File("../bdd/email_verification_table.sql", 0, 2)), Terminal_Init_Table("email_verification_table"), "email_owner", Extract_File("../bdd/email_verification_table.sql", 5, 6)) //<-- Os.Args email verification
+	Inser_In_To_DB(Init_Database("email_owner", Extract_File("../bdd/email_verification_table.sql", 0, 2)), Terminal_Init_Table("email_verification_table"), "email_owner", Extract_File("../bdd/email_verification_table.sql", 5, 6)) //<-- Os.Args email verification
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ init bd ↓
 
 //Init bdd
 func InitBDD() {
-	if _, err := os.Stat("./dbtest.db"); err == nil { //<-- If bdd exist
-		fmt.Println("The bdd is already here")
+	if _, err := os.Stat("./" + Bdd.Name); err == nil { //<-- If bdd exist
+		fmt.Println("The bdd, " + Bdd.Name + " is already here")
 
 	} else if errors.Is(err, os.ErrNotExist) { //<-- If bdd not exist > Re create
 		email_verification()
@@ -182,6 +187,6 @@ func InitBDD() {
 		user()
 		categorie()
 		post()
-		fmt.Println("Bdd was successfully created, you are ready :)\n")
+		fmt.Println("Bdd, " + Bdd.Name + " was successfully created, you are ready :)\n")
 	}
 }

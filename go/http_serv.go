@@ -70,7 +70,6 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 //Register Page
 func register(w http.ResponseWriter, r *http.Request) {
-
 	if r.Method == "GET" {
 
 		Return_To_Page(w, r, "../templates/register.html")
