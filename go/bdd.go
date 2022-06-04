@@ -78,19 +78,72 @@ func Inser_In_To_DB(db *sql.DB, var_receive string, table_name string, table_fie
 	return result.LastInsertId()
 }
 
-//#------------------------------------------------------------------------------------------------------------# ↓ Init db_test to start ↓
+//#------------------------------------------------------------------------------------------------------------# ↓ Init db_test & featers ↓
 
-//Simple print on Terminal
+//Selection input of shell during init bdd
+func Terminal_Init_Table(who_whant string) string {
+
+	fmt.Println("---------------------")
+
+	if who_whant == "add_user_table" {
+
+		fmt.Println("Create a default user to connect on the web site.")
+		fmt.Print("username ->")
+
+		username, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+		username = strings.TrimSpace(username)
+
+		fmt.Print("email ->")
+
+		mail, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+		mail = strings.TrimSpace(mail)
+
+		fmt.Print("password ->")
+
+		pswd, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+		pswd = strings.TrimSpace(pswd)
+		pswd, _ = HashPassword(pswd)
+
+		fmt.Println("---------------------")
+
+		return "'" + username + "','" + pswd + "','none_desc','" + mail + "','none_picture','3'"
+
+	} else if who_whant == "email_verification_table" {
+
+		fmt.Println("Write your mail to send request register.")
+		fmt.Print("email ->")
+
+		mail, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+		mail = strings.TrimSpace(mail)
+
+		fmt.Print("password -> ")
+
+		pswd, _ := bufio.NewReader(os.Stdin).ReadString('\n') //<-- Email need \n to connect
+		pswd = strings.TrimSpace(pswd)
+		pswd, _ = HashPassword(pswd)
+
+		fmt.Println("---------------------")
+
+		return "'" + mail + "','" + pswd + "'"
+	}
+
+	return ""
+}
+
+//Simple print on shell
 func Is_Ok(Printable string, Second_Printable string) {
 
 	fmt.Println("> " + Printable + " Table was successfully created")
+
 	if len(Second_Printable) > 0 {
 		fmt.Println("-> " + Second_Printable + " was successfully created\n")
 	} else {
 		fmt.Println("")
 	}
+
 }
 
+//#------------------------------------------------------------------------------------------------------------# ↓ Init db_test to start ↓
 func categorie() {
 	Inser_In_To_DB(Init_Database("dbtest.db", "categorie", Extract_File("../bdd/categorie_table.sql", 0, 2)), Extract_File("../bdd/categorie_table.sql", 8, 10), "categorie", Extract_File("../bdd/categorie_table.sql", 5, 6))
 	Is_Ok("categorie", "test_categorie")
