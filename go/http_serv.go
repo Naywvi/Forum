@@ -6,69 +6,116 @@ import (
 	"os"
 	"path/filepath"
 	"text/template"
-	"time"
 )
 
 var templatesDir = os.Getenv("TEMPLATES_DIR")
 
-//#------------------------------------------------------------------------------------------------------------# ↓ cookie ↓
+//#------------------------------------------------------------------------------------------------------------# ↓ Return to [Select_Page] ↓
+
+//Return to page Selected need Path (string)
+func Return_To_Page(w http.ResponseWriter, r *http.Request, Path string) {
+	template.Must(template.ParseFiles(filepath.Join(templatesDir, Path))).Execute(w, " ")
+}
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Return error html ↓
-func checkHttpError(w http.ResponseWriter, r *http.Request) {
+
+//Send Http error method
+func Send_Error(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "Method is not supported.", http.StatusBadRequest)
 	fmt.Fprint(w, http.StatusBadRequest)
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Login ↓
+
+//Login Page
 func login(w http.ResponseWriter, r *http.Request) {
+
 	if r.Method == "GET" {
-		template.Must(template.ParseFiles(filepath.Join(templatesDir, "../templates/login.html"))).Execute(w, " ")
+
+		Return_To_Page(w, r, "../templates/login.html")
+
 	} else if r.Method == "POST" {
+
 		r.ParseForm()
-		user_exist := CheckIfExistLogin(r.Form["mail_login"][0], r.Form["password_login"][0], initHashPswd(r.Form["password_login"][0])) //<-- check witch hash pswd
+
+		var (
+			mail_login = r.Form["mail_login"][0]
+			pswd_login = r.Form["password_login"][0]
+			Hash_Pswd  = initHashPswd(pswd_login)
+			user_exist = Check_If_Exist_Login(mail_login, pswd_login, Hash_Pswd) //<-- check witch hash pswd in bdd
+		)
+
 		if user_exist == true {
+
 			//
-			expiration := time.Now().Add(365 * 24 * time.Hour)
-			cookie := http.Cookie{Name: "username", Value: "astaxie", Expires: expiration}
-			http.SetCookie(w, &cookie)
+			SetCookie(w, r)
 			//
 			fmt.Fprint(w, "Connection > redirection + token")
-		} else {
+
+		} else { // <-- Send Error
+
 			fmt.Fprint(w, "<script> window.alert('Bad password or bad identification, try again.'); </script>")
-			template.Must(template.ParseFiles(filepath.Join(templatesDir, "../templates/login.html"))).Execute(w, " ")
+			Return_To_Page(w, r, "../templates/login.html")
+
 		}
-	} else {
-		checkHttpError(w, r)
+
+	} else { // <-- If r.Method != Get/Post
+
+		Send_Error(w, r)
 		return
+
 	}
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Register ↓ //+check if not exist in bdd
+
+//Register Page
 func register(w http.ResponseWriter, r *http.Request) {
+
 	if r.Method == "GET" {
-		template.Must(template.ParseFiles(filepath.Join(templatesDir, "../templates/register.html"))).Execute(w, " ")
+
+		Return_To_Page(w, r, "../templates/register.html")
+
 	} else if r.Method == "POST" {
+
 		r.ParseForm()
-		user_not_exist := CheckIfExist(r.Form["username_register"][0], "name", "user")
-		mail_not_exist := CheckIfExist(r.Form["email_register"][0], "Email", "user")
-		if user_not_exist == true && mail_not_exist == true {
+
+		var (
+			Check_User     = Check_If_Exist(r.Form["username_register"][0], "name", "user")
+			Check_Email    = Check_If_Exist(r.Form["email_register"][0], "Email", "user")
+			User_Register  = r.Form["username_register"][0]
+			Email_Register = r.Form["email_register"][0]
+			Pswd_Register  = r.Form["password_register"][0]
+			Hash_Pswd      = initHashPswd(Pswd_Register)
+		)
+
+		if Check_User == true && Check_Email == true { // <-- If all is ok
+
 			fmt.Fprint(w, "Enregistrer > redirection + token")
-			ADDUserToBDD(r.Form["username_register"][0], initHashPswd(r.Form["password_register"][0]), r.Form["email_register"][0]) //<-- Add hash pswd
-		} else {
-			if mail_not_exist == false {
+			ADD_User_To_BDD(User_Register, Hash_Pswd, Email_Register) // <-- Add to bdd & hash pswd
+
+		} else { // <-- Check the wrong selection
+
+			if Check_Email == false {
 				fmt.Fprint(w, "<script> window.alert('This email is already in use, try again'); </script>")
-			} else if user_not_exist == false {
+			} else if Check_User == false {
 				fmt.Fprint(w, "<script> window.alert('This username is already in use, try again'); </script>")
 			}
-			template.Must(template.ParseFiles(filepath.Join(templatesDir, "../templates/register.html"))).Execute(w, " ")
+
+			Return_To_Page(w, r, "../templates/register.html")
 		}
-	} else {
-		checkHttpError(w, r)
+
+	} else { // <-- If r.Method != Get/Post
+
+		Send_Error(w, r)
 		return
+
 	}
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Pages Selection & init http_serv ↓
+
+//Server Http
 func httpServ() {
 	fs := http.FileServer(http.Dir("../static")) // <- ce qu'on envoie en static vers le serv
 	http.Handle("/", fs)

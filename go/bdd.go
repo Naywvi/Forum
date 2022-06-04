@@ -11,7 +11,7 @@ import (
 )
 
 //Extract sql-file & return it (select interval in file with end/ start)
-func SqlExtract(file_sql string, start int, end int) string {
+func Extract_File(file_sql string, start int, end int) string {
 	text := ""
 	count := 0
 	file, _ := os.Open(file_sql)
@@ -42,11 +42,11 @@ func Checkalacon(result_table []string, input string) bool { //Check in lower ca
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Select on table ↓
-func SelectAllFrom(db *sql.DB, table string) *sql.Rows {
+func Select_All_From_DB(db *sql.DB, table string) *sql.Rows {
 	result, _ := db.Query("SELECT * FROM " + table)
 	return result
 }
-func SelectFieldFrom(db *sql.DB, field string, table string) *sql.Rows {
+func Select_Field_From_DB(db *sql.DB, field string, table string) *sql.Rows {
 	result, _ := db.Query("SELECT " + field + " FROM " + table)
 	return result
 }
@@ -54,7 +54,7 @@ func SelectFieldFrom(db *sql.DB, field string, table string) *sql.Rows {
 //#------------------------------------------------------------------------------------------------------------# ↓ Add to table func ↓
 
 //Auto-Create Table
-func initDatabase(database string, table_name string, txt string) *sql.DB {
+func Init_Database(database string, table_name string, txt string) *sql.DB {
 	db, err := sql.Open("sqlite3", database)
 	if err != nil {
 		log.Fatal(err)
@@ -65,7 +65,7 @@ func initDatabase(database string, table_name string, txt string) *sql.DB {
 }
 
 //Auto increment field & Value on table
-func InsterInTo(db *sql.DB, var_receive string, table_name string, table_field string) (int64, error) { //
+func Inser_In_To_DB(db *sql.DB, var_receive string, table_name string, table_field string) (int64, error) { //
 	result, err := db.Exec("INSERT INTO " + table_name + " (" + table_field + ")" + " VALUES (" + var_receive + ")")
 	if err != nil {
 		log.Fatal(err)
@@ -75,29 +75,30 @@ func InsterInTo(db *sql.DB, var_receive string, table_name string, table_field s
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Init db_test to start ↓
 func categorie() {
-	InsterInTo(initDatabase("dbtest.db", "categorie", SqlExtract("../bdd/categorie_table.sql", 0, 2)), SqlExtract("../bdd/categorie_table.sql", 8, 10), "categorie", SqlExtract("../bdd/categorie_table.sql", 5, 6))
+	Inser_In_To_DB(Init_Database("dbtest.db", "categorie", Extract_File("../bdd/categorie_table.sql", 0, 2)), Extract_File("../bdd/categorie_table.sql", 8, 10), "categorie", Extract_File("../bdd/categorie_table.sql", 5, 6))
 	fmt.Println("> Categorie Table was successfully created")
 	fmt.Println("-> test_categorie was successfully created\n")
 }
+
 func post() {
-	InsterInTo(initDatabase("dbtest.db", "post", SqlExtract("../bdd/post_table.sql", 0, 6)), SqlExtract("../bdd/post_table.sql", 13, 14), "post", SqlExtract("../bdd/post_table.sql", 9, 10))
+	Inser_In_To_DB(Init_Database("dbtest.db", "post", Extract_File("../bdd/post_table.sql", 0, 6)), Extract_File("../bdd/post_table.sql", 13, 14), "post", Extract_File("../bdd/post_table.sql", 9, 10))
 	fmt.Println("> Post Table was successfully created")
 	fmt.Println("-> Test_post was successfully created\n")
 }
 func user() {
-	InsterInTo(initDatabase("dbtest.db", "user", SqlExtract("../bdd/user_table.sql", 0, 8)), SqlExtract("../bdd/user_table.sql", 15, 16), "user", SqlExtract("../bdd/user_table.sql", 11, 12))
+	Inser_In_To_DB(Init_Database("dbtest.db", "user", Extract_File("../bdd/user_table.sql", 0, 8)), Extract_File("../bdd/user_table.sql", 15, 16), "user", Extract_File("../bdd/user_table.sql", 11, 12))
 	fmt.Println("> User Table was successfully created")
 	fmt.Println("-> User test was successfully created | Login : Naywvi | pswd : 1230 |\n")
 }
 func rank() {
 	for i := 1; i < 5; i++ {
-		InsterInTo(initDatabase("dbtest.db", "rank", SqlExtract("../bdd/rank_table.sql", 0, 10)), SqlExtract("../bdd/rank_table.sql", 15+2*i, 16+2*i), "rank", SqlExtract("../bdd/rank_table.sql", 13, 14))
+		Inser_In_To_DB(Init_Database("dbtest.db", "rank", Extract_File("../bdd/rank_table.sql", 0, 10)), Extract_File("../bdd/rank_table.sql", 15+2*i, 16+2*i), "rank", Extract_File("../bdd/rank_table.sql", 13, 14))
 	}
 	fmt.Println("> Rank Table was successfully created\n")
 }
 
 func email_verification() {
-	InsterInTo(initDatabase("dbtest.db", "email_owner", SqlExtract("../bdd/email_verification_table.sql", 0, 2)), reveive_email_verification(), "email_owner", SqlExtract("../bdd/email_verification_table.sql", 5, 6)) //<-- Os.Args email verification
+	Inser_In_To_DB(Init_Database("dbtest.db", "email_owner", Extract_File("../bdd/email_verification_table.sql", 0, 2)), reveive_email_verification(), "email_owner", Extract_File("../bdd/email_verification_table.sql", 5, 6)) //<-- Os.Args email verification
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ init bd ↓
@@ -118,10 +119,10 @@ func InitBDD() {
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ For register ↓
-func CheckIfExist(input string, check_field string, In_This_Table string) bool { //HORRIBLE !!!!
+func Check_If_Exist(input string, check_field string, In_This_Table string) bool { //HORRIBLE !!!!
 	var (
 		db, _        = sql.Open("sqlite3", "dbtest.db")
-		rows         = SelectFieldFrom(db, check_field, In_This_Table)
+		rows         = Select_Field_From_DB(db, check_field, In_This_Table)
 		result_check []string
 		u            User
 	)
@@ -136,17 +137,17 @@ func CheckIfExist(input string, check_field string, In_This_Table string) bool {
 	return Checkalacon(result_check, input)
 }
 
-func ADDUserToBDD(name string, pswd string, email string) {
+func ADD_User_To_BDD(name string, pswd string, email string) {
 	db, err := sql.Open("sqlite3", "dbtest.db") // init lg & ddb name
 	if err != nil {
 		log.Fatal(err)
 	}
 	var_send := []string{"'" + name + "',", "'" + pswd + "',", "'none_desc',", "'" + email + "',", "'none_picture',", "'3'"}
-	InsterInTo(db, strings.Join(var_send, ""), "user", SqlExtract("../bdd/user_table.sql", 11, 12))
+	Inser_In_To_DB(db, strings.Join(var_send, ""), "user", Extract_File("../bdd/user_table.sql", 11, 12))
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ For login ↓
-func Check_If_Login_Exist(I *Instance, identifier string, pswd string, hash_pswd string) bool { //log
+func Verif_If_Login_Exist(I *Instance, identifier string, pswd string, hash_pswd string) bool { //log
 	for _, i := range I.I {
 		if identifier == i.Email || identifier == i.Name {
 			return CheckPasswordHash(pswd, hash_pswd)
@@ -154,12 +155,12 @@ func Check_If_Login_Exist(I *Instance, identifier string, pswd string, hash_pswd
 	}
 	return false
 }
-func CheckIfExistLogin(input_mail, input_pswd, hash_pswd string) bool { //Permet d'instancier User struct et de tout récup + check all cases
+func Check_If_Exist_Login(input_mail, input_pswd, hash_pswd string) bool { //Permet d'instancier User struct et de tout récup + check all cases
 	var (
 		I       = Instance{}
 		u       = User{}
 		db, _   = sql.Open("sqlite3", "dbtest.db")
-		rows    = SelectAllFrom(db, "user")
+		rows    = Select_All_From_DB(db, "user")
 		input_m = strings.ToLower(input_mail)
 		input_p = strings.ToLower(input_pswd)
 	)
@@ -173,5 +174,5 @@ func CheckIfExistLogin(input_mail, input_pswd, hash_pswd string) bool { //Permet
 			log.Fatal(err)
 		}
 	}
-	return Check_If_Login_Exist(&I, input_m, input_p, hash_pswd)
+	return Verif_If_Login_Exist(&I, input_m, input_p, hash_pswd)
 }
