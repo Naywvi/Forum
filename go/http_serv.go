@@ -41,11 +41,10 @@ func login(w http.ResponseWriter, r *http.Request) {
 		var (
 			mail_login = r.Form["mail_login"][0]
 			pswd_login = r.Form["password_login"][0]
-			Hash_Pswd  = initHashPswd(pswd_login)
-			user_exist = Check_If_Exist_Login(mail_login, pswd_login, Hash_Pswd) //<-- check witch hash pswd in bdd
+			Check      = Check_If_Exist(mail_login, pswd_login, "Pswd", "user", "Login")
 		)
 
-		if user_exist == true {
+		if Check == true {
 
 			//
 			SetCookie(w, r)
@@ -81,11 +80,11 @@ func register(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 
 		var (
-			Check_User     = Check_If_Exist(r.Form["username_register"][0], "name", "user")
-			Check_Email    = Check_If_Exist(r.Form["email_register"][0], "Email", "user")
 			User_Register  = r.Form["username_register"][0]
 			Email_Register = r.Form["email_register"][0]
 			Pswd_Register  = r.Form["password_register"][0]
+			Check_User     = Check_If_Exist(User_Register, "", "Name", "user", "Register")
+			Check_Email    = Check_If_Exist(Email_Register, "", "Email", "user", "Register")
 			Hash_Pswd      = initHashPswd(Pswd_Register)
 		)
 
@@ -96,7 +95,9 @@ func register(w http.ResponseWriter, r *http.Request) {
 
 		} else { // <-- Check the wrong selection
 
-			if Check_Email == false {
+			if Check_Email == false && Check_User == false {
+				fmt.Fprint(w, "<script> window.alert('retard'); </script>")
+			} else if Check_Email == false {
 				fmt.Fprint(w, "<script> window.alert('This email is already in use, try again'); </script>")
 			} else if Check_User == false {
 				fmt.Fprint(w, "<script> window.alert('This username is already in use, try again'); </script>")

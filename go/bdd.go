@@ -30,15 +30,19 @@ func Extract_File(file_sql string, start int, end int) string {
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Func used ↓
-func Checkalacon(result_table []string, input string) bool { //Check in lower case to be sure
-	input = strings.ToLower(input)
-	for i := range result_table {
-		low := strings.ToLower(result_table[i])
-		if low == input {
-			return false
-		}
+//Add default user to bdd
+func ADD_User_To_BDD(name, pswd, email string) {
+	var (
+		db, err          = sql.Open("sqlite3", "dbtest.db")
+		Default_user_arr = []string{"'" + name + "',", "'" + pswd + "',", "'none_desc',", "'" + email + "',", "'none_picture',", "'3'"}
+		Default_user     = strings.Join(Default_user_arr, "")
+	)
+
+	if err != nil {
+		log.Fatal(err)
 	}
-	return true
+
+	Inser_In_To_DB(db, Default_user, "user", Extract_File("../bdd/user_table.sql", 11, 12))
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Select on table ↓
@@ -74,27 +78,36 @@ func Inser_In_To_DB(db *sql.DB, var_receive string, table_name string, table_fie
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Init db_test to start ↓
+
+//Simple print on Terminal
+func Is_Ok(Printable string, Second_Printable string) {
+
+	fmt.Println("> " + Printable + " Table was successfully created")
+	if len(Second_Printable) > 0 {
+		fmt.Println("-> " + Second_Printable + " was successfully created\n")
+	} else {
+		fmt.Println("")
+	}
+}
+
 func categorie() {
 	Inser_In_To_DB(Init_Database("dbtest.db", "categorie", Extract_File("../bdd/categorie_table.sql", 0, 2)), Extract_File("../bdd/categorie_table.sql", 8, 10), "categorie", Extract_File("../bdd/categorie_table.sql", 5, 6))
-	fmt.Println("> Categorie Table was successfully created")
-	fmt.Println("-> test_categorie was successfully created\n")
+	Is_Ok("categorie", "test_categorie")
 }
 
 func post() {
 	Inser_In_To_DB(Init_Database("dbtest.db", "post", Extract_File("../bdd/post_table.sql", 0, 6)), Extract_File("../bdd/post_table.sql", 13, 14), "post", Extract_File("../bdd/post_table.sql", 9, 10))
-	fmt.Println("> Post Table was successfully created")
-	fmt.Println("-> Test_post was successfully created\n")
+	Is_Ok("Post", "Test_post")
 }
 func user() {
 	Inser_In_To_DB(Init_Database("dbtest.db", "user", Extract_File("../bdd/user_table.sql", 0, 8)), Extract_File("../bdd/user_table.sql", 15, 16), "user", Extract_File("../bdd/user_table.sql", 11, 12))
-	fmt.Println("> User Table was successfully created")
-	fmt.Println("-> User test was successfully created | Login : Naywvi | pswd : 1230 |\n")
+	Is_Ok("User", "User_test > Login : Naywvi | pswd : 1230 |")
 }
 func rank() {
 	for i := 1; i < 5; i++ {
 		Inser_In_To_DB(Init_Database("dbtest.db", "rank", Extract_File("../bdd/rank_table.sql", 0, 10)), Extract_File("../bdd/rank_table.sql", 15+2*i, 16+2*i), "rank", Extract_File("../bdd/rank_table.sql", 13, 14))
 	}
-	fmt.Println("> Rank Table was successfully created\n")
+	Is_Ok("Rank", "")
 }
 
 func email_verification() {
@@ -105,10 +118,10 @@ func email_verification() {
 
 //Init bdd
 func InitBDD() {
-	if _, err := os.Stat("./dbtest.db"); err == nil { //if bdd exist
+	if _, err := os.Stat("./dbtest.db"); err == nil { //<-- If bdd exist
 		fmt.Println("The bdd is already here")
 
-	} else if errors.Is(err, os.ErrNotExist) { //if bdd not exist > Re create
+	} else if errors.Is(err, os.ErrNotExist) { //<-- If bdd not exist > Re create
 		email_verification()
 		rank()
 		user()
@@ -116,63 +129,4 @@ func InitBDD() {
 		post()
 		fmt.Println("Bdd was successfully created, you are ready :)\n")
 	}
-}
-
-//#------------------------------------------------------------------------------------------------------------# ↓ For register ↓
-func Check_If_Exist(input string, check_field string, In_This_Table string) bool { //HORRIBLE !!!!
-	var (
-		db, _        = sql.Open("sqlite3", "dbtest.db")
-		rows         = Select_Field_From_DB(db, check_field, In_This_Table)
-		result_check []string
-		u            User
-	)
-
-	for rows.Next() {
-		err := rows.Scan(&u.Name)
-		if err != nil {
-			log.Fatal(err)
-		}
-		result_check = append(result_check, u.Name)
-	}
-	return Checkalacon(result_check, input)
-}
-
-func ADD_User_To_BDD(name string, pswd string, email string) {
-	db, err := sql.Open("sqlite3", "dbtest.db") // init lg & ddb name
-	if err != nil {
-		log.Fatal(err)
-	}
-	var_send := []string{"'" + name + "',", "'" + pswd + "',", "'none_desc',", "'" + email + "',", "'none_picture',", "'3'"}
-	Inser_In_To_DB(db, strings.Join(var_send, ""), "user", Extract_File("../bdd/user_table.sql", 11, 12))
-}
-
-//#------------------------------------------------------------------------------------------------------------# ↓ For login ↓
-func Verif_If_Login_Exist(I *Instance, identifier string, pswd string, hash_pswd string) bool { //log
-	for _, i := range I.I {
-		if identifier == i.Email || identifier == i.Name {
-			return CheckPasswordHash(pswd, hash_pswd)
-		}
-	}
-	return false
-}
-func Check_If_Exist_Login(input_mail, input_pswd, hash_pswd string) bool { //Permet d'instancier User struct et de tout récup + check all cases
-	var (
-		I       = Instance{}
-		u       = User{}
-		db, _   = sql.Open("sqlite3", "dbtest.db")
-		rows    = Select_All_From_DB(db, "user")
-		input_m = strings.ToLower(input_mail)
-		input_p = strings.ToLower(input_pswd)
-	)
-
-	for rows.Next() {
-		err := rows.Scan(&u.Id, &u.Name, &u.Pswd, &u.Desc, &u.Email, &u.Profile_Picture, &u.Rank_id)
-		u.Name = strings.ToLower(u.Name)
-		u.Email = strings.ToLower(u.Email)
-		I.I = append(I.I, u)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-	return Verif_If_Login_Exist(&I, input_m, input_p, hash_pswd)
 }
