@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"log"
+	"strconv"
 	"strings"
 )
 
@@ -73,6 +74,12 @@ func Check_Login_Or_Register(I *Instance, identifier, pswd, Who_whant, input str
 
 		for _, i := range I.I { //<-- Check in I (= instance of table)
 			if identifier == i.Email || identifier == i.Name {
+				//<<<< Set for personnal Cookie
+				Connected.User = i.Name
+				Connected.User_Hased = Encrypt_Cookie(Connected.User)
+				Connected.Rank_Id = strconv.Itoa(i.Rank_id)
+				Connected.Rank_Id_Hashed = Encrypt_Cookie(strconv.Itoa(i.Rank_id))
+				//<<<< Set for personnal Cookie
 				return CheckPasswordHash(pswd, i.Pswd)
 			}
 		}

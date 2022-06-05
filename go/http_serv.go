@@ -8,6 +8,14 @@ import (
 	"text/template"
 )
 
+type Connected_Status struct {
+	User           string
+	User_Hased     string
+	Rank_Id        string
+	Rank_Id_Hashed string
+}
+
+var Connected Connected_Status
 var templatesDir = os.Getenv("TEMPLATES_DIR")
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Return to [Select_Page] ↓
@@ -45,12 +53,10 @@ func login(w http.ResponseWriter, r *http.Request) {
 		)
 
 		if Check == true {
+			SettCookie(w, r) //send cookie first
+			fmt.Fprint(w, "bien joué")
 
-			//
-			SetCookie(w, r)
-			//
-			fmt.Fprint(w, "Connection > redirection + token")
-
+			//--> redirect to index.html
 		} else { // <-- Send Error
 
 			fmt.Fprint(w, "<script> window.alert('Bad password or bad identification, try again.'); </script>")
@@ -71,7 +77,6 @@ func login(w http.ResponseWriter, r *http.Request) {
 //Register Page
 func register(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-
 		Return_To_Page(w, r, "../templates/register.html")
 
 	} else if r.Method == "POST" {
@@ -86,11 +91,11 @@ func register(w http.ResponseWriter, r *http.Request) {
 			Check_Email    = Check_If_Exist(Email_Register, "", "Email", "user", "Register")
 			Hash_Pswd      = initHashPswd(Pswd_Register)
 		)
-
 		if Check_User == true && Check_Email == true { // <-- If all is ok
-
-			fmt.Fprint(w, "Enregistrer > redirection + token")
+			fmt.Fprint(w, "bien joué")
 			ADD_User_To_BDD(User_Register, Hash_Pswd, Email_Register) // <-- Add to bdd & hash pswd
+			//--> redirect to login page
+			return
 
 		} else { // <-- Check the wrong selection
 
@@ -116,6 +121,15 @@ func register(w http.ResponseWriter, r *http.Request) {
 
 	}
 }
+func test(w http.ResponseWriter, r *http.Request) {
+	check_c := Check_Cookie(w, r)
+	if check_c == true {
+		fmt.Print("ok")
+	} else {
+		fmt.Print("NAH")
+	}
+	Return_To_Page(w, r, "../templates/admin_panel.html")
+}
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Pages Selection & init http_serv ↓
 
@@ -123,6 +137,7 @@ func register(w http.ResponseWriter, r *http.Request) {
 func httpServ() {
 	fs := http.FileServer(http.Dir("../static")) // <- ce qu'on envoie en static vers le serv
 	http.Handle("/", fs)
+	http.HandleFunc("/test", test)
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/register", register)
 	fmt.Println("Started https serv successfully on http://localhost:1010")
