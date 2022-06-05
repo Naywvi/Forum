@@ -12,10 +12,13 @@ import (
 
 //Extract sql-file & return it (select interval in file with end/ start)
 func Extract_File(file_sql string, start int, end int) string {
-	text := ""
-	count := 0
-	file, _ := os.Open(file_sql)
-	scanner := bufio.NewScanner(file)
+	var (
+		text    = ""
+		count   = 0
+		file, _ = os.Open(file_sql)
+		scanner = bufio.NewScanner(file)
+	)
+
 	scanner.Split(bufio.ScanLines)
 	for scanner.Scan() {
 		if count == end {
@@ -159,7 +162,6 @@ func post() {
 	Is_Ok("Post", "Test_post")
 }
 func user() {
-
 	Inser_In_To_DB(Init_Database("user", Extract_File("../bdd/user_table.sql", 0, 8)), Terminal_Init_Table("add_user_table"), "user", Extract_File("../bdd/user_table.sql", 11, 12))
 	Is_Ok("User", "")
 }

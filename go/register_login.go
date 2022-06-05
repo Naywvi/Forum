@@ -31,7 +31,9 @@ func Check_If_Exist(input, input2, check_field, In_This_Table, Who_Want string) 
 	for rows.Next() {
 
 		if Who_Want == "Register" { //<-- Select field
-
+			if check_field == "Email" {
+				index = &u.Email
+			}
 			err := rows.Scan(index)
 			if err != nil {
 				log.Fatal(err)
@@ -69,7 +71,7 @@ func Check_Login_Or_Register(I *Instance, identifier, pswd, Who_whant, input str
 
 	if Who_whant == "Login" {
 
-		for _, i := range I.I { //<-- Chech in I (= instance of table)
+		for _, i := range I.I { //<-- Check in I (= instance of table)
 			if identifier == i.Email || identifier == i.Name {
 				return CheckPasswordHash(pswd, i.Pswd)
 			}

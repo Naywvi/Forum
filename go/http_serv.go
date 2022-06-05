@@ -87,7 +87,6 @@ func register(w http.ResponseWriter, r *http.Request) {
 			Hash_Pswd      = initHashPswd(Pswd_Register)
 		)
 
-		print("ok")
 		if Check_User == true && Check_Email == true { // <-- If all is ok
 
 			fmt.Fprint(w, "Enregistrer > redirection + token")
