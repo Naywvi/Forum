@@ -11,7 +11,7 @@ import (
 )
 
 //Extract sql-file & return it (select interval in file with end/ start)
-func Extract_File(file_sql string, start int, end int) string {
+func Extract_File(file_sql string, start, end int) string {
 	var (
 		text    = ""
 		count   = 0
@@ -55,7 +55,7 @@ func Select_All_From_DB(db *sql.DB, table string) *sql.Rows {
 	result, _ := db.Query("SELECT * FROM " + table)
 	return result
 }
-func Select_Field_From_DB(db *sql.DB, field string, table string) *sql.Rows {
+func Select_Field_From_DB(db *sql.DB, field, table string) *sql.Rows {
 	result, _ := db.Query("SELECT " + field + " FROM " + table)
 	return result
 }
@@ -63,7 +63,7 @@ func Select_Field_From_DB(db *sql.DB, field string, table string) *sql.Rows {
 //#------------------------------------------------------------------------------------------------------------# ↓ Init Add to table ↓
 
 //Auto-Create Table
-func Init_Database(table_name string, txt string) *sql.DB {
+func Init_Database(table_name, txt string) *sql.DB {
 	db, err := sql.Open(Bdd.Langage, Bdd.Name)
 	if err != nil {
 		log.Fatal(err)
@@ -74,7 +74,7 @@ func Init_Database(table_name string, txt string) *sql.DB {
 }
 
 //Auto increment field & Value on table
-func Inser_In_To_DB(db *sql.DB, var_receive string, table_name string, table_field string) (int64, error) { //
+func Inser_In_To_DB(db *sql.DB, var_receive, table_name, table_field string) (int64, error) { //
 	result, err := db.Exec("INSERT INTO " + table_name + " (" + table_field + ")" + " VALUES (" + var_receive + ")")
 	if err != nil {
 		log.Fatal(err)
@@ -139,7 +139,7 @@ func Terminal_Init_Table(who_want string) string {
 }
 
 //Simple print on shell
-func Is_Ok(Printable string, Second_Printable string) {
+func Is_Ok(Printable, Second_Printable string) {
 
 	fmt.Println("> " + Printable + " Table was successfully created")
 
