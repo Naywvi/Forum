@@ -29,9 +29,10 @@ func Admin_Panel(w http.ResponseWriter, r *http.Request) {
 
 	} else if r.Method == "POST" { // We accept only methods "POST" and "GET" for security
 		var (
-			db, err = sql.Open(Bdd.Langage, Bdd.Name)
-			I_I     Instance_of_instance
-			query   = r.FormValue("") // <-- query recuperation
+			db, err   = sql.Open(Bdd.Langage, Bdd.Name)
+			I_I       Instance_of_instance
+			query     = r.FormValue("") // <-- query recuperation
+			all_table = []string{"categorie", "email_owner", "post", "user"}
 		)
 		if err != nil {
 			log.Fatal(err)
@@ -74,23 +75,31 @@ func Admin_Panel(w http.ResponseWriter, r *http.Request) {
 
 		} else if query == "See_Table" {
 
-			I_I = Select_All_Rows_Table(db)
-			template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/admin/panel_admin.html"))).Execute(w, I_I)
+			I_I = Select_All_Rows_Table(db, all_table)
+			Return_With_Value_Admin(w, r, I_I)
 
 		} else if query == "Backup" {
 
-			I_I = Select_All_Rows_Table(db)
+			I_I = Select_All_Rows_Table(db, all_table)
 			Set_Backup(I_I)
+			fmt.Fprint(w, "<script>alert('Backup create Succesfully')</script>")
 			Return_To_Page(w, r, "../static/templates/admin/panel_admin.html")
 
 		} else if query == "Manage_Users" {
-
+			var (
+				table = []string{"user"}
+			)
+			I_I = Select_All_Rows_Table(db, table)
+			Return_With_Value_Admin(w, r, I_I)
 		}
 
 	} else {
 		Send_Error(w, r)
 		return
 	}
+}
+func Return_With_Value_Admin(w http.ResponseWriter, r *http.Request, I Instance_of_instance) {
+	template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/admin/panel_admin.html"))).Execute(w, I)
 }
 
 func Set_Backup(I_I Instance_of_instance) {

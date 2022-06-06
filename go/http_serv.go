@@ -106,7 +106,7 @@ func register(w http.ResponseWriter, r *http.Request) {
 		)
 
 		if Check_User == true && Check_Email == true && Pswd_Register == Pswd_Register_Confirm { // <-- If all is ok
-
+			Register_Smtp(Email_Register, User_Register)
 			ADD_User_To_BDD(User_Register, Hash_Pswd, Email_Register, "3") // <-- Add to bdd & hash pswd
 			fmt.Fprint(w, `<script> window.alert('Login now') </script>`)
 			fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/"; </script>`)

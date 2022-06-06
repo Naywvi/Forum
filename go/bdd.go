@@ -97,14 +97,13 @@ func Select_Field_From_DB(db *sql.DB, field, table string) *sql.Rows {
 	result, _ := db.Query("SELECT " + field + " FROM " + table)
 	return result
 }
-func Select_All_Rows_Table(db *sql.DB) Instance_of_instance {
+func Select_All_Rows_Table(db *sql.DB, table []string) Instance_of_instance {
 	var (
-		all_table = []string{"categorie", "email_owner", "post", "user"}
-		I         Instance_Bdd
-		I_I       Instance_of_instance
+		I   Instance_Bdd
+		I_I Instance_of_instance
 	)
-	for i := range all_table {
-		I.I = Print_Rows(Select_All_From_DB(db, all_table[i]), all_table[i])
+	for i := range table {
+		I.I = Print_Rows(Select_All_From_DB(db, table[i]), table[i])
 		I_I.I = append(I_I.I, I) // <-- To send on one template
 	}
 	return I_I
