@@ -33,21 +33,44 @@ func Extract_File(file_sql string, start, end int) string {
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Add user to table ↓
-// func Print_Rows(rows *sql.Rows) {
-// 	var (
 
-// 		I     *Instance_Bdd
-// 	)
-// 	user = all_bd.User{}
-// 	for rows.Next() {
-// 		err := rows.Scan(&I)
-// 		if err != nil {
-// 			log.Fatal(err)
-// 		}
-// 		fmt.Println(test)
-// 	}
+func Print_Rows(rows *sql.Rows, table string) []all_bd {
+	var (
+		I Instance_Bdd
+		u = all_bd{}
+	)
 
-// }
+	for rows.Next() {
+
+		if table == "user" {
+			err := rows.Scan(&u.User.Id, &u.User.Name, &u.User.Pswd, &u.User.Desc, &u.User.Email, &u.User.Profile_Picture, &u.User.Rank_id)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+		} else if table == "email_owner" {
+			err := rows.Scan(&u.Smtp.Email, &u.Smtp.Pass)
+			if err != nil {
+				log.Fatal(err)
+			}
+		} else if table == "categorie" {
+			err := rows.Scan(&u.Categorie.Id, &u.Categorie.Name)
+			if err != nil {
+				log.Fatal(err)
+			}
+		} else if table == "post" {
+			err := rows.Scan(&u.Post.Id, &u.Post.Id_catego, &u.Post.Name, &u.Post.User_id, &u.Post.Likes, &u.Post.Contenu)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+
+		I.I = append(I.I, u)
+
+	}
+	return I.I
+
+}
 
 //Add default user to bdd
 func ADD_User_To_BDD(name, pswd, email, rank_id string) {
@@ -73,6 +96,18 @@ func Select_All_From_DB(db *sql.DB, table string) *sql.Rows {
 func Select_Field_From_DB(db *sql.DB, field, table string) *sql.Rows {
 	result, _ := db.Query("SELECT " + field + " FROM " + table)
 	return result
+}
+func Select_All_Rows_Table(db *sql.DB) Instance_of_instance {
+	var (
+		all_table = []string{"categorie", "email_owner", "post", "user"}
+		I         Instance_Bdd
+		I_I       Instance_of_instance
+	)
+	for i := range all_table {
+		I.I = Print_Rows(Select_All_From_DB(db, all_table[i]), all_table[i])
+		I_I.I = append(I_I.I, I) // <-- To send on one template
+	}
+	return I_I
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Init Add to table ↓

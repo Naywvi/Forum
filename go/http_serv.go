@@ -96,15 +96,16 @@ func register(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 
 		var (
-			User_Register  = r.Form["username_register"][0]
-			Email_Register = r.Form["email_register"][0]
-			Pswd_Register  = r.Form["password_register"][0]
-			Check_User     = Check_If_Exist(User_Register, "", "Name", "user", "Register")
-			Check_Email    = Check_If_Exist(Email_Register, "", "Email", "user", "Register")
-			Hash_Pswd      = initHashPswd(Pswd_Register)
+			User_Register         = r.Form["username_register"][0]
+			Email_Register        = r.Form["email_register"][0]
+			Pswd_Register         = r.Form["password_register"][0]
+			Pswd_Register_Confirm = r.Form["password_register_confirm"][0]
+			Check_User            = Check_If_Exist(User_Register, "", "Name", "user", "Register")
+			Check_Email           = Check_If_Exist(Email_Register, "", "Email", "user", "Register")
+			Hash_Pswd             = initHashPswd(Pswd_Register)
 		)
 
-		if Check_User == true && Check_Email == true { // <-- If all is ok
+		if Check_User == true && Check_Email == true && Pswd_Register == Pswd_Register_Confirm { // <-- If all is ok
 
 			ADD_User_To_BDD(User_Register, Hash_Pswd, Email_Register, "3") // <-- Add to bdd & hash pswd
 			fmt.Fprint(w, `<script> window.alert('Login now') </script>`)
@@ -116,16 +117,18 @@ func register(w http.ResponseWriter, r *http.Request) {
 		} else { // <-- Check the wrong selection
 
 			error_message := ""
-
-			if Check_Email == false && Check_User == false {
-				error_message = "email and username are"
-			} else if Check_Email == false {
-				error_message = "email is"
-			} else if Check_User == false {
-				error_message = "username is"
+			if Pswd_Register == Pswd_Register_Confirm {
+				if Check_Email == false && Check_User == false {
+					error_message = "email and username are"
+				} else if Check_Email == false {
+					error_message = "email is"
+				} else if Check_User == false {
+					error_message = "username is"
+				}
+				fmt.Fprint(w, "<script> window.alert('This "+error_message+" already in use, try again'); </script>")
+			} else {
+				fmt.Fprint(w, "<script> window.alert('Bad password confirmation, try again'); </script>")
 			}
-
-			fmt.Fprint(w, "<script> window.alert('This "+error_message+" already in use, try again'); </script>")
 
 			Return_To_Page(w, r, "../static/templates/register.html")
 		}
@@ -135,72 +138,6 @@ func register(w http.ResponseWriter, r *http.Request) {
 		Send_Error(w, r)
 		return
 
-	}
-}
-
-//#------------------------------------------------------------------------------------------------------------# ↓ Pages Selection & init http_serv ↓
-
-func Admin_Panel(w http.ResponseWriter, r *http.Request) {
-
-	if r.Method == "GET" {
-
-		s, rank, _ := Check_Cookie(w, r)
-		if s == true && rank == "1" {
-			Return_To_Page(w, r, "../static/templates/admin/panel_admin.html")
-		} else { //<-- rank == 4
-			Send_Error(w, r)
-		}
-
-	} else if r.Method == "POST" {
-
-		query := r.FormValue("")
-
-		if query == "Create_user" {
-
-			r.ParseForm()
-
-			var (
-				username       = r.Form["username_create_by_admin"][0]
-				email          = r.Form["Email_create_by_admin"][0]
-				rank           = r.Form["Rank_id_create_by_admin"][0]
-				pswd           = r.Form["password_create_by_admin"][0]
-				Check_username = Check_If_Exist(username, "", "Name", "user", "Register")
-				Check_email    = Check_If_Exist(email, "", "Email", "user", "Register")
-				pswd_hash      = initHashPswd(pswd)
-			)
-
-			if Check_username == true && Check_email == true {
-
-				ADD_User_To_BDD(username, pswd_hash, email, rank)
-				Return_To_Page(w, r, "../static/templates/admin/panel_admin.html")
-
-			} else { // <-- Check the wrong selection
-
-				error_message := ""
-
-				if Check_email == false && Check_username == false {
-					error_message = "email and username are"
-				} else if Check_email == false {
-					error_message = "email is"
-				} else if Check_username == false {
-					error_message = "username is"
-				}
-
-				fmt.Fprint(w, "<script> window.alert('This "+error_message+" already in use, try again'); </script>")
-				Return_To_Page(w, r, "../static/templates/admin/panel_admin.html")
-			}
-		} else if query == "See_Table" {
-			// db, err := sql.Open(Bdd.Langage, Bdd.Name)
-			// if err != nil {
-			// 	log.Fatal(err)
-			// }
-
-			// Print_Rows(Select_All_From_DB(db, "user"))
-		}
-
-	} else {
-		Send_Error(w, r)
-		return
 	}
 }
 

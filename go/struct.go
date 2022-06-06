@@ -1,10 +1,17 @@
 package main
 
+type Instance_of_instance struct {
+	I []Instance_Bdd
+}
 type Instance_Bdd struct {
 	I []all_bd
 }
 
 type all_bd struct {
+	Smtp struct {
+		Email string
+		Pass  string
+	}
 	Categorie struct {
 		Id   int
 		Name string
@@ -12,11 +19,11 @@ type all_bd struct {
 
 	Post struct {
 		Id        int
-		Id_catego int
+		Id_catego string
 		Name      string
 		Contenu   string
 		Likes     string
-		User_id   int
+		User_id   string
 	}
 
 	User struct {
