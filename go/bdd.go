@@ -33,6 +33,21 @@ func Extract_File(file_sql string, start, end int) string {
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Add user to table ↓
+// func Print_Rows(rows *sql.Rows) {
+// 	var (
+
+// 		I     *Instance_Bdd
+// 	)
+// 	user = all_bd.User{}
+// 	for rows.Next() {
+// 		err := rows.Scan(&I)
+// 		if err != nil {
+// 			log.Fatal(err)
+// 		}
+// 		fmt.Println(test)
+// 	}
+
+// }
 
 //Add default user to bdd
 func ADD_User_To_BDD(name, pswd, email, rank_id string) {

@@ -107,8 +107,8 @@ func register(w http.ResponseWriter, r *http.Request) {
 		if Check_User == true && Check_Email == true { // <-- If all is ok
 
 			ADD_User_To_BDD(User_Register, Hash_Pswd, Email_Register, "3") // <-- Add to bdd & hash pswd
-			fmt.Fprint(w, `<script> window.alert('Login bitch') </script>`)
-			fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/login"; </script>`)
+			fmt.Fprint(w, `<script> window.alert('Hi !') </script>`)
+			fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/"; </script>`)
 
 			//--> redirect to index
 			return
@@ -189,6 +189,13 @@ func Admin_Panel(w http.ResponseWriter, r *http.Request) {
 				fmt.Fprint(w, "<script> window.alert('This "+error_message+" already in use, try again'); </script>")
 				Return_To_Page(w, r, "../static/templates/admin/panel_admin.html")
 			}
+		} else if query == "See_Table" {
+			// db, err := sql.Open(Bdd.Langage, Bdd.Name)
+			// if err != nil {
+			// 	log.Fatal(err)
+			// }
+
+			// Print_Rows(Select_All_From_DB(db, "user"))
 		}
 
 	} else {
