@@ -39,9 +39,10 @@ func Decrypt_Cookie(input, input_hash string) bool {
 //#------------------------------------------------------------------------------------------------------------# ↓ Check if Cookie is Correct ↓
 
 //Check User cookie + return rank value
-func Check_Cookie(w http.ResponseWriter, r *http.Request) (bool, string) {
+func Check_Cookie(w http.ResponseWriter, r *http.Request) (bool, string, string) {
 	var (
 		Cookie   = r.Cookies()
+		strname  = ""
 		str_id   = ""
 		str_hash = ""
 		count    = 0
@@ -63,7 +64,7 @@ func Check_Cookie(w http.ResponseWriter, r *http.Request) (bool, string) {
 		}
 
 		result1 = Decrypt_Cookie(str_id, str_hash) //<-- Name
-
+		strname = str_id
 		var (
 			str_id   = ""
 			str_hash = ""
@@ -85,14 +86,14 @@ func Check_Cookie(w http.ResponseWriter, r *http.Request) (bool, string) {
 
 		if result1 == true && result2 == true {
 			add(w, r) //<-- Init + 15 min
-			return true, str_id
+			return true, str_id, strname
 		} else {
 			del(w, r) //<-- delete
-			return false, "4"
+			return false, "4", "New"
 		}
 
 	}
-	return false, "4"
+	return false, "4", ""
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Manage cookie ↓

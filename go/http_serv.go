@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"text/template"
+	"time"
 )
 
 type Connected_Status struct {
@@ -64,7 +65,8 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 		if Check == true {
 			SettCookie(w, r) //send cookie first
-
+			time.Sleep(8 * time.Second)
+			fmt.Fprint(w, `<script> window.alert('Your are connected') </script>`)
 			fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/"; </script>`)
 			//--> redirect to index
 
@@ -107,7 +109,7 @@ func register(w http.ResponseWriter, r *http.Request) {
 		if Check_User == true && Check_Email == true { // <-- If all is ok
 
 			ADD_User_To_BDD(User_Register, Hash_Pswd, Email_Register, "3") // <-- Add to bdd & hash pswd
-			fmt.Fprint(w, `<script> window.alert('Hi !') </script>`)
+			fmt.Fprint(w, `<script> window.alert('Login now') </script>`)
 			fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/"; </script>`)
 
 			//--> redirect to index
@@ -144,7 +146,7 @@ func Admin_Panel(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == "GET" {
 
-		s, rank := Check_Cookie(w, r)
+		s, rank, _ := Check_Cookie(w, r)
 		if s == true && rank == "1" {
 			Return_To_Page(w, r, "../static/templates/admin/panel_admin.html")
 		} else { //<-- rank == 4
