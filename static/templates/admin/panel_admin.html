@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin panel</title>
+</head>
+
+<body>
+    > Update user or delete
+
+    > see Log (activity:
+    - Of server
+    - Of user
+    )
+
+    > Add post / catégo / Alert
+    > Send mail smtp all db
+    > See All db
+    > See All user + rank
+
+    > Backup
+    <form action="/admin_panel?=Create_user" method="post">
+        <!--Récup l'url[0] pour return ici-->
+        <!--Satrt login-->
+        <h3>Create user</h3>
+
+        <label for="username">Username</label>
+        <input type="text" required placeholder=" Give Username" id="username" name="username_create_by_admin">
+
+        <label for="Email">Email</label>
+        <input type="text" required placeholder="Give Email" id="Email" name="Email_create_by_admin">
+
+        <label for="password">Password</label>
+        <input type="password" required placeholder="Give Password" id="password" name="password_create_by_admin">
+
+        <label for="Rank_id">Rank_id</label>
+        <input type="Rank_id" required placeholder=" Give Rank id (1,2,3)" id="Rank_id" name="Rank_id_create_by_admin">
+
+        <button type="submit" value="Admin_Create_User">Create</button>
+
+
+    </form>
+
+    <form action="/admin_panel?=See_Table" method="post">
+        <button type="submit" value="See_Table">See Table</button>
+    </form>
+</body>
+
+</html>

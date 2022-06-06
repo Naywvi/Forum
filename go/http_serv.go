@@ -6,7 +6,6 @@ import (
 	"os"
 	"path/filepath"
 	"text/template"
-	"time"
 )
 
 type Connected_Status struct {
@@ -65,7 +64,6 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 		if Check == true {
 			SettCookie(w, r) //send cookie first
-			time.Sleep(8 * time.Second)
 			fmt.Fprint(w, `<script> window.alert('Your are connected') </script>`)
 			fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/"; </script>`)
 			//--> redirect to index
