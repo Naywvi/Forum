@@ -38,8 +38,8 @@ func Decrypt_Cookie(input, input_hash string) bool {
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Check if Cookie is Correct ↓
 
-//Check User cookie
-func Check_Cookie(w http.ResponseWriter, r *http.Request) bool {
+//Check User cookie + return rank value
+func Check_Cookie(w http.ResponseWriter, r *http.Request) (bool, string) {
 	var (
 		Cookie   = r.Cookies()
 		str_id   = ""
@@ -84,32 +84,41 @@ func Check_Cookie(w http.ResponseWriter, r *http.Request) bool {
 		result2 = Decrypt_Cookie(str_id, str_hash) //<-- value(-> rank_id)
 
 		if result1 == true && result2 == true {
-			add(w, r, c) //<-- Init + 15 min
-			return true
+			add(w, r) //<-- Init + 15 min
+			return true, str_id
 		} else {
-			del(w, r, c) //<-- delete
-			return false
+			del(w, r) //<-- delete
+			return false, "4"
 		}
 
 	}
-	return false
+	return false, "4"
 }
 
-//#------------------------------------------------------------------------------------------------------------# ↓ Add +15 min or del cookie if is wrong ↓
+//#------------------------------------------------------------------------------------------------------------# ↓ Manage cookie ↓
 
-func add(w http.ResponseWriter, r *http.Request, cookie *http.Cookie) {
-	cookie.Expires = time.Now().Add(time.Second * 900) //+15 min
-	http.SetCookie(w, cookie)
+//add +15 min actual cookie
+func add(w http.ResponseWriter, r *http.Request) {
+	Cookie := r.Cookies()
+	for _, c := range Cookie {
+		c.Expires = time.Now().Add(time.Second * 900) //+15 min
+		http.SetCookie(w, c)
+	}
 }
 
-func del(w http.ResponseWriter, r *http.Request, cookie *http.Cookie) {
-	cookie.Expires = time.Now()
-	http.SetCookie(w, cookie)
+//delete actual
+func del(w http.ResponseWriter, r *http.Request) {
+	Cookie := r.Cookies()
+	for _, c := range Cookie {
+		c.Expires = time.Now()
+		http.SetCookie(w, c)
+	}
+
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Set cookie ↓
 
-//Set Cookie
+//Set the Cookie
 func SettCookie(w http.ResponseWriter, r *http.Request) {
 
 	expiration := time.Now().Add(time.Second * 900) //15 minutes

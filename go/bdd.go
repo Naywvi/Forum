@@ -35,10 +35,10 @@ func Extract_File(file_sql string, start, end int) string {
 //#------------------------------------------------------------------------------------------------------------# ↓ Add user to table ↓
 
 //Add default user to bdd
-func ADD_User_To_BDD(name, pswd, email string) {
+func ADD_User_To_BDD(name, pswd, email, rank_id string) {
 	var (
 		db, err          = sql.Open(Bdd.Langage, Bdd.Name)
-		Default_user_arr = []string{"'" + name + "',", "'" + pswd + "',", "'none_desc',", "'" + email + "',", "'none_picture',", "'3'"}
+		Default_user_arr = []string{"'" + name + "',", "'" + pswd + "',", "'none_desc',", "'" + email + "',", "'none_picture',", "'" + rank_id + "'"}
 		Default_user     = strings.Join(Default_user_arr, "")
 	)
 

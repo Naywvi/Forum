@@ -29,8 +29,18 @@ func Return_To_Page(w http.ResponseWriter, r *http.Request, Path string) {
 
 //Send Http error method
 func Send_Error(w http.ResponseWriter, r *http.Request) {
-	http.Error(w, "Method is not supported.", http.StatusBadRequest)
-	fmt.Fprint(w, http.StatusBadRequest)
+	Return_To_Page(w, r, "../static/templates/managed_pages/404.html")
+	// http.Error(w, "Method is not supported.", http.StatusBadRequest) //<-- Print [error] Method is not supported
+	// fmt.Fprint(w, http.StatusBadRequest)
+
+}
+
+//#------------------------------------------------------------------------------------------------------------# ↓ Logout ↓
+
+//Logout
+func logout(w http.ResponseWriter, r *http.Request) {
+	del(w, r)
+	fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/"; </script>`)
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Login ↓
@@ -40,7 +50,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == "GET" {
 
-		Return_To_Page(w, r, "../templates/login.html")
+		Return_To_Page(w, r, "../static/templates/login.html")
 
 	} else if r.Method == "POST" {
 
@@ -54,13 +64,15 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 		if Check == true {
 			SettCookie(w, r) //send cookie first
-			fmt.Fprint(w, "bien joué")
+
+			fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/"; </script>`)
+			//--> redirect to index
 
 			//--> redirect to index.html
 		} else { // <-- Send Error
 
 			fmt.Fprint(w, "<script> window.alert('Bad password or bad identification, try again.'); </script>")
-			Return_To_Page(w, r, "../templates/login.html")
+			Return_To_Page(w, r, "../static/templates/login.html")
 
 		}
 
@@ -77,7 +89,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 //Register Page
 func register(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-		Return_To_Page(w, r, "../templates/register.html")
+		Return_To_Page(w, r, "../static/templates/register.html")
 
 	} else if r.Method == "POST" {
 
@@ -91,10 +103,14 @@ func register(w http.ResponseWriter, r *http.Request) {
 			Check_Email    = Check_If_Exist(Email_Register, "", "Email", "user", "Register")
 			Hash_Pswd      = initHashPswd(Pswd_Register)
 		)
+
 		if Check_User == true && Check_Email == true { // <-- If all is ok
-			fmt.Fprint(w, "bien joué")
-			ADD_User_To_BDD(User_Register, Hash_Pswd, Email_Register) // <-- Add to bdd & hash pswd
-			//--> redirect to login page
+
+			ADD_User_To_BDD(User_Register, Hash_Pswd, Email_Register, "3") // <-- Add to bdd & hash pswd
+			fmt.Fprint(w, `<script> window.alert('Login bitch') </script>`)
+			fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/login"; </script>`)
+
+			//--> redirect to index
 			return
 
 		} else { // <-- Check the wrong selection
@@ -111,7 +127,7 @@ func register(w http.ResponseWriter, r *http.Request) {
 
 			fmt.Fprint(w, "<script> window.alert('This "+error_message+" already in use, try again'); </script>")
 
-			Return_To_Page(w, r, "../templates/register.html")
+			Return_To_Page(w, r, "../static/templates/register.html")
 		}
 
 	} else { // <-- If r.Method != Get/Post
@@ -121,23 +137,75 @@ func register(w http.ResponseWriter, r *http.Request) {
 
 	}
 }
-func test(w http.ResponseWriter, r *http.Request) {
-	check_c := Check_Cookie(w, r)
-	if check_c == true {
-		fmt.Print("ok")
+
+//#------------------------------------------------------------------------------------------------------------# ↓ Pages Selection & init http_serv ↓
+
+func Admin_Panel(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == "GET" {
+
+		s, rank := Check_Cookie(w, r)
+		if s == true && rank == "1" {
+			Return_To_Page(w, r, "../static/templates/admin/panel_admin.html")
+		} else { //<-- rank == 4
+			Send_Error(w, r)
+		}
+
+	} else if r.Method == "POST" {
+
+		query := r.FormValue("")
+
+		if query == "Create_user" {
+
+			r.ParseForm()
+
+			var (
+				username       = r.Form["username_create_by_admin"][0]
+				email          = r.Form["Email_create_by_admin"][0]
+				rank           = r.Form["Rank_id_create_by_admin"][0]
+				pswd           = r.Form["password_create_by_admin"][0]
+				Check_username = Check_If_Exist(username, "", "Name", "user", "Register")
+				Check_email    = Check_If_Exist(email, "", "Email", "user", "Register")
+				pswd_hash      = initHashPswd(pswd)
+			)
+
+			if Check_username == true && Check_email == true {
+
+				ADD_User_To_BDD(username, pswd_hash, email, rank)
+				Return_To_Page(w, r, "../static/templates/admin/panel_admin.html")
+
+			} else { // <-- Check the wrong selection
+
+				error_message := ""
+
+				if Check_email == false && Check_username == false {
+					error_message = "email and username are"
+				} else if Check_email == false {
+					error_message = "email is"
+				} else if Check_username == false {
+					error_message = "username is"
+				}
+
+				fmt.Fprint(w, "<script> window.alert('This "+error_message+" already in use, try again'); </script>")
+				Return_To_Page(w, r, "../static/templates/admin/panel_admin.html")
+			}
+		}
+
 	} else {
-		fmt.Print("NAH")
+		Send_Error(w, r)
+		return
 	}
-	Return_To_Page(w, r, "../templates/admin_panel.html")
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Pages Selection & init http_serv ↓
 
 //Server Http
 func httpServ() {
+
 	fs := http.FileServer(http.Dir("../static")) // <- ce qu'on envoie en static vers le serv
 	http.Handle("/", fs)
-	http.HandleFunc("/test", test)
+	http.HandleFunc("/logout", logout)
+	http.HandleFunc("/admin_panel", Admin_Panel)
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/register", register)
 	fmt.Println("Started https serv successfully on http://localhost:1010")
