@@ -138,6 +138,8 @@ func Check_If_Exist(input, input2, check_field, In_This_Table, Who_Want string) 
 		rows = Select_All_From_DB(db, "user")
 	} else if Who_Want == "validation" {
 		rows = Select_Field_From_DB(db, check_field, In_This_Table)
+	} else if Who_Want == "New_categorie" {
+		rows = Select_Field_From_DB(db, check_field, In_This_Table)
 	}
 
 	for rows.Next() {
@@ -171,11 +173,19 @@ func Check_If_Exist(input, input2, check_field, In_This_Table, Who_Want string) 
 			}
 			Rows = append(Rows, *index)
 
+		} else if Who_Want == "New_categorie" {
+
+			err := rows.Scan(&u.Categorie.Name)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			Rows = append(Rows, u.Categorie.Name)
 		}
 
 	}
 
-	if Who_Want == "Register" || Who_Want == "validation" { //<-- Select return
+	if Who_Want == "Register" || Who_Want == "validation" || Who_Want == "New_categorie" { //<-- Select return
 		return Check_Login_Or_Register(nil, "", "", Who_Want, input, Rows)
 	} else if Who_Want == "Login" {
 		return Check_Login_Or_Register(&I, input, input2, Who_Want, "", nil)
@@ -214,7 +224,7 @@ func Check_Login_Or_Register(I *Instance_Bdd, identifier, pswd, Who_whant, input
 		}
 
 		return true
-	} else if Who_whant == "validation" {
+	} else if Who_whant == "validation" || Who_whant == "New_categorie" {
 
 		for i := range Rows {
 			if Rows[i] == input {

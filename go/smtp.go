@@ -30,9 +30,9 @@ func Reset_Pswd_Smtp(email_reset string) {
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Send alert to all users smtp ↓
 
-// func alert_Smtp() {
-// 	smtp() //<-- Envoie tout les emails
-// }
+func alert_Smtp(to []string, path string) {
+	Init_Smtp(to, path, "", "alert")
+}
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Manage smtp ↓
 type loginAuth struct {
@@ -116,6 +116,26 @@ func Init_Smtp(to []string, Name_User, user_hash, Who_Want string) { //<-- Récu
 			fmt.Println(err)
 			return
 		}
+	} else if Who_Want == "alert" {
+		alert_path := Name_User // flemme
+		t, _ := template.ParseFiles(alert_path)
+		var body bytes.Buffer
+
+		mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
+		body.Write([]byte(fmt.Sprintf("Subject : Forum NLT - Nlt-Bot (alert) ! \n%s\n\n", mimeHeaders)))
+		//<<<<<
+		t.Execute(&body, struct {
+			Name string
+		}{
+			Name: "à toi", //<--- Name de la personne
+		})
+		//<<<<<
+		err = smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, body.Bytes())
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
 	}
 
 	// Sending email.

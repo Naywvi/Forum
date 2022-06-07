@@ -1,0 +1,6 @@
+- Reset password / Smtp all alert
+- Smtp récupération input terminal
+- Post
+- Reset temp_user all days 6 am
+- Visite site web "/"
+- VERIFICATION DES MAILS !!!

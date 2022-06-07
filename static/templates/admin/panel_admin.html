@@ -14,8 +14,7 @@
     - Of user
     )
 
-    > Add post / catégo / Alert
-    > Send mail smtp all db
+    > Send mail smtp all db Alert
 
     <form action="/admin_panel?=Create_user" method="post"><!--Récup l'url[0] pour return ici-->
         
@@ -49,6 +48,14 @@
         <button type="submit" value="Backup">Manage_Users</button>
     </form>
     {{.}}
+    <form action="/admin_panel?=Create_Category" method="post">
+        <input type="text" placeholder="Category name.." name="create_category"></input>
+        <button type="submit" value="Create_Category">Create category</button>
+    </form>
+    <form action="/admin_panel?=Alert" method="post">
+        <input type="text" placeholder="Alert content.." name="Alert"></input>
+        <button type="submit" value="Alert">Send alert to all users</button>
+    </form>
 
 </body>
 

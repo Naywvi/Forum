@@ -91,6 +91,36 @@ func Admin_Panel(w http.ResponseWriter, r *http.Request) {
 			)
 			I_I = Select_All_Rows_Table(db, table)
 			Return_With_Value_Admin(w, r, I_I)
+		} else if query == "Create_Category" {
+
+			var (
+				Create_categorie = r.Form["create_category"][0]
+				Check_categorie  = Check_If_Exist(Create_categorie, "", "Name", "categorie", "New_categorie")
+			)
+
+			if Check_categorie == true {
+				Inser_In_To_DB(db, "'"+Create_categorie+"'", "categorie", "Name")
+			} else {
+				fmt.Fprint(w, "<script> window.alert('This categorie exist.'); </script>")
+			}
+
+		} else if query == "Alert" {
+			var (
+				table = []string{"user"}
+				it    = Instance_Bdd{}
+				to    = []string{}
+			)
+			instance := Select_All_Rows_Table(db, table)
+			for _, i := range instance.I {
+
+				it.I = append(it.I, i.I...)
+			}
+			for _, k := range it.I {
+				to = append(to, k.User.Email)
+			}
+			path := "../static/templates/smtp/alert.html"
+			alert_Smtp(to, path) //<-- Send mail to all mails of users
+			fmt.Fprint(w, "<script> window.alert('Alert sent.'); </script>")
 		}
 
 	} else {
