@@ -76,14 +76,14 @@ func register(w http.ResponseWriter, r *http.Request) {
 			Pswd_Register_Confirm = r.Form["password_register_confirm"][0]
 			Check_User            = Check_If_Exist(User_Register, "", "Name", "user", "Register")
 			Check_Email           = Check_If_Exist(Email_Register, "", "Email", "user", "Register")
-			//Hash_Pswd             = initHashPswd(Pswd_Register)
-			user_hash = initHashPswd(User_Register)
+			Hash_Pswd             = initHashPswd(Pswd_Register)
+			user_hash             = initHashPswd(User_Register)
 		)
-		print("ta mere")
-		Register_Smtp(Email_Register, User_Register, user_hash)
+
 		if Check_User == true && Check_Email == true && Pswd_Register == Pswd_Register_Confirm { // <-- If all is ok
 
-			//ADD_User_To_BDD(User_Register, Hash_Pswd, Email_Register, "3") // <-- Add to bdd & hash pswd
+			Register_Smtp(Email_Register, User_Register, user_hash)
+			ADD_User_To_Temp(User_Register, Hash_Pswd, Email_Register, user_hash)
 			Return_To_Page(w, r, "../static/templates/managed_pages/after_register.html")
 
 			//--> redirect to index
@@ -224,5 +224,74 @@ func Check_Login_Or_Register(I *Instance_Bdd, identifier, pswd, Who_whant, input
 
 		return true
 	}
+	return false
+}
+
+//#------------------------------------------------------------------------------------------------------------# ↓ Pages Manage smtp / Temp users / validation Query ↓
+func Validation_URLbyMail(w http.ResponseWriter, r *http.Request) {
+	query := r.FormValue("")
+	if r.Method == "GET" {
+		Return_To_Page(w, r, "../static/templates/managed_pages/Validation_URLbyMail.html")
+
+	} else if r.Method == "POST" {
+		Check_Validation_QueryURL(w, r, query)
+	} else { // <-- If r.Method != Get/Post
+
+		Send_Error(w, r)
+		return
+
+	}
+}
+func Del_User_From_Table(db *sql.DB, rows *sql.Rows, table, name_deleted, who_want string) { //all time send i of deleter
+	var (
+		Rows  []string
+		u     = all_bd{}
+		marge = 0
+		id    = ""
+		index = 0
+	)
+
+	for rows.Next() {
+		marge = 4 // <-- De combien je recule pour avoir l'id dans la table afin de le delect (vérification par la "validation field")
+		if who_want == "validation" {
+			err := rows.Scan(&u.Temp_user.Id, &u.Temp_user.Name, &u.Temp_user.Email, &u.Temp_user.Pswd, &u.Temp_user.validation)
+			if err != nil {
+				log.Fatal(err)
+			}
+			Rows = append(Rows, strconv.Itoa(*&u.Temp_user.Id), *&u.Temp_user.Name, *&u.Temp_user.Email, *&u.Temp_user.Pswd, *&u.Temp_user.validation)
+		}
+
+	}
+
+	for i := range Rows {
+
+		if Rows[i] == name_deleted {
+			index = i
+			id = Rows[i-marge]
+			break
+		}
+
+	}
+	db.Exec("DELETE FROM " + table + " WHERE id = " + id)
+	fmt.Println("Validation done successfully", index)
+	if who_want == "validation" {
+		ADD_User_To_BDD(Rows[index-3], Rows[index-1], Rows[index-2], "3")
+	}
+}
+func Check_Validation_QueryURL(w http.ResponseWriter, r *http.Request, query string) bool {
+	test := Check_If_Exist(query, "", "validation", "temp_user", "validation")
+	var (
+		db, err = sql.Open(Bdd.Langage, Bdd.Name)
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if test == false {
+
+		Del_User_From_Table(db, Select_All_From_DB(db, "temp_user"), "temp_user", query, "validation")
+
+	}
+
+	Send_Error(w, r)
 	return false
 }
