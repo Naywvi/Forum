@@ -35,4 +35,12 @@ type all_bd struct {
 		Profile_Picture string
 		Rank_id         int
 	}
+
+	Temp_user struct {
+		Id         int
+		Name       string
+		Email      string
+		Pswd       string
+		validation string
+	}
 }

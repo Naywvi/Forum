@@ -14,13 +14,13 @@ import (
 //#------------------------------------------------------------------------------------------------------------# ↓ Register -> verification mail smtp ↓
 
 //email / password (non hash) / >inscription(récup email) />reset password(email > reset pass) />alert (>all bdd)
-func Register_Smtp(email_register, Name_User string) {
+func Register_Smtp(email_register, Name_User, user_hash string) {
 	var (
 		to       = []string{email_register}
 		Who_Want = "Register"
 	)
 
-	Init_Smtp(to, Name_User, Who_Want)
+	Init_Smtp(to, Name_User, user_hash, Who_Want)
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Reset pass -> send url smtp ↓
@@ -60,11 +60,11 @@ func (a *loginAuth) Next(fromServer []byte, more bool) ([]byte, error) {
 	}
 	return nil, nil
 }
-func Init_Smtp(to []string, Name_User, Who_Want string) { //<-- Récup log bdd (retirer hash)
-
+func Init_Smtp(to []string, Name_User, user_hash, Who_Want string) { //<-- Récup log bdd (retirer hash)
+	//forum.nlt@hotmail.com
 	// Sender data.
-	from := "forum.nlt@hotmail.com" //à recup
-	password := "12301230789Aa"
+	from := "naj_lak93@hotmail.fr" //à recup
+	password := "123012301230789Aa"
 
 	// Receiver email address.
 
@@ -97,7 +97,7 @@ func Init_Smtp(to []string, Name_User, Who_Want string) { //<-- Récup log bdd (
 	}
 
 	if Who_Want == "Register" {
-		t, _ := template.ParseFiles("../static/templates/smtp/register.html")
+		t, _ := template.ParseFiles("../static/templates/smtp/confirm_verification_mail.html")
 		var body bytes.Buffer
 
 		mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
@@ -105,8 +105,10 @@ func Init_Smtp(to []string, Name_User, Who_Want string) { //<-- Récup log bdd (
 		//<<<<<
 		t.Execute(&body, struct {
 			Name string
+			Link string
 		}{
 			Name: Name_User, //<--- Name de la personne
+			Link: user_hash,
 		})
 		//<<<<<
 		err = smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, body.Bytes())

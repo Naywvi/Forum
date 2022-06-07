@@ -63,6 +63,11 @@ func Print_Rows(rows *sql.Rows, table string) []all_bd {
 			if err != nil {
 				log.Fatal(err)
 			}
+		} else if table == "temp_user" {
+			err := rows.Scan(&u.Temp_user.Id, &u.Temp_user.Name, &u.Temp_user.Email, &u.Temp_user.Pswd, &u.Temp_user.validation)
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 
 		I.I = append(I.I, u)
@@ -71,12 +76,23 @@ func Print_Rows(rows *sql.Rows, table string) []all_bd {
 	return I.I
 
 }
+func ADD_User_To_Temp(name, pswd, email, user_hash string) {
+	var (
+		db, err          = sql.Open(Bdd.Langage, Bdd.Name)
+		Default_user_arr = []string{"'" + name + "','" + pswd + "','" + email + "','" + user_hash + "'"}
+		Default_user     = strings.Join(Default_user_arr, "")
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	Inser_In_To_DB(db, Default_user, "temp_user", Extract_File("../bdd/temp_user_table.sql", 8, 9))
+}
 
 //Add default user to bdd
 func ADD_User_To_BDD(name, pswd, email, rank_id string) {
 	var (
 		db, err          = sql.Open(Bdd.Langage, Bdd.Name)
-		Default_user_arr = []string{"'" + name + "',", "'" + pswd + "',", "'none_desc',", "'" + email + "',", "'none_picture',", "'" + rank_id + "'"}
+		Default_user_arr = []string{"'" + name + "','" + pswd + "','none_desc','" + email + "','none_picture','" + rank_id + "'"}
 		Default_user     = strings.Join(Default_user_arr, "")
 	)
 
@@ -156,10 +172,14 @@ func Terminal_Init_Table(who_want string) string {
 		pswd, _ := bufio.NewReader(os.Stdin).ReadString('\n')
 		pswd = strings.TrimSpace(pswd)
 		pswd, _ = HashPassword(pswd)
+		fmt.Println("User -> 3 | Moderator -> 2 | Admin -> 1")
+		fmt.Print("rank_id ->")
 
+		rank, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+		rank = strings.TrimSpace(rank)
 		fmt.Println("---------------------")
 
-		return "'" + username + "','" + pswd + "','none_desc','" + mail + "','none_picture','3'"
+		return "'" + username + "','" + pswd + "','none_desc','" + mail + "','none_picture','" + rank + "'"
 
 	} else if who_want == "email_verification_table" {
 
@@ -175,15 +195,51 @@ func Terminal_Init_Table(who_want string) string {
 		pswd = strings.TrimSpace(pswd)
 		pswd, _ = HashPassword(pswd)
 
-		fmt.Println("---------------------")
-
 		return "'" + mail + "','" + pswd + "'"
 	} else if who_want == "Bdd_Name" {
 		fmt.Println("Choose name of your Data_Base.")
 		Name_Bd, _ := bufio.NewReader(os.Stdin).ReadString('\n')
 		Bdd.Name = strings.TrimSpace(Name_Bd) + ".db"
 		Bdd.Langage = "sqlite3"
+
+		fmt.Println(Bdd.Name, "Is the database selected. Do you validate ? [y] [n] ")
+
+		Check, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+		Check = strings.TrimSpace(Check)
+
+		if Check == "n" || Check == "N" || Check == "no" || Check == "NO" {
+			return Terminal_Init_Table(who_want)
+		} else if Check == "y" || Check == "Y" || Check == "YES" || Check == "yes" {
+			fmt.Println("You are ready now")
+		} else {
+			fmt.Println("Wrong selection")
+			fmt.Println("---------------------")
+			return Terminal_Init_Table(who_want)
+		}
+
+	} else if who_want == "temp_user" {
+		fmt.Println("Create a temp user to check the validation table.")
+		fmt.Print("username ->")
+
+		username, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+		username = strings.TrimSpace(username)
+
+		fmt.Print("email ->")
+
+		mail, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+		mail = strings.TrimSpace(mail)
+		mail_hash := initHashPswd(mail)
+
+		fmt.Print("password ->")
+
+		pswd, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+		pswd = strings.TrimSpace(pswd)
+		pswd, _ = HashPassword(pswd)
+
+		fmt.Println("---------------------")
+		return "'" + username + "','" + pswd + "','" + mail + "','" + mail_hash + "'"
 	}
+	fmt.Println("---------------------")
 	return ""
 }
 
@@ -214,11 +270,9 @@ func user() {
 	Inser_In_To_DB(Init_Database("user", Extract_File("../bdd/user_table.sql", 0, 8)), Terminal_Init_Table("add_user_table"), "user", Extract_File("../bdd/user_table.sql", 11, 12))
 	Is_Ok("User", "")
 }
-func rank() {
-	for i := 1; i < 5; i++ {
-		Inser_In_To_DB(Init_Database("rank", Extract_File("../bdd/rank_table.sql", 0, 10)), Extract_File("../bdd/rank_table.sql", 15+2*i, 16+2*i), "rank", Extract_File("../bdd/rank_table.sql", 13, 14))
-	}
-	Is_Ok("Rank", "")
+func temp_user() {
+	Inser_In_To_DB(Init_Database("temp_user", Extract_File("../bdd/temp_user_table.sql", 0, 5)), Terminal_Init_Table("temp_user"), "temp_user", Extract_File("../bdd/temp_user_table.sql", 8, 9))
+	Is_Ok("temp_user", "")
 }
 
 func email_verification() {
@@ -235,7 +289,7 @@ func InitBDD() {
 	} else if errors.Is(err, os.ErrNotExist) { //<-- If bdd not exist > Re create
 		fmt.Println("--->Create a new db<--- ?")
 		email_verification()
-		rank()
+		temp_user()
 		user()
 		categorie()
 		post()
