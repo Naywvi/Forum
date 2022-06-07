@@ -11,7 +11,7 @@ Id_cat,Title_post,Content,Likes,Posted_user
 
 --test_post on 15-16
 
-1,'recette','recette_content',0,'Naywvi'
+'1','recette','recette_content','0','Naywvi'
 
 
 

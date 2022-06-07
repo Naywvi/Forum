@@ -16,14 +16,10 @@
 
     > Add post / catégo / Alert
     > Send mail smtp all db
-    > See All db
-    > See All user + rank
 
-    > Backup
-    <form action="/admin_panel?=Create_user" method="post">
-        <!--Récup l'url[0] pour return ici-->
-        <!--Satrt login-->
-        <h3>Create user</h3>
+    <form action="/admin_panel?=Create_user" method="post"><!--Récup l'url[0] pour return ici-->
+        
+        <h3>Create user</h3><!--Satrt login-->
 
         <label for="username">Username</label>
         <input type="text" required placeholder=" Give Username" id="username" name="username_create_by_admin">
@@ -39,12 +35,21 @@
 
         <button type="submit" value="Admin_Create_User">Create</button>
 
-
     </form>
 
     <form action="/admin_panel?=See_Table" method="post">
         <button type="submit" value="See_Table">See Table</button>
     </form>
+
+    <form action="/admin_panel?=Backup" method="post">
+        <button type="submit" value="Backup">Backup the forum</button>
+    </form>
+
+    <form action="/admin_panel?=Manage_Users" method="post">
+        <button type="submit" value="Backup">Manage_Users</button>
+    </form>
+    {{.}}
+
 </body>
 
 </html>
