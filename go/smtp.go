@@ -11,6 +11,30 @@ import (
 	"text/template"
 )
 
+//#------------------------------------------------------------------------------------------------------------# ↓ Register -> verification mail smtp ↓
+
+//email / password (non hash) / >inscription(récup email) />reset password(email > reset pass) />alert (>all bdd)
+func Register_Smtp(email_register, Name_User string) {
+	var (
+		to       = []string{email_register}
+		Who_Want = "Register"
+	)
+
+	Init_Smtp(to, Name_User, Who_Want)
+}
+
+//#------------------------------------------------------------------------------------------------------------# ↓ Reset pass -> send url smtp ↓
+func Reset_Pswd_Smtp(email_reset string) {
+
+}
+
+//#------------------------------------------------------------------------------------------------------------# ↓ Send alert to all users smtp ↓
+
+// func alert_Smtp() {
+// 	smtp() //<-- Envoie tout les emails
+// }
+
+//#------------------------------------------------------------------------------------------------------------# ↓ Manage smtp ↓
 type loginAuth struct {
 	username, password string
 }
@@ -36,26 +60,7 @@ func (a *loginAuth) Next(fromServer []byte, more bool) ([]byte, error) {
 	}
 	return nil, nil
 }
-
-//email / password (non hash) / >inscription(récup email) />reset password(email > reset pass) />alert (>all bdd)
-func Register_Smtp(email_register, Name_User string) {
-	var (
-		subject_mail = "Forum NLT - Nouveau membre !"
-		to           = []string{email_register}
-		Who_Want     = "Register"
-	)
-
-	Init_Smtp(to, subject_mail, Name_User, Who_Want)
-}
-
-func Reset_Pswd_Smtp(email_reset string) {
-
-}
-
-// func alert_Smtp() {
-// 	smtp() //<-- Envoie tout les emails
-// }
-func Init_Smtp(to []string, subject_mail, Name_User, Who_Want string) { //<-- Récup log bdd (retirer hash)
+func Init_Smtp(to []string, Name_User, Who_Want string) { //<-- Récup log bdd (retirer hash)
 
 	// Sender data.
 	from := "forum.nlt@hotmail.com" //à recup
@@ -96,7 +101,7 @@ func Init_Smtp(to []string, subject_mail, Name_User, Who_Want string) { //<-- R�
 		var body bytes.Buffer
 
 		mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
-		body.Write([]byte(fmt.Sprintf(""+subject_mail+" \n%s\n\n", mimeHeaders)))
+		body.Write([]byte(fmt.Sprintf("Subject : Forum NLT - Nouveau membre ! \n%s\n\n", mimeHeaders)))
 		//<<<<<
 		t.Execute(&body, struct {
 			Name string
