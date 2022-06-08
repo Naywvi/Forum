@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -76,6 +77,46 @@ func Print_Rows(rows *sql.Rows, table string) []all_bd {
 	return I.I
 
 }
+
+//Del user from table
+func Del_User_From_Table(db *sql.DB, rows *sql.Rows, table, name_deleted, who_want string) { //all time send i of deleter
+	var (
+		Rows  []string
+		u     = all_bd{}
+		marge = 0
+		id    = ""
+		index = 0
+	)
+
+	for rows.Next() {
+		marge = 4 // <-- De combien je recule pour avoir l'id dans la table afin de le delect (vérification par la "validation field")
+		if who_want == "validation" {
+			err := rows.Scan(&u.Temp_user.Id, &u.Temp_user.Name, &u.Temp_user.Email, &u.Temp_user.Pswd, &u.Temp_user.validation)
+			if err != nil {
+				log.Fatal(err)
+			}
+			Rows = append(Rows, strconv.Itoa(*&u.Temp_user.Id), *&u.Temp_user.Name, *&u.Temp_user.Email, *&u.Temp_user.Pswd, *&u.Temp_user.validation)
+		}
+
+	}
+
+	for i := range Rows {
+
+		if Rows[i] == name_deleted {
+			index = i
+			id = Rows[i-marge]
+			break
+		}
+
+	}
+	db.Exec("DELETE FROM " + table + " WHERE id = " + id)
+	fmt.Println("Validation done successfully", index)
+	if who_want == "validation" {
+		ADD_User_To_BDD(Rows[index-3], Rows[index-1], Rows[index-2], "3")
+	}
+}
+
+//Add user to temp_user
 func ADD_User_To_Temp(name, pswd, email, user_hash string) {
 	var (
 		db, err          = sql.Open(Bdd.Langage, Bdd.Name)

@@ -11,7 +11,7 @@
         <div class="shape"></div>
         <div class="shape"></div>
     </div>
-    <form action="/register" method="post">
+    <form action="/register?=register" method="post">
       <!--Start register-->
         <h3>Register here</h3>
 
@@ -28,7 +28,9 @@
         <input type="password" *required placeholder="Confirm Password.." id="confirm_password_register" name="password_register_confirm">
 
         <button type="submit">Register here</button>
-        
+
+        <p class="login"><a href="/resend_mail">Click here to resend mail</a></p>
+
         <p class="regp">Register with</p>
         <div class="social" value="register">
           <div class="go"><i class="fab fa-google"></i>  Google</div>

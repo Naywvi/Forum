@@ -43,7 +43,7 @@ func httpServ() {
 	fs := http.FileServer(http.Dir("../static")) // <- ce qu'on envoie en static vers le serv
 	http.Handle("/", fs)
 	http.HandleFunc("/validation_mail", Validation_URLbyMail)
-
+	http.HandleFunc("/resend_mail", Resend_Mail)
 	http.HandleFunc("/admin_panel", Admin_Panel)
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/register", register)

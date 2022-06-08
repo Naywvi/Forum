@@ -3,4 +3,3 @@
 - Post
 - Reset temp_user all days 6 am
 - Visite site web "/"
-- VERIFICATION DES MAILS !!!
