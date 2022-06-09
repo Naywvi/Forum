@@ -48,7 +48,7 @@ func httpServ() {
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/register", register)
 	http.HandleFunc("/logout", logout)
-	http.HandleFunc("/reset_password_request", reset_password_request)
+	// http.HandleFunc("/reset_password_page", reset_password_page)
 	fmt.Println("Started https serv successfully on http://localhost:1010")
 	http.ListenAndServe(":1010", nil)
 

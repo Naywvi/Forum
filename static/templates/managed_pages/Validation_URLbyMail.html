@@ -1,228 +1,198 @@
-<!DOCTYPE html>
-<html>
-
 <head>
-    <title></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <style type="text/css">
-        @media screen {
-            @font-face {
-                font-family: 'Lato';
-                font-style: normal;
-                font-weight: 400;
-                src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v11/qIIYRU-oROkIk8vfvxw6QvesZW2xOQ-xsNqO47m55DA.woff) format('woff');
-            }
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Forum template">
+    <meta property="og:url" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Forum template">
+    <meta property="og:description" content="Forum template">
+    <meta property="og:image" content="">
+    <!-- <link rel="stylesheet" href="././assets_global_global/css/login.css"> -->
+    <link rel="shortcut icon" href="./assets_global/img/favicon.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet">
+    <link href="./assets_global/css/style.css" rel="stylesheet">
 
-            @font-face {
-                font-family: 'Lato';
-                font-style: normal;
-                font-weight: 700;
-                src: local('Lato Bold'), local('Lato-Bold'), url(https://fonts.gstatic.com/s/lato/v11/qdgUG4U09HnJwhYI-uK18wLUuEpTyoUstqEm5AMlJo4.woff) format('woff');
-            }
+    <title>Forum template</title>
 
-            @font-face {
-                font-family: 'Lato';
-                font-style: italic;
-                font-weight: 400;
-                src: local('Lato Italic'), local('Lato-Italic'), url(https://fonts.gstatic.com/s/lato/v11/RYyZNoeFgb0l7W3Vu1aSWOvvDin1pK8aKteLpeZ5c0A.woff) format('woff');
-            }
+    <script>/*
+*   You can replace the following code with whatever you would like
+*   to inject into other web pages.
+*/
 
-            @font-face {
-                font-family: 'Lato';
-                font-style: italic;
-                font-weight: 700;
-                src: local('Lato Bold Italic'), local('Lato-BoldItalic'), url(https://fonts.gstatic.com/s/lato/v11/HkF_qI1x_noxlxhrhMQYELO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
-            }
-        }
 
-        /* CLIENT-SPECIFIC STYLES */
-        body,
-        table,
-        td,
-        a {
-            -webkit-text-size-adjust: 100%;
-            -ms-text-size-adjust: 100%;
-        }
+        /*  An example script
+         *
+         *  @param {els} count dom elements
+         */
 
-        table,
-        td {
-            mso-table-lspace: 0pt;
-            mso-table-rspace: 0pt;
-        }
+        window.calc = function (els) {
+            return document.querySelectorAll(els).length;
+        };
+    </script>
+    <script>/*
+*   You can replace the following code with whatever you would like
+*   to inject into other web pages.
+*/
 
-        img {
-            -ms-interpolation-mode: bicubic;
-        }
 
-        /* RESET STYLES */
-        img {
-            border: 0;
-            height: auto;
-            line-height: 100%;
-            outline: none;
-            text-decoration: none;
-        }
+        /*  An example script
+         *
+         *  @param {els} count dom elements
+         */
 
-        table {
-            border-collapse: collapse !important;
-        }
+        window.calc = function (els) {
+            return document.querySelectorAll(els).length;
+        };
+    </script>
+    <script>/*
+*   You can replace the following code with whatever you would like
+*   to inject into other web pages.
+*/
 
-        body {
-            height: 100% !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            width: 100% !important;
-        }
 
-        /* iOS BLUE LINKS */
-        a[x-apple-data-detectors] {
-            color: inherit !important;
-            text-decoration: none !important;
-            font-size: inherit !important;
-            font-family: inherit !important;
-            font-weight: inherit !important;
-            line-height: inherit !important;
-        }
+        /*  An example script
+         *
+         *  @param {els} count dom elements
+         */
 
-        /* MOBILE STYLES */
-        @media screen and (max-width:600px) {
-            h1 {
-                font-size: 32px !important;
-                line-height: 32px !important;
-            }
-        }
-
-        /* ANDROID CENTER FIX */
-        div[style*="margin: 16px 0;"] {
-            margin: 0 !important;
-        }
-    </style>
+        window.calc = function (els) {
+            return document.querySelectorAll(els).length;
+        };
+    </script>
 </head>
 
-<body style="background-color: #f4f4f4; margin: 0 !important; padding: 0 !important;">
-    <!-- HIDDEN PREHEADER TEXT -->
-    <div
-        style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: 'Lato', Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
-        We're thrilled to have you here! Get ready to dive into your new account.
+<body cz-shortcut-listen="true">
+
+    <div class="topbar px-2 py-1 d-flex justify-content-between align-items-center position-relative">
+        <ul class="nav me-4 d-flex justify-content-center align-items-center">
+            <li class="nav-item">
+                <a class="nav-link" href="#">NagWebSite</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">FAQ</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Me contacter</a>
+            </li>
+        </ul>
+        <ul class="nav me-4 d-flex justify-content-center align-items-center">
+            <li class="nav-item position-relative">
+                <a class="nav-link d-flex justify-content-center align-items-center" href="#"><i
+                        class="bx bx-bell"></i></a>
+                <span class="position-absolute top-0 end-0 badge rounded-pill bg-warning text-dark">2</span>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">UserName</a>
+            </li>
+        </ul>
     </div>
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-        <!-- LOGO -->
-        <tr>
-            <td bgcolor="#FFA73B" align="center">
-                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
-                    <tr>
-                        <td align="center" valign="top" style="padding: 40px 10px 40px 10px;"> </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td bgcolor="#FFA73B" align="center" style="padding: 0px 10px 0px 10px;">
-                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
-                    <tr>
-                        <td bgcolor="#ffffff" align="center" valign="top"
-                            style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
-                            <h1 style="font-size: 48px; font-weight: 400; margin: 2;">Welcome!</h1> <img
-                                src=" https://img.icons8.com/clouds/100/000000/handshake.png" width="125" height="120"
-                                style="display: block; border: 0px;" />
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td bgcolor="#f4f4f4" align="center" style="padding: 0px 10px 0px 10px;">
-                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
-                    <tr>
-                        <td bgcolor="#ffffff" align="left"
-                            style="padding: 20px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;">We're excited to have you get started. First, you need to confirm your
-                                account. Just press the button below.</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td bgcolor="#ffffff" align="left">
-                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                <tr>
-                                    <td bgcolor="#ffffff" align="center" style="padding: 20px 30px 60px 30px;">
-                                        <table border="0" cellspacing="0" cellpadding="0">
 
-                                            <form  method="post">
-                                                <!--Récup l'url[0] pour return ici-->
-                                                <tr>
-                                                    <button type="submit" value="Admin_Create_User" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;border-radius: 3px; background-color:#FFA73B">Valide your account</button>
-                                                  
-                                                </tr>
-                                            </form>
+    <header class="container p-0 mt-5 mx-0 mx-auto">
+        <div class="picture d-flex justify-content-center align-items-center">
+            <div class="text-center">
+                <img class="logo" src="./assets_global/img/logo.png" alt="NagForum Logo">
+                <h1 class="text-white">
+                    Ready to join us ?</h1>
+                <p class="text-white">Join the great minds</p>
+            </div>
+        </div>
+        <div class="divider"></div>
+    </header>
+    <!---->
 
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr> <!-- COPY -->
-                    <tr>
-                        <td bgcolor="#ffffff" align="left"
-                            style="padding: 0px 30px 0px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;">If that doesn't work, copy and paste the following link in your
-                                browser:</p>
-                        </td>
-                    </tr> <!-- COPY -->
-                    <tr>
-                        <td bgcolor="#ffffff" align="left"
-                            style="padding: 20px 30px 20px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;"><a href="#" target="_blank"
-                                    style="color: #FFA73B;">https://bit.li.utlddssdstueincx</a></p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td bgcolor="#ffffff" align="left"
-                            style="padding: 0px 30px 20px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;">If you have any questions, just reply to this email&mdash;we're always
-                                happy to help out.</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td bgcolor="#ffffff" align="left"
-                            style="padding: 0px 30px 40px 30px; border-radius: 0px 0px 4px 4px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;">Cheers,<br>NLT Bot</p>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td bgcolor="#f4f4f4" align="center" style="padding: 30px 10px 0px 10px;">
-                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
-                    <tr>
-                        <td bgcolor="#FFECD1" align="center"
-                            style="padding: 30px 30px 30px 30px; border-radius: 4px 4px 4px 4px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <h2 style="font-size: 20px; font-weight: 400; color: #111111; margin: 0;">Need more help?
-                            </h2>
-                            <p style="margin: 0;"><a href="#" target="_blank" style="color: #FFA73B;">We&rsquo;re here
-                                    to help you out</a></p>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td bgcolor="#f4f4f4" align="center" style="padding: 0px 10px 0px 10px;">
-                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
-                    <tr>
-                        <td bgcolor="#f4f4f4" align="left"
-                            style="padding: 0px 30px 30px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 400; line-height: 18px;">
-                            <br>
-                            <p style="margin: 0;">If these emails get annoying, please feel free to <a href="#"
-                                    target="_blank" style="color: #111111; font-weight: 700;">unsubscribe</a>.</p>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
+    <!---->
+    <section class="container mx-auto p-4 forum">
+        <div class="row">
+            <div class="col-md-12">
+
+                <section class="container mx-auto p-4 forum">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!---->
+
+
+                            <div id="details" class="container mt-4 py-3 px-4">
+                                <div class="row g-3">
+
+                                    <div class="d-flex flex-row justify-content-center align-items-top">
+
+                                        <div class="col-md-11 ps-5 pb-3" style="text-align: center">
+                                            <h1 class="text-white details">
+                                                <i class="bx bx-spreadsheet"></i> <strong class="text-yellow">Resend
+                                                    verification mail </strong><br>
+                                            </h1>
+
+                                            <strong>
+                                                <h1 class="text-yellow">Welcome!</h1>
+
+
+                                                <br>
+                                                <p class="login">We're excited to have you get started. First, you need
+                                                    to confirm your account. Just press the button below.</p>
+
+
+                                                <p class="login">If that doesn't work, copy and paste the following link
+                                                    in your browser:</p>
+                                                <p class="login">If you have any questions, just reply to this
+                                                    email—we're always happy to help out.</p>
+                                                <p class="login">Cheers, NLT-BOT</p>
+                                                <br> <br>
+                                                <form method="post">
+                                                    <!--Récup l'url[0] pour return ici-->
+
+                                                    <button type="submit" href="/"value="Admin_Create_User"
+                                                        style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;border-radius: 3px; background-color:#FFA73B">Valide
+                                                        your account</button>
+
+
+                                                </form>
+                                            </strong>
+
+                                            <!--button register-->
+                                            <!--form rresend pass-->
+
+
+                                            <!--form rresend pass-->
+                                        </div>
+                                    </div>
+                                    <!---->
+                                </div>
+                            </div>
+                </section>
+
+
+                <!---->
+                <footer class="container mb-5">
+                    <div class="row divider"></div>
+                    <div class="row px-2 py-4">
+                        <div class="col-md-5">
+                            <p>Propulsé par <a href="#">GoForum</a> ver-1.0a • Design par <a href="#">NagDesign</a></p>
+                        </div>
+                        <div class="col-md-7 text-end">
+                            <p><a href="#">Nous contacter</a> | <a href="#">Membres</a> | <a href="#">Politique de
+                                    confidentialité</a> | <a href="#">Notre équipe</a> | <a href="#">Supprimer les
+                                    cookies</a></p>
+                        </div>
+                    </div>
+                </footer>
+
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+                    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+                <script src="https://unpkg.com/boxicons@2.1.2/dist/boxicons.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                    crossorigin="anonymous"></script>
+                <script
+                    src="https://cdn.tiny.cloud/1/a1oa0uw4ffrixbzpelg35rdxmzpx9imirkgfbkz5d62qcnuj/tinymce/6/tinymce.min.js"
+                    referrerpolicy="origin"></script>
+                <script src="./assets_global/js/main.js"></script>
+
+
+            </div>
+        </div>
+    </section>
+    <div id="httpSpyContainer_sq27T8VFex4CtQ623afyMoiYA89kG6UZ" class="bottomRight noMargin noToolbar"></div>
 </body>
-
-</html>

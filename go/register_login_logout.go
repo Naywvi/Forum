@@ -140,6 +140,20 @@ func register(w http.ResponseWriter, r *http.Request) {
 				Return_To_Page(w, r, "../static/templates/register.html")
 			}
 
+		} else if query == "reset" {
+			r.ParseForm()
+			email_input := r.Form["reset_email"][0]
+			verification := Check_If_Exist(string(email_input), "", "Email", "user", "Register")
+			if !verification {
+				var email_tab []string
+				email_tab = append(email_tab, r.Form["reset_email"][0])
+				Init_Smtp(email_tab, "", "", "Reset")
+				fmt.Fprint(w, "<script> window.alert('Sent ! Now check your emails.'); </script>")
+				Return_To_Page(w, r, "../static/templates/login.html")
+			} else {
+				fmt.Fprint(w, "<script> window.alert('This email do not exist. Try again'); </script>")
+				Return_To_Page(w, r, "../static/templates/register.html")
+			}
 		}
 
 	} else { // <-- If r.Method != Get/Post
@@ -299,6 +313,8 @@ func Validation_URLbyMail(w http.ResponseWriter, r *http.Request) {
 
 	} else if r.Method == "POST" {
 		Check_Validation_QueryURL(w, r, query)
+		fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/"; </script>`)
+
 	} else { // <-- If r.Method != Get/Post
 
 		Send_Error(w, r)
@@ -406,28 +422,21 @@ func Email_Validation(email string) bool {
 	return true
 }
 
-func reset_password_request(w http.ResponseWriter, r *http.Request) {
+func reset_password_page(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-		Return_To_Page(w, r, "../static/templates/reset_password_request.html")
+		Return_To_Page(w, r, "../static/templates/reset_password_page.html")
 	} else if r.Method == "POST" {
-		query := r.FormValue("")
-		if query == "reset" {
-			r.ParseForm()
-			email_input := r.Form["reset_mail"][0]
-			verification := Check_If_Exist(string(email_input), "", "Email", "user", "Register")
-			if !verification {
-				var email_tab []string
-				email_tab = append(email_tab, r.Form["reset_email"][0])
-				Init_Smtp(email_tab, "", "", "Reset")
-				fmt.Fprint(w, "<script> window.alert('Sent ! Now check your emails.'); </script>")
-				Return_To_Page(w, r, "../static/templates/login.html")
-			} else {
-				fmt.Fprint(w, "<script> window.alert('This email do not exist. Try again'); </script>")
-				Return_To_Page(w, r, "../static/templates/reset_password_request.html")
-			}
-		}
-	} else { // <-- If r.Method != Get/Post
+		r.ParseForm()
+		new_password := r.Form["new_password"][0]
+		confirm_new_password := r.Form["confirm_new_password"][0]
+		if new_password == confirm_new_password {
 
+		} else {
+			fmt.Fprint(w, "<script> window.alert('The 2 passwords must be same ! '); </script>")
+			Return_To_Page(w, r, "../static/templates/reset_password_page.html")
+		}
+
+	} else {
 		Send_Error(w, r)
 		return
 

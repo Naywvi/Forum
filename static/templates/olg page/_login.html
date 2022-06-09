@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+    <link  href="./assets_global/css/login.css"rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+
+<body>
+    <div class="background">
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    <form action="/login" method="post">
+        <!--Satrt login-->
+        <h3>Login Here</h3>
+
+        <label for="mail">Username or Email</label>
+        <input type = "text" required placeholder="Username or Email" id="username" name="mail_login">
+        <label for="password">Password</label>
+        <input type="password" required placeholder="Password.." id="password" name="password_login">
+        <button type="submit" value="Login">Log In</button>
+   
+        <p class="logp">Login with</p>
+        <div class="social">
+          <div class="go"><i class="fab fa-google"></i>  Google</div>
+          <div class="fb"><i class="fab fa-facebook"></i>  Facebook</div>
+        </div>
+        <!--End login-->
+        <br>
+        <p class="register"><a href="/register">Click here to register</a></p>
+    </form>
+</body>
+</html>
+
+  
