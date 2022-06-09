@@ -170,7 +170,7 @@ func Check_If_Exist(input, input2, check_field, In_This_Table, Who_Want string) 
 		input = strings.ToLower(input)
 	} else if Who_Want == "Login" {
 		rows = Select_All_From_DB(db, "user")
-	} else if Who_Want == "validation" || Who_Want == "New_categorie" || Who_Want == "temp_user" {
+	} else if Who_Want == "validation" || Who_Want == "New_categorie" || Who_Want == "temp_user" || Who_Want == "Reset" {
 		rows = Select_Field_From_DB(db, check_field, In_This_Table)
 	}
 	for rows.Next() {
@@ -226,11 +226,20 @@ func Check_If_Exist(input, input2, check_field, In_This_Table, Who_Want string) 
 			}
 
 			Rows = append(Rows, *index)
+		} else if Who_Want == "Reset" {
+			index = &u.User.Email
+			err := rows.Scan(index)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			Rows = append(Rows, *index)
+
 		}
 
 	}
 
-	if Who_Want == "Register" || Who_Want == "validation" || Who_Want == "New_categorie" || Who_Want == "temp_user" { //<-- Select return
+	if Who_Want == "Register" || Who_Want == "validation" || Who_Want == "New_categorie" || Who_Want == "temp_user" || Who_Want == "Reset" { //<-- Select return
 		return Check_Login_Or_Register(nil, "", "", Who_Want, input, Rows)
 	} else if Who_Want == "Login" {
 		return Check_Login_Or_Register(&I, input, input2, Who_Want, "", nil)
@@ -269,7 +278,7 @@ func Check_Login_Or_Register(I *Instance_Bdd, identifier, pswd, Who_whant, input
 		}
 
 		return true
-	} else if Who_whant == "validation" || Who_whant == "New_categorie" || Who_whant == "temp_user" {
+	} else if Who_whant == "validation" || Who_whant == "New_categorie" || Who_whant == "temp_user" || Who_whant == "Reset" {
 
 		for i := range Rows {
 			if Rows[i] == input {
@@ -395,4 +404,32 @@ func Email_Validation(email string) bool {
 		return false
 	}
 	return true
+}
+
+func reset_password_request(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		Return_To_Page(w, r, "../static/templates/reset_password_request.html")
+	} else if r.Method == "POST" {
+		query := r.FormValue("")
+		if query == "reset" {
+			r.ParseForm()
+			email_input := r.Form["reset_mail"][0]
+			verification := Check_If_Exist(string(email_input), "", "Email", "user", "Register")
+			if !verification {
+				var email_tab []string
+				email_tab = append(email_tab, r.Form["reset_email"][0])
+				Init_Smtp(email_tab, "", "", "Reset")
+				fmt.Fprint(w, "<script> window.alert('Sent ! Now check your emails.'); </script>")
+				Return_To_Page(w, r, "../static/templates/login.html")
+			} else {
+				fmt.Fprint(w, "<script> window.alert('This email do not exist. Try again'); </script>")
+				Return_To_Page(w, r, "../static/templates/reset_password_request.html")
+			}
+		}
+	} else { // <-- If r.Method != Get/Post
+
+		Send_Error(w, r)
+		return
+
+	}
 }

@@ -136,6 +136,26 @@ func Init_Smtp(to []string, Name_User, user_hash, Who_Want string) { //<-- Récu
 			return
 		}
 
+	} else if Who_Want == "Reset" {
+		t, _ := template.ParseFiles("../static/templates/smtp/reset_password.html")
+		var body bytes.Buffer
+
+		mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
+		body.Write([]byte(fmt.Sprintf("Subject : Forum NLT - Réinitialise ton mot de passe ! \n%s\n\n", mimeHeaders)))
+		//<<<<<
+		t.Execute(&body, struct {
+			Name string
+			Link string
+		}{
+			Name: Name_User, //<--- Name de la personne
+			Link: user_hash,
+		})
+		//<<<<<
+		err = smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, body.Bytes())
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 	}
 
 	// Sending email.
