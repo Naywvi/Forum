@@ -141,13 +141,11 @@ func Init_Smtp(to []string, Name_User, user_hash, Who_Want string) { //<-- Récu
 		var body bytes.Buffer
 
 		mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
-		body.Write([]byte(fmt.Sprintf("Subject : Forum NLT - Réinitialise ton mot de passe ! \n%s\n\n", mimeHeaders)))
+		body.Write([]byte(fmt.Sprintf("Subject : Forum NLT - Reset password ! \n%s\n\n", mimeHeaders)))
 		//<<<<<
 		t.Execute(&body, struct {
-			Name string
 			Link string
 		}{
-			Name: Name_User, //<--- Name de la personne
 			Link: user_hash,
 		})
 		//<<<<<
