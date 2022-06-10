@@ -78,6 +78,23 @@ func Print_Rows(rows *sql.Rows, table string) []all_bd {
 
 }
 
+/*
+Exemple:
+UPDATE user
+SET Name = 'test'
+WHERE Name = 'New_test';
+*/
+//Change value on table
+func Update_Field(Table, field_table, field_table_two, Last_input, New_input string) {
+	var (
+		db, err = sql.Open(Bdd.Langage, Bdd.Name)
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	db.Exec("UPDATE " + Table + " SET " + field_table + " = '" + New_input + "' WHERE " + field_table_two + " = '" + Last_input + "';")
+}
+
 //Del user from table
 func Del_User_From_Table(db *sql.DB, rows *sql.Rows, table, name_deleted, who_want string) { //all time send i of deleter
 	var (

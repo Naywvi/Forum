@@ -334,6 +334,11 @@ func Check_If_Exist(input, input2, check_field, In_This_Table, Who_Want string) 
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Check func for reset password ↓
+func Reset_Password(New_password, Last_password string) {
+	New_password = initHashPswd(New_password)
+	Update_Field("user", "Pswd", "Pswd", Last_password, New_password)
+}
+
 func Return_to_reset_pswd(email string) string {
 
 	var (
