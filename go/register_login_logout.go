@@ -141,21 +141,6 @@ func register(w http.ResponseWriter, r *http.Request) {
 			}
 
 		}
-		//  else if query == "reset" {
-		// 	r.ParseForm()
-		// 	email_input := r.Form["reset_email"][0]
-		// 	verification := Check_If_Exist(string(email_input), "", "Email", "user", "Register")
-		// 	if !verification {
-		// 		var email_tab []string
-		// 		email_tab = append(email_tab, r.Form["reset_email"][0])
-		// 		Init_Smtp(email_tab, "", "", "Reset")
-		// 		fmt.Fprint(w, "<script> window.alert('Sent ! Now check your emails.'); </script>")
-		// 		Return_To_Page(w, r, "../static/templates/login.html")
-		// 	} else {
-		// 		fmt.Fprint(w, "<script> window.alert('This email do not exist. Try again'); </script>")
-		// 		Return_To_Page(w, r, "../static/templates/register.html")
-		// 	}
-		// }
 
 	} else { // <-- If r.Method != Get/Post
 
@@ -163,6 +148,91 @@ func register(w http.ResponseWriter, r *http.Request) {
 		return
 
 	}
+}
+
+//#------------------------------------------------------------------------------------------------------------# ↓ Reset password Page ↓
+func reset_password_page(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == "GET" {
+
+		Return_To_Page(w, r, "../static/templates/reset_password_page.html")
+
+	} else if r.Method == "POST" {
+
+		r.ParseForm()
+
+		var (
+			email_to_reset = r.Form["reset_email"][0]
+			email_exist    = Check_If_Exist(email_to_reset, "", "Email", "user", "Register") // true -> don't exist
+		)
+
+		if email_exist == true {
+
+			Return_To_Page(w, r, "../static/templates/reset_password_page.html")
+			fmt.Fprint(w, "<script> window.alert('Mail don't exist'); </script>")
+
+		} else {
+
+			var (
+				email_tab       = []string{email_to_reset}
+				validation_hash = Return_to_reset_pswd(email_to_reset)
+			)
+
+			if validation_hash == "error" || len(validation_hash) == 0 {
+
+				Return_To_Page(w, r, "../static/templates/reset_password_page.html")
+				fmt.Fprint(w, "<script> window.alert('Contact administrator'); </script>")
+
+			} else {
+
+				Init_Smtp(email_tab, "", validation_hash, "Reset")
+
+			}
+
+			fmt.Fprint(w, "<script> window.alert('Sent ! Now check your emails.'); </script>")
+		}
+
+	} else {
+
+		Send_Error(w, r)
+
+		return
+	}
+}
+
+//#------------------------------------------------------------------------------------------------------------# ↓ Reset password Validation by query ↓
+func valide_password_page(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		Return_To_Page(w, r, "../static/templates/managed_pages/valide_password_page.html")
+	} else if r.Method == "POST" {
+
+		var (
+			query                 = r.FormValue("")
+			reset_password        = r.Form["reset_password"][0]
+			confim_reset_password = r.Form["confirm_reset_password"][0]
+			ok                    = Check_If_Exist(query, "", "Pswd", "user", "validation")
+		)
+
+		r.ParseForm()
+		if ok == false {
+			if reset_password == confim_reset_password {
+				Reset_Password(confim_reset_password, query)
+				fmt.Fprint(w, `<script> window.alert('Password reset successfully') </script>`)
+			} else {
+				fmt.Fprint(w, `<script> window.alert('both passwords must be similar') </script>`)
+				Return_To_Page(w, r, "../static/templates/managed_pages/valide_password_page.html")
+			}
+
+		} else {
+			Send_Error(w, r)
+			return
+		}
+	} else {
+		Send_Error(w, r)
+
+		return
+	}
+
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Select field for register or login ↓
@@ -261,6 +331,45 @@ func Check_If_Exist(input, input2, check_field, In_This_Table, Who_Want string) 
 	}
 
 	return false
+}
+
+//#------------------------------------------------------------------------------------------------------------# ↓ Check func for reset password ↓
+func Return_to_reset_pswd(email string) string {
+
+	var (
+		db, err = sql.Open(Bdd.Langage, Bdd.Name)
+		rows    = Select_All_From_DB(db, "user")
+		Rows    []string
+		u       = all_bd{}
+		check   = false
+	)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for rows.Next() {
+
+		err := rows.Scan(&u.User.Id, &u.User.Desc, &u.User.Email, &u.User.Name, &u.User.Profile_Picture, &u.User.Pswd, &u.User.Rank_id)
+		if err != nil {
+			log.Fatal(err)
+		}
+		Rows = append(Rows, strconv.Itoa(*&u.User.Id), *&u.User.Desc, *&u.User.Email, *&u.User.Name, *&u.User.Profile_Picture, *&u.User.Profile_Picture, *&u.User.Pswd, strconv.Itoa(*&u.User.Rank_id))
+
+	}
+
+	for i := range Rows {
+		if Rows[i] == email {
+			check = true
+		}
+		if Rows[i] == email {
+			if check == true {
+				return Rows[i-2]
+			}
+		}
+	}
+
+	return "error"
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Check func for register or login ↓
@@ -422,89 +531,4 @@ func Email_Validation(email string) bool {
 		return false
 	}
 	return true
-}
-func Return_to_reset_pswd(email string) string {
-
-	var (
-		db, err = sql.Open(Bdd.Langage, Bdd.Name)
-		rows    = Select_All_From_DB(db, "user")
-		Rows    []string
-		u       = all_bd{}
-		check   = false
-	)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	for rows.Next() {
-
-		err := rows.Scan(&u.User.Id, &u.User.Desc, &u.User.Email, &u.User.Name, &u.User.Profile_Picture, &u.User.Pswd, &u.User.Rank_id)
-		if err != nil {
-			log.Fatal(err)
-		}
-		Rows = append(Rows, strconv.Itoa(*&u.User.Id), *&u.User.Desc, *&u.User.Email, *&u.User.Name, *&u.User.Profile_Picture, *&u.User.Profile_Picture, *&u.User.Pswd, strconv.Itoa(*&u.User.Rank_id))
-
-	}
-
-	for i := range Rows {
-		if Rows[i] == email {
-			check = true
-		}
-		if Rows[i] == email {
-			if check == true {
-				return Rows[i-2]
-			}
-		}
-	}
-
-	return "error"
-}
-func reset_password_page(w http.ResponseWriter, r *http.Request) {
-
-	if r.Method == "GET" {
-
-		Return_To_Page(w, r, "../static/templates/reset_password_page.html")
-
-	} else if r.Method == "POST" {
-
-		r.ParseForm()
-
-		var (
-			email_to_reset = r.Form["reset_email"][0]
-			email_exist    = Check_If_Exist(email_to_reset, "", "Email", "user", "Register") // true -> don't exist
-		)
-
-		if email_exist == true {
-
-			Return_To_Page(w, r, "../static/templates/reset_password_page.html")
-			fmt.Fprint(w, "<script> window.alert('Mail don't exist'); </script>")
-
-		} else {
-
-			var (
-				email_tab       = []string{email_to_reset}
-				validation_hash = Return_to_reset_pswd(email_to_reset)
-			)
-
-			if validation_hash == "error" || len(validation_hash) == 0 {
-
-				Return_To_Page(w, r, "../static/templates/reset_password_page.html")
-				fmt.Fprint(w, "<script> window.alert('Contact administrator'); </script>")
-
-			} else {
-
-				Init_Smtp(email_tab, "", validation_hash, "Reset")
-
-			}
-
-			fmt.Fprint(w, "<script> window.alert('Sent ! Now check your emails.'); </script>")
-		}
-
-	} else {
-
-		Send_Error(w, r)
-
-		return
-	}
 }

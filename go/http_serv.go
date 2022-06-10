@@ -1,7 +1,9 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -37,6 +39,27 @@ func Send_Error(w http.ResponseWriter, r *http.Request) {
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Pages Selection & init http_serv ↓
 
+/*
+Exemple:
+UPDATE user
+SET Name = 'test'
+WHERE Name = 'New_test';
+*/
+//Change value on table
+func Update_Field(Table, field_table, field_table_two, Last_input, New_input string) {
+	var (
+		db, err = sql.Open(Bdd.Langage, Bdd.Name)
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	db.Exec("UPDATE " + Table + " SET " + field_table + " = '" + New_input + "' WHERE " + field_table_two + " = '" + Last_input + "';")
+}
+func Reset_Password(New_password, Last_password string) {
+	New_password = initHashPswd(New_password)
+	Update_Field("user", "Pswd", "Pswd", Last_password, New_password)
+}
+
 //Server Http
 func httpServ() {
 
@@ -48,6 +71,7 @@ func httpServ() {
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/register", register)
 	http.HandleFunc("/logout", logout)
+	http.HandleFunc("/valide_password", valide_password_page)
 	http.HandleFunc("/reset_password_page", reset_password_page)
 	fmt.Println("Started https serv successfully on http://localhost:1010")
 	http.ListenAndServe(":1010", nil)
