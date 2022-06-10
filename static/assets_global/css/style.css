@@ -84,7 +84,9 @@ figure {
     max-width: 48%;
 }
 
-#list, #post, #details {
+#list,
+#post,
+#details {
     background-color: #172129;
     border-radius: .5rem;
 }
@@ -178,8 +180,8 @@ figure {
 
 #post .header,
 form .header {
-    background: rgb(194,80,76);
-    background: linear-gradient(122deg, rgba(194,80,76,1) 20%, rgba(255,121,117,1) 100%);
+    background: rgb(194, 80, 76);
+    background: linear-gradient(122deg, rgba(194, 80, 76, 1) 20%, rgba(255, 121, 117, 1) 100%);
     border-radius: .2rem;
     font-weight: 600;
 }
@@ -270,7 +272,7 @@ form .header {
     color: #ddd !important;
 }
 
-.border-top{
+.border-top {
     border-color: #172129 !important;
 }
 
@@ -288,7 +290,7 @@ h1.details small {
     font-weight: 600 !important;
 }
 
-.breadcrumb-item + .breadcrumb-item::before {
+.breadcrumb-item+.breadcrumb-item::before {
     padding-right: .4rem;
     margin-left: -.1rem;
     color: #ddd;
@@ -317,8 +319,8 @@ footer {
 }
 
 .divider {
-    background: rgb(194,80,76);
-    background: linear-gradient(122deg, rgba(194,80,76,1) 20%, rgba(255,121,117,1) 100%);
+    background: rgb(194, 80, 76);
+    background: linear-gradient(122deg, rgba(194, 80, 76, 1) 20%, rgba(255, 121, 117, 1) 100%);
     height: .3rem;
 }
 
@@ -328,11 +330,31 @@ footer p {
     font-weight: 200;
 }
 
-textarea, input, select {
+textarea,
+input,
+select {
     background-color: #172129 !important;
     border-color: #c2504c !important;
     color: #ddd !important;
 }
-.registerbuttonrelou{
-   background-color: #0000;border-left-width: 0px;border-left-style: solid;border-top-width: 0px;border-top-style: solid;border-right-width: 0px;border-right-style: solid;border-bottom-width: 0px;border-bottom-style: solid;color: white;
+
+.registerbuttonrelou {
+    background-color: #0000;
+    border-left-width: 0px;
+    border-left-style: solid;
+    border-top-width: 0px;
+    border-top-style: solid;
+    border-right-width: 0px;
+    border-right-style: solid;
+    border-bottom-width: 0px;
+    border-bottom-style: solid;
+    color: white;
 }
+
+.text_home_p {
+    text-align: center;
+    font-size: 1.5rem;
+    padding-left: 3%;
+padding-right: 3%;
+}
+
