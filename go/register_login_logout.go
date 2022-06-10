@@ -228,7 +228,7 @@ func reset_password_page(w http.ResponseWriter, r *http.Request) {
 
 				var (
 					email_tab       = []string{email_to_reset}
-					validation_hash = Return_to_reset_pswd(email_to_reset)
+					validation_hash = Return_From_Table(email_to_reset, "user", "Reset_password")
 				)
 
 				if validation_hash == "error" || len(validation_hash) == 0 {
@@ -411,11 +411,11 @@ func Reset_Password(New_password, Last_password string) {
 	Update_Field("user", "Pswd", "Pswd", Last_password, New_password)
 }
 
-func Return_to_reset_pswd(email string) string {
+func Return_From_Table(input, table_name, who_want string) string {
 
 	var (
 		db, err = sql.Open(Bdd.Langage, Bdd.Name)
-		rows    = Select_All_From_DB(db, "user")
+		rows    = Select_All_From_DB(db, table_name)
 		Rows    []string
 		u       = all_bd{}
 		check   = false
@@ -426,24 +426,38 @@ func Return_to_reset_pswd(email string) string {
 	}
 
 	for rows.Next() {
-
-		err := rows.Scan(&u.User.Id, &u.User.Desc, &u.User.Email, &u.User.Name, &u.User.Profile_Picture, &u.User.Pswd, &u.User.Rank_id)
-		if err != nil {
-			log.Fatal(err)
+		if who_want == "Reset_password" {
+			err := rows.Scan(&u.User.Id, &u.User.Desc, &u.User.Email, &u.User.Name, &u.User.Profile_Picture, &u.User.Pswd, &u.User.Rank_id)
+			if err != nil {
+				log.Fatal(err)
+			}
+			Rows = append(Rows, strconv.Itoa(*&u.User.Id), *&u.User.Desc, *&u.User.Email, *&u.User.Name, *&u.User.Profile_Picture, *&u.User.Profile_Picture, *&u.User.Pswd, strconv.Itoa(*&u.User.Rank_id))
+		} else if who_want == "Email_profil" {
+			err := rows.Scan(&u.User.Id, &u.User.Desc, &u.User.Email, &u.User.Name, &u.User.Profile_Picture, &u.User.Pswd, &u.User.Rank_id)
+			if err != nil {
+				log.Fatal(err)
+			}
+			Rows = append(Rows, strconv.Itoa(*&u.User.Id), *&u.User.Desc, *&u.User.Email, *&u.User.Name, *&u.User.Profile_Picture, *&u.User.Profile_Picture, *&u.User.Pswd, strconv.Itoa(*&u.User.Rank_id))
 		}
-		Rows = append(Rows, strconv.Itoa(*&u.User.Id), *&u.User.Desc, *&u.User.Email, *&u.User.Name, *&u.User.Profile_Picture, *&u.User.Profile_Picture, *&u.User.Pswd, strconv.Itoa(*&u.User.Rank_id))
-
 	}
 
 	for i := range Rows {
-		if Rows[i] == email {
+		if Rows[i] == input {
 			check = true
 		}
-		if Rows[i] == email {
+		if Rows[i] == input {
+
 			if check == true {
-				return Rows[i-2]
+
+				if who_want == "Reset_password" {
+					return Rows[i-2]
+				} else if who_want == "Email_profil" { // savoir si faut mettre +3 ou -1943 depuis bdd ou juste au dessus ordre des variables?
+					return Rows[i+3]
+				}
+
 			}
 		}
+
 	}
 
 	return "error"

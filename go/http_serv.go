@@ -36,8 +36,9 @@ func Send_Error(w http.ResponseWriter, r *http.Request) {
 }
 func profil(w http.ResponseWriter, r *http.Request) {
 	type Statement_of_user struct {
-		User string
-		Rank string
+		User  string
+		Rank  string
+		Email string
 	}
 	//<<< --- Check rank
 
@@ -47,6 +48,7 @@ func profil(w http.ResponseWriter, r *http.Request) {
 	)
 	pos.User = User
 	pos.Rank = statement
+	pos.Email = Return_From_Table(User, "user", "Email_profil")
 
 	//<<< --- Check rank
 	if r.Method == "GET" {
