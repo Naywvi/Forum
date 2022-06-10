@@ -34,9 +34,37 @@ func Send_Error(w http.ResponseWriter, r *http.Request) {
 	// fmt.Fprint(w, http.StatusBadRequest)
 
 }
+func profil(w http.ResponseWriter, r *http.Request) {
+	type Statement_of_user struct {
+		User string
+		Rank string
+	}
+	//<<< --- Check rank
 
-//#------------------------------------------------------------------------------------------------------------# ↓ Pages Selection & init http_serv ↓
+	var (
+		_, statement, User = Check_Cookie(w, r)
+		pos                = Statement_of_user{}
+	)
+	pos.User = User
+	pos.Rank = statement
 
+	//<<< --- Check rank
+	if r.Method == "GET" {
+		template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/profil.html"))).Execute(w, pos)
+
+	} else if r.Method == "POST" {
+
+	} else {
+
+		Send_Error(w, r)
+
+		return
+	}
+}
+
+//#------------------------------------------------------------------------------------------------------------# ↓ Home Page ↓
+
+//Home page
 func forum(w http.ResponseWriter, r *http.Request) {
 	type Statement_of_user struct {
 		User string
@@ -67,10 +95,12 @@ func forum(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//#------------------------------------------------------------------------------------------------------------# ↓ Pages Selection & init http_serv ↓
 //Server Http
 func httpServ() {
 	fs := http.FileServer(http.Dir("../static")) // <- ce qu'on envoie en static vers le serv
 	http.Handle("/", fs)
+	http.HandleFunc("/profil", profil)
 	http.HandleFunc("/forum", forum)
 	http.HandleFunc("/validation_mail", Validation_URLbyMail)
 	http.HandleFunc("/resend_mail", Resend_Mail)
