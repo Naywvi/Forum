@@ -37,11 +37,41 @@ func Send_Error(w http.ResponseWriter, r *http.Request) {
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Pages Selection & init http_serv ↓
 
+func forum(w http.ResponseWriter, r *http.Request) {
+	type Statement_of_user struct {
+		User string
+		Rank string
+	}
+	if r.Method == "GET" {
+		//<<< --- Check rank
+
+		var (
+			_, statement, User = Check_Cookie(w, r)
+			pos                = Statement_of_user{}
+		)
+		pos.User = User
+		pos.Rank = statement
+
+		template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/forum.html"))).Execute(w, pos)
+
+		//<<< --- Check rank
+		Return_To_Page(w, r, "../static/templates/forum.html")
+
+	} else if r.Method == "POST" {
+
+	} else {
+
+		Send_Error(w, r)
+
+		return
+	}
+}
+
 //Server Http
 func httpServ() {
-
 	fs := http.FileServer(http.Dir("../static")) // <- ce qu'on envoie en static vers le serv
 	http.Handle("/", fs)
+	http.HandleFunc("/forum", forum)
 	http.HandleFunc("/validation_mail", Validation_URLbyMail)
 	http.HandleFunc("/resend_mail", Resend_Mail)
 	http.HandleFunc("/admin_panel", Admin_Panel)

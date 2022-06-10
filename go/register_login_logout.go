@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"path/filepath"
 	"strconv"
 	"strings"
+	"text/template"
 
 	emailverifier "github.com/AfterShip/email-verifier"
 )
@@ -16,47 +18,65 @@ import (
 //Logout
 func logout(w http.ResponseWriter, r *http.Request) {
 	del(w, r)
-	fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/"; </script>`)
+	fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Login ↓
 
 //Login Page
 func login(w http.ResponseWriter, r *http.Request) {
+	type Statement_of_user struct {
+		User string
+		Rank string
+	}
+	//<<< --- Check rank
 
-	if r.Method == "GET" {
+	var (
+		_, statement, User = Check_Cookie(w, r)
+		pos                = Statement_of_user{}
+	)
+	pos.User = User
+	pos.Rank = statement
 
-		Return_To_Page(w, r, "../static/templates/login.html")
+	//<<< --- Check rank
+	if pos.Rank == "4" {
+		if r.Method == "GET" {
 
-	} else if r.Method == "POST" {
+			template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/login.html"))).Execute(w, pos)
 
-		r.ParseForm()
+		} else if r.Method == "POST" {
 
-		var (
-			mail_login = r.Form["mail_login"][0]
-			pswd_login = r.Form["password_login"][0]
-			Check      = Check_If_Exist(mail_login, pswd_login, "Pswd", "user", "Login")
-		)
+			r.ParseForm()
 
-		if Check == true {
-			SettCookie(w, r) //send cookie first
-			fmt.Fprint(w, `<script> window.alert('Your are connected') </script>`)
-			fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/"; </script>`)
-			//--> redirect to index
+			var (
+				mail_login = r.Form["mail_login"][0]
+				pswd_login = r.Form["password_login"][0]
+				Check      = Check_If_Exist(mail_login, pswd_login, "Pswd", "user", "Login")
+			)
 
-			//--> redirect to index.html
-		} else { // <-- Send Error
+			if Check == true {
+				SettCookie(w, r) //send cookie first
+				fmt.Fprint(w, `<script> window.alert('Your are connected') </script>`)
+				fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
+				//--> redirect to index
 
-			fmt.Fprint(w, "<script> window.alert('Bad password or bad identification, try again.'); </script>")
-			Return_To_Page(w, r, "../static/templates/login.html")
+				//--> redirect to index.html
+			} else { // <-- Send Error
+
+				fmt.Fprint(w, "<script> window.alert('Bad password or bad identification, try again.'); </script>")
+				template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/login.html"))).Execute(w, pos)
+
+			}
+
+		} else { // <-- If r.Method != Get/Post
+
+			Send_Error(w, r)
+			return
 
 		}
-
-	} else { // <-- If r.Method != Get/Post
-
-		Send_Error(w, r)
+	} else {
+		fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
 		return
-
 	}
 }
 
@@ -64,175 +84,227 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 //Register Page
 func register(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "GET" {
-		Return_To_Page(w, r, "../static/templates/register.html")
+	type Statement_of_user struct {
+		User string
+		Rank string
+	}
+	//<<< --- Check rank
 
-	} else if r.Method == "POST" {
-		//<-- check temp bdd
-		var (
-			query = r.FormValue("") // <-- query recuperation
+	var (
+		_, statement, User = Check_Cookie(w, r)
+		pos                = Statement_of_user{}
+	)
+	pos.User = User
+	pos.Rank = statement
 
-		)
-		if query == "register" {
-			r.ParseForm()
+	//<<< --- Check rank
+	if pos.Rank == "4" {
+		if r.Method == "GET" {
+			template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/register.html"))).Execute(w, pos)
 
+		} else if r.Method == "POST" {
+			//<-- check temp bdd
 			var (
-				User_Register         = r.Form["username_register"][0]
-				Email_Register        = r.Form["email_register"][0]
-				Pswd_Register         = r.Form["password_register"][0]
-				Pswd_Register_Confirm = r.Form["password_register_confirm"][0]
-				Check_User            = Check_If_Exist(User_Register, "", "Name", "user", "Register")
-				Check_Email           = Check_If_Exist(Email_Register, "", "Email", "user", "Register")
-				Hash_Pswd             = initHashPswd(Pswd_Register)
-				user_hash             = initHashPswd(User_Register)
-				Email_test_by_dns     = Email_Validation(Email_Register) // <-- Test mail by dns
-				Check_temp_user       = Check_If_Exist(User_Register, "", "Name", "temp_user", "Register")
-				Check_temp_email      = Check_If_Exist(Email_Register, "", "Email", "temp_user", "Register")
-			)
+				query = r.FormValue("") // <-- query recuperation
 
-			if Email_test_by_dns == false {
-				fmt.Fprint(w, "<script> window.alert('Wrong email "+Email_Register+"'); </script>")
-				Return_To_Page(w, r, "../static/templates/register.html")
-				return
-			} else if Check_temp_user == false || Check_temp_email == false { // <-- Check if exist in temp_user table
+			)
+			if query == "register" {
+				r.ParseForm()
+
 				var (
-					Error = ""
+					User_Register         = r.Form["username_register"][0]
+					Email_Register        = r.Form["email_register"][0]
+					Pswd_Register         = r.Form["password_register"][0]
+					Pswd_Register_Confirm = r.Form["password_register_confirm"][0]
+					Check_User            = Check_If_Exist(User_Register, "", "Name", "user", "Register")
+					Check_Email           = Check_If_Exist(Email_Register, "", "Email", "user", "Register")
+					Hash_Pswd             = initHashPswd(Pswd_Register)
+					user_hash             = initHashPswd(User_Register)
+					Email_test_by_dns     = Email_Validation(Email_Register) // <-- Test mail by dns
+					Check_temp_user       = Check_If_Exist(User_Register, "", "Name", "temp_user", "Register")
+					Check_temp_email      = Check_If_Exist(Email_Register, "", "Email", "temp_user", "Register")
 				)
 
-				if Check_temp_user == false && Check_temp_email == false {
-					Error = "Username and email"
-				} else if Check_temp_email == false {
-					Error = "Email"
-				} else if Check_temp_user == false {
-					Error = "Username"
-				}
+				if Email_test_by_dns == false {
+					fmt.Fprint(w, "<script> window.alert('Wrong email "+Email_Register+"'); </script>")
+					template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/register.html"))).Execute(w, pos)
+					return
+				} else if Check_temp_user == false || Check_temp_email == false { // <-- Check if exist in temp_user table
+					var (
+						Error = ""
+					)
 
-				fmt.Fprint(w, "<script> window.alert('"+Error+" alerady used, check your emails or try tomorrow.'); </script>")
-				Return_To_Page(w, r, "../static/templates/register.html")
-				return
-			}
-
-			if Check_User == true && Check_Email == true && Pswd_Register == Pswd_Register_Confirm { // <-- If all is ok
-
-				Register_Smtp(Email_Register, User_Register, user_hash)
-				ADD_User_To_Temp(User_Register, Hash_Pswd, Email_Register, user_hash)
-				Return_To_Page(w, r, "../static/templates/managed_pages/after_register.html")
-
-				//--> redirect to index
-				return
-
-			} else { // <-- Check the wrong selection
-
-				error_message := ""
-				if Pswd_Register == Pswd_Register_Confirm {
-					if Check_Email == false && Check_User == false {
-						error_message = "email and username are"
-					} else if Check_Email == false {
-						error_message = "email is"
-					} else if Check_User == false {
-						error_message = "username is"
+					if Check_temp_user == false && Check_temp_email == false {
+						Error = "Username and email"
+					} else if Check_temp_email == false {
+						Error = "Email"
+					} else if Check_temp_user == false {
+						Error = "Username"
 					}
-					fmt.Fprint(w, "<script> window.alert('This "+error_message+" already in use, try again'); </script>")
-				} else {
-					fmt.Fprint(w, "<script> window.alert('Bad password confirmation, try again'); </script>")
+
+					fmt.Fprint(w, "<script> window.alert('"+Error+" alerady used, check your emails or try tomorrow.'); </script>")
+					template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/register.html"))).Execute(w, pos)
+					return
 				}
 
-				Return_To_Page(w, r, "../static/templates/register.html")
+				if Check_User == true && Check_Email == true && Pswd_Register == Pswd_Register_Confirm { // <-- If all is ok
+
+					Register_Smtp(Email_Register, User_Register, user_hash)
+					ADD_User_To_Temp(User_Register, Hash_Pswd, Email_Register, user_hash)
+					template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/register.html"))).Execute(w, pos)
+
+					//--> redirect to index
+					return
+
+				} else { // <-- Check the wrong selection
+
+					error_message := ""
+					if Pswd_Register == Pswd_Register_Confirm {
+						if Check_Email == false && Check_User == false {
+							error_message = "email and username are"
+						} else if Check_Email == false {
+							error_message = "email is"
+						} else if Check_User == false {
+							error_message = "username is"
+						}
+						fmt.Fprint(w, "<script> window.alert('This "+error_message+" already in use, try again'); </script>")
+					} else {
+						fmt.Fprint(w, "<script> window.alert('Bad password confirmation, try again'); </script>")
+					}
+
+					template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/register.html"))).Execute(w, pos)
+				}
+
 			}
+
+		} else { // <-- If r.Method != Get/Post
+
+			Send_Error(w, r)
+			return
 
 		}
-
-	} else { // <-- If r.Method != Get/Post
-
-		Send_Error(w, r)
+	} else {
+		fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
 		return
-
 	}
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Reset password Page ↓
 func reset_password_page(w http.ResponseWriter, r *http.Request) {
+	type Statement_of_user struct {
+		User string
+		Rank string
+	}
+	//<<< --- Check rank
 
-	if r.Method == "GET" {
+	var (
+		_, statement, User = Check_Cookie(w, r)
+		pos                = Statement_of_user{}
+	)
+	pos.User = User
+	pos.Rank = statement
 
-		Return_To_Page(w, r, "../static/templates/reset_password_page.html")
+	//<<< --- Check rank
+	if pos.Rank == "4" {
+		if r.Method == "GET" {
 
-	} else if r.Method == "POST" {
+			template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/reset_password_page.html"))).Execute(w, pos)
 
-		r.ParseForm()
+		} else if r.Method == "POST" {
 
-		var (
-			email_to_reset = r.Form["reset_email"][0]
-			email_exist    = Check_If_Exist(email_to_reset, "", "Email", "user", "Register") // true -> don't exist
-		)
-
-		if email_exist == true {
-
-			Return_To_Page(w, r, "../static/templates/reset_password_page.html")
-			fmt.Fprint(w, "<script> window.alert('Mail don't exist'); </script>")
-
-		} else {
+			r.ParseForm()
 
 			var (
-				email_tab       = []string{email_to_reset}
-				validation_hash = Return_to_reset_pswd(email_to_reset)
+				email_to_reset = r.Form["reset_email"][0]
+				email_exist    = Check_If_Exist(email_to_reset, "", "Email", "user", "Register") // true -> don't exist
 			)
 
-			if validation_hash == "error" || len(validation_hash) == 0 {
+			if email_exist == true {
 
-				Return_To_Page(w, r, "../static/templates/reset_password_page.html")
-				fmt.Fprint(w, "<script> window.alert('Contact administrator'); </script>")
+				template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/reset_password_page.html"))).Execute(w, pos)
+				fmt.Fprint(w, "<script> window.alert('Mail don't exist'); </script>")
 
 			} else {
 
-				Init_Smtp(email_tab, "", validation_hash, "Reset")
+				var (
+					email_tab       = []string{email_to_reset}
+					validation_hash = Return_to_reset_pswd(email_to_reset)
+				)
+
+				if validation_hash == "error" || len(validation_hash) == 0 {
+
+					template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/reset_password_page.html"))).Execute(w, pos)
+					fmt.Fprint(w, "<script> window.alert('Contact administrator'); </script>")
+
+				} else {
+
+					Init_Smtp(email_tab, "", validation_hash, "Reset")
+					template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/reset_password_page.html"))).Execute(w, pos)
+					fmt.Fprint(w, "<script> window.alert('Sent ! Now check your emails.'); </script>")
+				}
 
 			}
 
-			fmt.Fprint(w, "<script> window.alert('Sent ! Now check your emails.'); </script>")
+		} else {
+
+			Send_Error(w, r)
+
+			return
 		}
-
 	} else {
-
-		Send_Error(w, r)
-
+		fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
 		return
 	}
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Reset password Validation by query ↓
 func valide_password_page(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "GET" {
-		Return_To_Page(w, r, "../static/templates/managed_pages/valide_password_page.html")
-	} else if r.Method == "POST" {
+	type Statement_of_user struct {
+		User string
+		Rank string
+	}
+	//<<< --- Check rank
 
-		var (
-			query                 = r.FormValue("")
-			reset_password        = r.Form["reset_password"][0]
-			confim_reset_password = r.Form["confirm_reset_password"][0]
-			ok                    = Check_If_Exist(query, "", "Pswd", "user", "validation")
-		)
+	var (
+		_, statement, User = Check_Cookie(w, r)
+		pos                = Statement_of_user{}
+	)
+	pos.User = User
+	pos.Rank = statement
+	if pos.Rank != "4" {
+		if r.Method == "GET" {
+			Return_To_Page(w, r, "../static/templates/managed_pages/valide_password_page.html")
+		} else if r.Method == "POST" {
 
-		r.ParseForm()
-		if ok == false {
-			if reset_password == confim_reset_password {
-				Reset_Password(confim_reset_password, query)
-				fmt.Fprint(w, `<script> window.alert('Password reset successfully') </script>`)
+			var (
+				query                 = r.FormValue("")
+				reset_password        = r.Form["reset_password"][0]
+				confim_reset_password = r.Form["confirm_reset_password"][0]
+				ok                    = Check_If_Exist(query, "", "Pswd", "user", "validation")
+			)
+
+			r.ParseForm()
+			if ok == false {
+				if reset_password == confim_reset_password {
+					Reset_Password(confim_reset_password, query)
+					fmt.Fprint(w, `<script> window.alert('Password reset successfully') </script>`)
+				} else {
+					fmt.Fprint(w, `<script> window.alert('both passwords must be similar') </script>`)
+					Return_To_Page(w, r, "../static/templates/managed_pages/valide_password_page.html")
+				}
+
 			} else {
-				fmt.Fprint(w, `<script> window.alert('both passwords must be similar') </script>`)
-				Return_To_Page(w, r, "../static/templates/managed_pages/valide_password_page.html")
+				Send_Error(w, r)
+				return
 			}
-
 		} else {
 			Send_Error(w, r)
+			fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
 			return
 		}
 	} else {
-		Send_Error(w, r)
-
 		return
 	}
-
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Select field for register or login ↓
@@ -423,18 +495,35 @@ func Check_Login_Or_Register(I *Instance_Bdd, identifier, pswd, Who_whant, input
 //#------------------------------------------------------------------------------------------------------------# ↓ Pages Manage smtp / Temp users / validation Query ↓
 func Validation_URLbyMail(w http.ResponseWriter, r *http.Request) {
 	query := r.FormValue("")
-	if r.Method == "GET" {
-		Return_To_Page(w, r, "../static/templates/managed_pages/Validation_URLbyMail.html")
+	type Statement_of_user struct {
+		User string
+		Rank string
+	}
+	//<<< --- Check rank
 
-	} else if r.Method == "POST" {
-		Check_Validation_QueryURL(w, r, query)
-		fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/"; </script>`)
+	var (
+		_, statement, User = Check_Cookie(w, r)
+		pos                = Statement_of_user{}
+	)
+	pos.User = User
+	pos.Rank = statement
+	if pos.Rank == "4" {
+		if r.Method == "GET" {
+			Return_To_Page(w, r, "../static/templates/managed_pages/Validation_URLbyMail.html")
 
-	} else { // <-- If r.Method != Get/Post
+		} else if r.Method == "POST" {
+			Check_Validation_QueryURL(w, r, query)
+			fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
 
-		Send_Error(w, r)
+		} else { // <-- If r.Method != Get/Post
+
+			Send_Error(w, r)
+			return
+
+		}
+	} else {
+		fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
 		return
-
 	}
 }
 
@@ -494,34 +583,52 @@ func need_validation(email, user string) string {
 
 //--------------------------------------------------
 func Resend_Mail(w http.ResponseWriter, r *http.Request) {
-
-	if r.Method == "GET" {
-		Return_To_Page(w, r, "../static/templates/resend_mail.html")
-	} else if r.Method == "POST" {
-
-		r.ParseForm()
-		var (
-			User_Resend  = r.Form["user_resend"][0]
-			Email_Resend = r.Form["email_resend"][0]
-			hash         = need_validation(Email_Resend, User_Resend)
-		)
-
-		if hash == "error" {
-			fmt.Fprint(w, "<script> window.alert('Bad emailor username, try again'); </script>")
-			Return_To_Page(w, r, "../static/templates/resend_mail.html")
-		} else {
-			Register_Smtp(Email_Resend, User_Resend, hash)
-			fmt.Fprint(w, "<script> window.alert('Mail sent successfully'); </script>")
-			fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/"; </script>`)
-		}
-
-	} else { // <-- If r.Method != Get/Post
-
-		Send_Error(w, r)
-		return
-
+	type Statement_of_user struct {
+		User string
+		Rank string
 	}
+	//<<< --- Check rank
 
+	var (
+		_, statement, User = Check_Cookie(w, r)
+		pos                = Statement_of_user{}
+	)
+	pos.User = User
+	pos.Rank = statement
+
+	//<<< --- Check rank
+	if pos.Rank == "4" {
+
+		if r.Method == "GET" {
+			template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/resend_mail.html"))).Execute(w, pos)
+		} else if r.Method == "POST" {
+
+			r.ParseForm()
+			var (
+				User_Resend  = r.Form["user_resend"][0]
+				Email_Resend = r.Form["email_resend"][0]
+				hash         = need_validation(Email_Resend, User_Resend)
+			)
+
+			if hash == "error" {
+				fmt.Fprint(w, "<script> window.alert('Bad emailor username, try again'); </script>")
+				template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/resend_mail.html"))).Execute(w, pos)
+			} else {
+				Register_Smtp(Email_Resend, User_Resend, hash)
+				fmt.Fprint(w, "<script> window.alert('Mail sent successfully'); </script>")
+				fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
+			}
+
+		} else { // <-- If r.Method != Get/Post
+
+			Send_Error(w, r)
+			return
+
+		}
+	} else {
+		fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
+		return
+	}
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Check mail(register) By DNS ↓
