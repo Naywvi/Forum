@@ -440,8 +440,9 @@ func Return_From_Table(input, table_name, who_want string) string {
 			Rows = append(Rows, strconv.Itoa(*&u.User.Id), *&u.User.Desc, *&u.User.Email, *&u.User.Name, *&u.User.Profile_Picture, *&u.User.Profile_Picture, *&u.User.Pswd, strconv.Itoa(*&u.User.Rank_id))
 		}
 	}
-
+	input = strings.ToLower(input)
 	for i := range Rows {
+		Rows[i] = strings.ToLower(Rows[i])
 		if Rows[i] == input {
 			check = true
 		}
