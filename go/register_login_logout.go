@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"text/template"
+	"time"
 
 	emailverifier "github.com/AfterShip/email-verifier"
 )
@@ -17,7 +18,14 @@ import (
 
 //Logout
 func logout(w http.ResponseWriter, r *http.Request) {
+	var (
+		_, _, User = Check_Cookie(w, r)
+		logout     = time.Now()
+	)
+
+	Update_Field("profil", "Last_time_connected", "User", User, logout.String())
 	del(w, r)
+
 	fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
 }
 

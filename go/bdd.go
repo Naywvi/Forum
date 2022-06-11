@@ -69,13 +69,36 @@ func Print_Rows(rows *sql.Rows, table string) []all_bd {
 			if err != nil {
 				log.Fatal(err)
 			}
+		} else if table == "profil" {
+			err := rows.Scan(&u.Profil.Id, &u.Profil.User, &u.Profil.Joined, &u.Profil.Last_time_connected, &u.Profil.Subjet_submit, &u.Profil.Email, &u.Profil.Desc, &u.Profil.Rank_id_profil)
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
-
 		I.I = append(I.I, u)
 
 	}
 	return I.I
 
+}
+
+/*
+SELECT
+	*
+FROM
+	user
+WHERE
+	id = 1
+*/
+func Select_column(Table_name, Table_field, input string) *sql.Rows { //only string
+	var (
+		db, err = sql.Open(Bdd.Langage, Bdd.Name)
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	result, _ := db.Query("SELECT * FROM " + Table_name + " WHERE " + Table_field + " = '" + input + "';")
+	return result
 }
 
 /*
@@ -127,7 +150,6 @@ func Del_User_From_Table(db *sql.DB, rows *sql.Rows, table, name_deleted, who_wa
 
 	}
 	db.Exec("DELETE FROM " + table + " WHERE id = " + id)
-	fmt.Println("Validation done successfully", index)
 	if who_want == "validation" {
 		ADD_User_To_BDD(Rows[index-3], Rows[index-1], Rows[index-2], "3")
 	}
@@ -159,6 +181,7 @@ func ADD_User_To_BDD(name, pswd, email, rank_id string) {
 	}
 
 	Inser_In_To_DB(db, Default_user, "user", Extract_File("../bdd/user_table.sql", 11, 12))
+	New_Profil(name, email)
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Select on table ↓
@@ -336,6 +359,13 @@ func temp_user() {
 func email_verification() {
 	Inser_In_To_DB(Init_Database("email_owner", Extract_File("../bdd/email_verification_table.sql", 0, 2)), Terminal_Init_Table("email_verification_table"), "email_owner", Extract_File("../bdd/email_verification_table.sql", 5, 6)) //<-- Os.Args email verification
 }
+func profilt() {
+	fmt.Println(Extract_File("../bdd/profil_table.sql", 0, 8))
+	fmt.Println(Extract_File("../bdd/profil_table.sql", 11, 12))
+	fmt.Println(Extract_File("../bdd/profil_table.sql", 15, 16))
+	Inser_In_To_DB(Init_Database("profil", Extract_File("../bdd/profil_table.sql", 0, 8)), Extract_File("../bdd/profil_table.sql", 15, 16), "profil", Extract_File("../bdd/profil_table.sql", 11, 12))
+	Is_Ok("profil", "")
+}
 
 //#------------------------------------------------------------------------------------------------------------# ↓ init bd ↓
 
@@ -351,6 +381,7 @@ func InitBDD() {
 		user()
 		categorie()
 		post()
+		profilt()
 		fmt.Println("Bdd, " + Bdd.Name + " was successfully created, you are ready :)\n")
 	}
 }

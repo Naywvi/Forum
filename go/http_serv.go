@@ -34,35 +34,6 @@ func Send_Error(w http.ResponseWriter, r *http.Request) {
 	// fmt.Fprint(w, http.StatusBadRequest)
 
 }
-func profil(w http.ResponseWriter, r *http.Request) {
-	type Statement_of_user struct {
-		User  string
-		Rank  string
-		Email string
-	}
-	//<<< --- Check rank
-
-	var (
-		_, statement, User = Check_Cookie(w, r)
-		pos                = Statement_of_user{}
-	)
-	pos.User = User
-	pos.Rank = statement
-	pos.Email = Return_From_Table(User, "user", "Email_profil")
-
-	//<<< --- Check rank
-	if r.Method == "GET" {
-		template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/profil.html"))).Execute(w, pos)
-
-	} else if r.Method == "POST" {
-
-	} else {
-
-		Send_Error(w, r)
-
-		return
-	}
-}
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Home Page ↓
 
@@ -112,6 +83,7 @@ func httpServ() {
 	http.HandleFunc("/logout", logout)
 	http.HandleFunc("/valide_password", valide_password_page)
 	http.HandleFunc("/reset_password_page", reset_password_page)
+	http.HandleFunc("/create_post", Create_Post)
 	fmt.Println("Started https serv successfully on http://localhost:1010")
 	http.ListenAndServe(":1010", nil)
 

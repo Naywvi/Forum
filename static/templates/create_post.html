@@ -43,8 +43,8 @@
                 <span class="position-absolute top-0 end-0 badge rounded-pill bg-warning text-dark">2</span>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">UserName</a>
-            </li>
+                <a class="nav-link" href="#">{{.User}}</a>
+            </li>   
         </ul>
     </div>
 
@@ -88,9 +88,22 @@
                                             Nouveau sujet
                                         </div>
                                         <div class="mb-3 mt-3 p-0">
-                                            <input type="email" class="form-control" id="title"
-                                                aria-describedby="postTitle" placeholder="Titre">
+                                            <input type="text" class="form-control" id="title"
+                                                aria-describedby="postTitle" placeholder="Titre.." name="Post_Title">
                                         </div>
+                                        <input type="text" class="form-control" id="category"
+                                                aria-describedby="postCategory" placeholder="Catégorie.." name="Post_Category">
+                                        </div>
+                                        <input list="Post_Category" id="categorie" name="category_Post"/>
+                                        <!-- Faire un For range .categories qu'on va créer dans la fonction create post pour récupérer les catégories existantes -->
+                                            <datalist id="Post_Category">
+                                            <option value="Chrome">
+                                            <option value="Firefox">
+                                            <option value="Internet Explorer"> 
+                                            <option value="Opera">
+                                            <option value="Safari">
+                                            <option value="Microsoft Edge">
+                                            </datalist>
                                         <div class="mb-3 mt-3 p-0">
                                             <textarea id="editor" class="form-control" rows="3"
                                                 style="display: none;"></textarea>
@@ -351,8 +364,10 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <form action="/create_post?=Send_Post" method="POST">
                                         <button type="submit" class="btn btn-primary btn-sm"><small><i
                                                     class="bx bx-notepad"></i> Poster</small></button>
+                                        </form>
                                     </form>
 
                                 </div>

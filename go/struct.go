@@ -43,4 +43,15 @@ type all_bd struct {
 		Pswd       string
 		validation string
 	}
+
+	Profil struct {
+		Id                  int
+		User                string
+		Joined              string
+		Last_time_connected string
+		Subjet_submit       string
+		Email               string
+		Desc                string
+		Rank_id_profil      string
+	}
 }
