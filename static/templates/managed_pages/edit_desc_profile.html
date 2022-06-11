@@ -11,12 +11,12 @@
     <meta property="og:title" content="Forum template" />
     <meta property="og:description" content="Forum template" />
     <meta property="og:image" content="" />
-    <!-- <link rel="stylesheet" href="././assets_global_global/css/login.css"> -->
-    <link rel="shortcut icon" href="./assets_global/img/favicon.png">
+    <!-- <link rel="stylesheet" href="./../assets_global_global/css/login.css"> -->
+    <link rel="shortcut icon" href="../assets_global/img/favicon.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
-    <link href="./assets_global/css/style.css" rel="stylesheet">
+    <link href="../assets_global/css/style.css" rel="stylesheet">
 
     <title>Forum template</title>
 
@@ -25,7 +25,11 @@
 <body>
     <div class="topbar px-2 py-1 d-flex justify-content-between align-items-center position-relative">
         <ul class="nav me-4 d-flex justify-content-center align-items-center">
-       
+
+            <li class="nav-item">
+                <a class="nav-link" href="/forum">Forum</a>
+            </li>
+
 
             {{if eq .Rank "1"}}
             <li class="nav-item">
@@ -35,37 +39,18 @@
 
         </ul>
         <ul class="nav me-4 d-flex justify-content-center align-items-center">
-            {{if ne .Rank "4"}}
-            <li class="nav-item position-relative">
-                <a class="nav-link d-flex justify-content-center align-items-center" href="#"><i
-                        class="bx bx-bell"></i></a>
-                <span class="position-absolute top-0 end-0 badge rounded-pill bg-warning text-dark">2</span>
-            </li>
 
-            <li class="nav-item">
-                <a class="nav-link" href="/profil?={{.User}}">{{.User}}</a>
-            </li>
-            {{end}}
-            {{if eq .Rank "4"}}
-            <li class="nav-item">
-                <a class="nav-link" href="/login">Login</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/register">Register</a>
-            </li>
-            {{end}}
-            {{if ne .Rank "4"}}
             <li class="nav-item">
                 <a class="nav-link" href="/logout">Log out</a>
             </li>
-            {{end}}
+
         </ul>
     </div>
 
     <header class="container p-0 mt-5 mx-0 mx-auto">
         <div class="picture d-flex justify-content-center align-items-center">
             <div class="text-center">
-                <img class="logo" src="./assets_global/img/logo.png" alt="NagForum Logo">
+                <img class="logo" src="../assets_global/img/logo.png" alt="NagForum Logo">
                 <h1 class="text-white">Bienvenue sur le forum</h1>
                 <p class="text-white">Je suis heureux de vous accueillir sur mon Forum, profitez bien !</p>
             </div>
@@ -96,62 +81,30 @@
                                 <div class="row g-3">
 
                                     <div class="d-flex flex-row justify-content-center align-items-top">
-                                        
+
                                         <div class="col-md-11 ps-5 pb-3">
                                             <h1 class="text-white details">
-                                                <i class="bx bx-spreadsheet"></i> <strong
-                                                    class="text-yellow">{{.User}}</strong><br>
+                                                <i class="bx bx-spreadsheet"></i> <strong class="text-yellow">{{.User}}
+                                                    edit his description.</strong><br>
                                             </h1>
 
                                             <div id="profil" class="col-md-12 mt-4 p-4 border-profil position-relative">
-                                                <div class="subtitle px-1">Vos informations</div>
-                                                <div class="row">
-                                                    <div class="col-md-1 p-2 text-end"><strong>Mail</strong></div>
-                                                    <div class="col-md-3 p-2"><a href="mailto:{{.Email}}">{{.Email}}</a>
-                                                    </div>
-                                                    <!-- Si admin ou autre à toi de voir -->
-                                                    <div class="col-md-1 p-2 text-end"><strong>Groupe(s)</strong></div>
-                                                    <div class="col-md-3 p-2">
-                                                        {{if eq .Rank "1"}}
-                                                        <span class="badge bg-warning text-dark">Développeur</span>
-                                                        <span class="badge bg-danger">Administrateur</span>
-                                                        <span class="badge bg-success">Certifié</span>
-                                                        {{end}}
-                                                        {{if eq .Rank "2"}}
-                                                        <span class="badge bg-danger">Modérateur</span>
-                                                        <span class="badge bg-success">Certifié</span>
-                                                        {{end}}
-                                                        {{if eq .Rank "3"}}
-                                                        <span class="badge bg-success">Certifié</span>
-                                                        {{end}}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div id="profil" class="col-md-12 mt-4 p-4 border-profil position-relative">
-                                                <div class="subtitle px-1">Statistique</div>
+                                                <div class="subtitle px-1">Edit description</div>
 
-                                                <table class="table">
-                                                    <tbody>
-                                                        <tr>
-                                                            <th scope="row">Rejoins</th>
-                                                            <td>{{.Joined}}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row">Vu pour la dernière fois</th>
-                                                            <td>{{.Last_time_connected}}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row">Total de sujets</th>
-                                                            <td>{{.Subject_submit}} | <a href="#">Rechercher tous les sujet de
-                                                                    l'utilisateur</a></td>
-                                                        </tr>
-                                                        
-                                                        <tr>
-                                                            <th scope="row">Description</th>
-                                                            <td>{{.Desc}}</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
+
+                                                <tbody>
+                                                    <tr>
+                                                        <th scope="row">Description</th>
+                                                        <br>
+                                                        <form action="/profil/edit?=send" method="post">
+                                                            <textarea id="story" name="story" rows="5" cols="33">
+It was a dark and stormy night...
+</textarea>
+                                                        </form>
+                                                        <td>{{.Desc}}</td>
+                                                    </tr>
+                                                </tbody>
+
 
                                             </div>
 
@@ -161,7 +114,8 @@
                                     <div class="col-md-12 px-2 mt-2 d-flex justify-content-end">
                                         <a href="" class="btn btn-danger btn-sm me-2"><i class="bx bx-trash"></i>
                                             Supprimer mon compte</a>
-                                        <a href="/profil/edit" class="btn btn-primary btn-sm me-2"><i class="bx bx-edit-alt"></i>
+                                        <a href="/profil/edit" class="btn btn-primary btn-sm me-2"><i
+                                                class="bx bx-edit-alt"></i>
                                             Éditer</a>
                                     </div>
 
@@ -196,7 +150,7 @@
         crossorigin="anonymous"></script>
     <script src="https://cdn.tiny.cloud/1/a1oa0uw4ffrixbzpelg35rdxmzpx9imirkgfbkz5d62qcnuj/tinymce/6/tinymce.min.js"
         referrerpolicy="origin"></script>
-    <script src="./assets_global/js/main.js"></script>
+    <script src="../assets_global/js/main.js"></script>
 </body>
 
 </html>

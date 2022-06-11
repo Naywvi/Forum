@@ -67,12 +67,59 @@ func forum(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+func edit_desc(w http.ResponseWriter, r *http.Request) {
+	query := r.FormValue("")
+	type Statement_of_user struct {
+		User string
+		Rank string
+		Desc string
+	}
+	//<<< --- Check rank
+
+	var (
+		_, statement, User = Check_Cookie(w, r)
+		pos                = Statement_of_user{}
+	)
+
+	//<<< --- Check rank
+	if statement != "4" {
+
+		if r.Method == "GET" {
+			var (
+				result        = Select_column("profil", "user", User) //Rows
+				result_profil = Return_Profil(result)
+			)
+			//<<<<
+			pos.Desc = result_profil[6]
+			pos.Rank = statement
+			pos.User = User
+
+			//<<<<
+			template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/managed_pages/edit_desc_profile.html"))).Execute(w, pos)
+
+		} else if r.Method == "POST" {
+			if query == "edit" {
+
+			}
+
+		} else {
+
+			Send_Error(w, r)
+
+			return
+		}
+	} else {
+		fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
+		return
+	}
+}
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Pages Selection & init http_serv ↓
 //Server Http
 func httpServ() {
 	fs := http.FileServer(http.Dir("../static")) // <- ce qu'on envoie en static vers le serv
 	http.Handle("/", fs)
+	http.HandleFunc("/profil/edit", edit_desc)
 	http.HandleFunc("/profil", profil)
 	http.HandleFunc("/forum", forum)
 	http.HandleFunc("/validation_mail", Validation_URLbyMail)
