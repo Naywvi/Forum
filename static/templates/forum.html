@@ -1,4 +1,6 @@
-<html lang="en"><head>
+<html lang="en">
+
+<head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,49 +12,52 @@
     <meta property="og:image" content="">
     <!-- <link rel="stylesheet" href="././assets_global_global/css/login.css"> -->
     <link rel="shortcut icon" href="./assets_global/img/favicon.png">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet">
     <!-- <link href="./assets_global/css/style.css" rel="stylesheet"> -->
     <link href="./assets_global/css/style.css" rel="stylesheet">
     <title>Nlt - Forum</title>
 
-  
-<script>/*
- *   You can replace the following code with whatever you would like
- *   to inject into other web pages.
- */
+
+    <script>/*
+*   You can replace the following code with whatever you would like
+*   to inject into other web pages.
+*/
 
 
-/*  An example script
- *
- *  @param {els} count dom elements
- */
+        /*  An example script
+         *
+         *  @param {els} count dom elements
+         */
 
-window.calc = function(els) {
-   return document.querySelectorAll(els).length;
-};
-</script></head>
+        window.calc = function (els) {
+            return document.querySelectorAll(els).length;
+        };
+    </script>
+</head>
 
 <body cz-shortcut-listen="true">
 
     <div class="topbar px-2 py-1 d-flex justify-content-between align-items-center position-relative">
         <ul class="nav me-4 d-flex justify-content-center align-items-center">
-            
-        
+
+
             {{if eq .Rank "1"}}
             <li class="nav-item">
                 <a class="nav-link" href="/admin_panel">Admin panel</a>
             </li>
-             {{end}}
+            {{end}}
 
         </ul>
         <ul class="nav me-4 d-flex justify-content-center align-items-center">
             {{if ne .Rank "4"}}
             <li class="nav-item position-relative">
-                <a class="nav-link d-flex justify-content-center align-items-center" href="#"><i class="bx bx-bell"></i></a>
+                <a class="nav-link d-flex justify-content-center align-items-center" href="#"><i
+                        class="bx bx-bell"></i></a>
                 <span class="position-absolute top-0 end-0 badge rounded-pill bg-warning text-dark">2</span>
             </li>
-            
+
             <li class="nav-item">
                 <a class="nav-link" href="/profil?={{.User}}">{{.User}}</a>
             </li>
@@ -99,199 +104,251 @@ window.calc = function(els) {
 
                 <!-- DEBUT - Partie à répéter -->
 
-                <h1 class="text-white mt-2 ms-3">Catégorie 1</h1>
+                <!--NEW POST-->
 
-                <div id="list" class="container mt-4 py-3 px-4">
-                    <div class="row g-3">
 
-                        <!-- DEBUT - Sous-catégorie -->
-                        
-                        <!-- FIN - Sous-catégorie -->
 
-                        <!-- DEBUT - Sous-catégorie -->
-                        
-                        <!-- FIN - Sous-catégorie -->
-
-                        <!-- DEBUT - Sous-catégorie -->
-                        
-                        <!-- FIN - Sous-catégorie -->
-
-                        <!-- DEBUT - Sous-catégorie -->
-                        
-                        <!-- FIN - Sous-catégorie -->
-
-                        <!-- DEBUT - Sous-catégorie -->
-                        
-                        <!-- FIN - Sous-catégorie -->
-
-                        <!-- DEBUT - Sous-catégorie -->
-                        <div class="col-md-4">
-                            <a class="item position-relative" href="#">
-                                <div class="icon d-flex justify-content-center align-items-start">
-                                    <img class="mt-4" src="./assets_global/img/icons/position.png" alt="Invest">
-                                </div>
-                                <div class="text mt-4">
-                                    <h5>Subcat 5</h5>
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam consequuntur,
-                                        nulla earum dolorum eaque consectetur</p>
-                                </div>
-                                <div class="info row p-2 ps-4 me-5">
-                                    <div class="col-md-3 d-flex align-items-center">
-                                        <p class="infotxt"><strong>781</strong><br>sujets</p>
-                                    </div>
-                                    <div class="col-md-3 d-flex align-items-center">
-                                        <p class="infotxt"><strong>947</strong><br>réponses</p>
-                                    </div>
-                                    <div class="col-md-6 d-flex align-items-center">
-                                        <p class="infotxt"><span>4 juin 2022</span><br>la dernière modification</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        <!-- FIN - Sous-catégorie -->
-
+                <div id="profil" class="col-md-12 mt-4 p-4 border-profil position-relative">
+                    <div class="subtitle px-1" style="background-color: #fff0;">
+                        <a class="btn btn-primary btn-sm me-2" href="/create_post"><i class="bx bx-edit-alt"></i>Post
+                            it</a>
                     </div>
-                </div>
-                <!-- FIN - Partie à répéter -->
-
-                <!-- DEBUT - Partie à répéter -->
-
-                <h1 class="text-white mt-2 ms-3">Catégorie 2</h1>
-
-                <div id="list" class="container mt-4 py-3 px-4">
-                    <div class="row g-3">
-
-                        <!-- DEBUT - Sous-catégorie -->
-                        
-                        <!-- FIN - Sous-catégorie -->
-
-                        <!-- DEBUT - Sous-catégorie -->
-                        
-                        <!-- FIN - Sous-catégorie -->
-
-                        <!-- DEBUT - Sous-catégorie -->
-                        
-                        <!-- FIN - Sous-catégorie -->
-
-                        <!-- DEBUT - Sous-catégorie -->
-                        <div class="col-md-4">
-                            <a class="item position-relative" href="#">
-                                <div class="icon d-flex justify-content-center align-items-start">
-                                    <img class="mt-4" src="./assets_global/img/icons/ok.png" alt="Invest">
+               
+                    <div class="row g-3" style="text-align:center;">
+                        <div class="ex3">
+                            <label for="item-3"><strong><h3 style="color: #c2504c7c;">↓ Check Rules ↓</h3></strong></label>
+                            <input type="checkbox" name="one" id="item-3" checked hidden>
+                            <div class="hide3">
+                                <div class="inner3" style="color: #50738d;">
+                                     <p>Any image published on the forum must respect a maximum size of 1024 pixels maximum for the
+                            largest side; to learn how to place your images on the forum.</p>
+                        <p>Live "squabbles" are prohibited out of respect for the forum: if a dispute opposes you to a
+                            member, try an amicable dialogue with him by personal messaging (PM) and in the event of a
+                            major problem, contact an administrator or a moderator by PM.</p>
+                        <p>It should be noted that the forum is a community aiming at the exchange of means and skills
+                            on a purely voluntary basis and cannot be considered, consequently, as a due service. Its
+                            operation may be suspended, partially or totally, purely and simply without any other form
+                            of justification at any time.</p>
+                        <p>In the same way, a registered member can be banned by decision of the moderation or decision
+                            of the owner of the forum, without possible recourse other than a possible amicable request
+                            towards the owner.</p>
+                        <p>Our reason for existing is motivated by conviviality, good humor and respect for others,
+                            thank you for following us on this path.</p>
+                        <p>Sincerely, NLT-Bot.</p>
+                        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712139.png"
+                            style="height: 10%;width: 10%;display: block;margin-left: auto;margin-right: auto;">
                                 </div>
-                                <div class="text mt-4">
-                                    <h5>Subcat 4</h5>
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam consequuntur,
-                                        nulla earum dolorum eaque consectetur</p>
-                                </div>
-                                <div class="info row p-2 ps-4 me-5">
-                                    <div class="col-md-3 d-flex align-items-center">
-                                        <p class="infotxt"><strong>781</strong><br>sujets</p>
-                                    </div>
-                                    <div class="col-md-3 d-flex align-items-center">
-                                        <p class="infotxt"><strong>947</strong><br>réponses</p>
-                                    </div>
-                                    <div class="col-md-6 d-flex align-items-center">
-                                        <p class="infotxt"><span>4 juin 2022</span><br>la dernière modification</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        <!-- FIN - Sous-catégorie -->
+                            </div>
+                        <br>
 
-                        <!-- DEBUT - Sous-catégorie -->
-                        
-                        <!-- FIN - Sous-catégorie -->
-
-                        <!-- DEBUT - Sous-catégorie -->
-                        
-                        <!-- FIN - Sous-catégorie -->
-
+                       
                     </div>
-                </div>
-                <!-- FIN - Partie à répéter -->
 
-                <!-- DEBUT - Partie à répéter -->
 
-                <h1 class="text-white mt-2 ms-3">Catégorie 3</h1>
-
-                <div id="list" class="container mt-4 py-3 px-4">
-                    <div class="row g-3">
-
-                        <!-- DEBUT - Sous-catégorie -->
-                        
-                        <!-- FIN - Sous-catégorie -->
-
-                        <!-- DEBUT - Sous-catégorie -->
-                        <div class="col-md-4">
-                            <a class="item position-relative" href="#">
-                                <div class="icon d-flex justify-content-center align-items-start">
-                                    <img class="mt-4" src="./assets_global/img/icons/play.png" alt="Invest">
-                                </div>
-                                <div class="text mt-4">
-                                    <h5>Subcat 2</h5>
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam consequuntur,
-                                        nulla earum dolorum eaque consectetur</p>
-                                </div>
-                                <div class="info row p-2 ps-4 me-5">
-                                    <div class="col-md-3 d-flex align-items-center">
-                                        <p class="infotxt"><strong>781</strong><br>sujets</p>
-                                    </div>
-                                    <div class="col-md-3 d-flex align-items-center">
-                                        <p class="infotxt"><strong>947</strong><br>réponses</p>
-                                    </div>
-                                    <div class="col-md-6 d-flex align-items-center">
-                                        <p class="infotxt"><span>4 juin 2022</span><br>la dernière modification</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        <!-- FIN - Sous-catégorie -->
-
-                        <!-- DEBUT - Sous-catégorie -->
-                        
-                        <!-- FIN - Sous-catégorie -->
-
-                        <!-- DEBUT - Sous-catégorie -->
-                        
-                        <!-- FIN - Sous-catégorie -->
-
-                        <!-- DEBUT - Sous-catégorie -->
-                        
-                        <!-- FIN - Sous-catégorie -->
-
-                        <!-- DEBUT - Sous-catégorie -->
-                        
-                        <!-- FIN - Sous-catégorie -->
-
-                    </div>
-                </div>
-                <!-- FIN - Partie à répéter -->
-                <div class="d-flex mt-4 justify-content-between align-items-center">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/">Home Page</a></li>
-                            <li class="breadcrumb-item"><a href="/forum">Forum</a></li>
-
-                        </ol>
-                    </nav>
 
                 </div>
-
-
-
-
-
-
 
             </div>
-        </div>
+                
+                
+                    <!--NEW POST-->
+                    <h1 class="text-white mt-2 ms-3">Catégorie 1</h1>
+
+                    <div id="list" class="container mt-4 py-3 px-4">
+                        <div class="row g-3">
+
+                            <!-- DEBUT - Sous-catégorie -->
+
+                            <!-- FIN - Sous-catégorie -->
+
+                            <!-- DEBUT - Sous-catégorie -->
+
+                            <!-- FIN - Sous-catégorie -->
+
+                            <!-- DEBUT - Sous-catégorie -->
+
+                            <!-- FIN - Sous-catégorie -->
+
+                            <!-- DEBUT - Sous-catégorie -->
+
+                            <!-- FIN - Sous-catégorie -->
+
+                            <!-- DEBUT - Sous-catégorie -->
+
+                            <!-- FIN - Sous-catégorie -->
+
+                            <!-- DEBUT - Sous-catégorie -->
+                            <div class="col-md-4">
+                                <a class="item position-relative" href="#">
+                                    <div class="icon d-flex justify-content-center align-items-start">
+                                        <img class="mt-4" src="./assets_global/img/icons/position.png" alt="Invest">
+                                    </div>
+                                    <div class="text mt-4">
+                                        <h5>Subcat 5</h5>
+                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam
+                                            consequuntur,
+                                            nulla earum dolorum eaque consectetur</p>
+                                    </div>
+                                    <div class="info row p-2 ps-4 me-5">
+                                        <div class="col-md-3 d-flex align-items-center">
+                                            <p class="infotxt"><strong>781</strong><br>sujets</p>
+                                        </div>
+                                        <div class="col-md-3 d-flex align-items-center">
+                                            <p class="infotxt"><strong>947</strong><br>réponses</p>
+                                        </div>
+                                        <div class="col-md-6 d-flex align-items-center">
+                                            <p class="infotxt"><span>4 juin 2022</span><br>la dernière modification</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <!-- FIN - Sous-catégorie -->
+
+                        </div>
+                    </div>
+                    <!-- FIN - Partie à répéter -->
+
+                    <!-- DEBUT - Partie à répéter -->
+
+                    <h1 class="text-white mt-2 ms-3">Catégorie 2</h1>
+
+                    <div id="list" class="container mt-4 py-3 px-4">
+                        <div class="row g-3">
+
+                            <!-- DEBUT - Sous-catégorie -->
+
+                            <!-- FIN - Sous-catégorie -->
+
+                            <!-- DEBUT - Sous-catégorie -->
+
+                            <!-- FIN - Sous-catégorie -->
+
+                            <!-- DEBUT - Sous-catégorie -->
+
+                            <!-- FIN - Sous-catégorie -->
+
+                            <!-- DEBUT - Sous-catégorie -->
+                            <div class="col-md-4">
+                                <a class="item position-relative" href="#">
+                                    <div class="icon d-flex justify-content-center align-items-start">
+                                        <img class="mt-4" src="./assets_global/img/icons/ok.png" alt="Invest">
+                                    </div>
+                                    <div class="text mt-4">
+                                        <h5>Subcat 4</h5>
+                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam
+                                            consequuntur,
+                                            nulla earum dolorum eaque consectetur</p>
+                                    </div>
+                                    <div class="info row p-2 ps-4 me-5">
+                                        <div class="col-md-3 d-flex align-items-center">
+                                            <p class="infotxt"><strong>781</strong><br>sujets</p>
+                                        </div>
+                                        <div class="col-md-3 d-flex align-items-center">
+                                            <p class="infotxt"><strong>947</strong><br>réponses</p>
+                                        </div>
+                                        <div class="col-md-6 d-flex align-items-center">
+                                            <p class="infotxt"><span>4 juin 2022</span><br>la dernière modification</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <!-- FIN - Sous-catégorie -->
+
+                            <!-- DEBUT - Sous-catégorie -->
+
+                            <!-- FIN - Sous-catégorie -->
+
+                            <!-- DEBUT - Sous-catégorie -->
+
+                            <!-- FIN - Sous-catégorie -->
+
+                        </div>
+                    </div>
+                    <!-- FIN - Partie à répéter -->
+
+                    <!-- DEBUT - Partie à répéter -->
+
+                    <h1 class="text-white mt-2 ms-3">Catégorie 3</h1>
+
+                    <div id="list" class="container mt-4 py-3 px-4">
+                        <div class="row g-3">
+
+                            <!-- DEBUT - Sous-catégorie -->
+
+                            <!-- FIN - Sous-catégorie -->
+
+                            <!-- DEBUT - Sous-catégorie -->
+                            <div class="col-md-4">
+                                <a class="item position-relative" href="#">
+                                    <div class="icon d-flex justify-content-center align-items-start">
+                                        <img class="mt-4" src="./assets_global/img/icons/play.png" alt="Invest">
+                                    </div>
+                                    <div class="text mt-4">
+                                        <h5>Subcat 2</h5>
+                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam
+                                            consequuntur,
+                                            nulla earum dolorum eaque consectetur</p>
+                                    </div>
+                                    <div class="info row p-2 ps-4 me-5">
+                                        <div class="col-md-3 d-flex align-items-center">
+                                            <p class="infotxt"><strong>781</strong><br>sujets</p>
+                                        </div>
+                                        <div class="col-md-3 d-flex align-items-center">
+                                            <p class="infotxt"><strong>947</strong><br>réponses</p>
+                                        </div>
+                                        <div class="col-md-6 d-flex align-items-center">
+                                            <p class="infotxt"><span>4 juin 2022</span><br>la dernière modification</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <!-- FIN - Sous-catégorie -->
+
+                            <!-- DEBUT - Sous-catégorie -->
+
+                            <!-- FIN - Sous-catégorie -->
+
+                            <!-- DEBUT - Sous-catégorie -->
+
+                            <!-- FIN - Sous-catégorie -->
+
+                            <!-- DEBUT - Sous-catégorie -->
+
+                            <!-- FIN - Sous-catégorie -->
+
+                            <!-- DEBUT - Sous-catégorie -->
+
+                            <!-- FIN - Sous-catégorie -->
+
+                        </div>
+                    </div>
+                    <!-- FIN - Partie à répéter -->
+                    <div class="d-flex mt-4 justify-content-between align-items-center">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/">Home Page</a></li>
+                                <li class="breadcrumb-item"><a href="/forum">Forum</a></li>
+
+                            </ol>
+                        </nav>
+
+                    </div>
+
+
+
+
+
+
+
+                </div>
+            </div>
     </section>
     <footer class="container mb-5">
         <div class="row divider"></div>
         <div class="row px-2 py-4">
             <div class="col-md-5">
-                <p>Powered by <a href="https://go.dev/">Go </a>Design by <a href="https://github.com/Naywvi">Nagib</a></p>
+                <p>Powered by <a href="https://go.dev/">Go </a>Design by <a href="https://github.com/Naywvi">Nagib</a>
+                </p>
             </div>
             <div class="col-md-7 text-end">
                 <p><a href="#">Contact us</a> | <a href="#">Policy of
@@ -302,14 +359,20 @@ window.calc = function(els) {
         </div>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/boxicons@2.1.2/dist/boxicons.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-    <script src="https://cdn.tiny.cloud/1/a1oa0uw4ffrixbzpelg35rdxmzpx9imirkgfbkz5d62qcnuj/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.tiny.cloud/1/a1oa0uw4ffrixbzpelg35rdxmzpx9imirkgfbkz5d62qcnuj/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
     <script src="./assets_global/js/main.js"></script>
 
 
     <div id="httpSpyContainer_sq27T8VFex4CtQ623afyMoiYA89kG6UZ" class="bottomRight noMargin noToolbar"></div>
 
 
-</body></html>
+</body>
+
+</html>

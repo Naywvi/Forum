@@ -145,7 +145,25 @@ figure {
     left: 0;
     right: 0;
 }
-
+.ex3 .hide3 {
+    display: table;
+    overflow: hidden;
+    transition: all 0.5s ease;
+  }
+  .inner3 {
+    padding: 10px;
+  }
+  .ex3 input[type="checkbox"]:checked + .hide3 {
+    height: 0;
+    opacity: 0;
+    display: block;
+  }
+  .inner3 p{
+    border-color: rgba(255, 255, 255, 0.219);
+    border-top-style: solid;
+    border-top-width: 1px;
+border-bottom-width: 1px;
+  }
 #list .item .info::before {
     content: '';
     display: block;
