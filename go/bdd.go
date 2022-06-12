@@ -115,6 +115,7 @@ func Update_Field(Table, field_table, field_table_two, Last_input, New_input str
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("UPDATE " + Table + " SET " + field_table + " = '" + New_input + "' WHERE " + field_table_two + " = '" + Last_input + "';")
 	db.Exec("UPDATE " + Table + " SET " + field_table + " = '" + New_input + "' WHERE " + field_table_two + " = '" + Last_input + "';")
 }
 

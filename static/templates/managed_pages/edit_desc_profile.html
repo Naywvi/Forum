@@ -18,6 +18,9 @@
     <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
     <link href="../assets_global/css/style.css" rel="stylesheet">
 
+    <script src="https://cdn.tiny.cloud/1/ftnlqzbd2t8o2rodvb77d87vi27ldv6u39eza432pces5v8l/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
+
     <title>Forum template</title>
 
 </head>
@@ -94,14 +97,24 @@
 
                                                 <tbody>
                                                     <tr>
-                                                        <th scope="row">Description</th>
-                                                        <br>
+                                                       
+                                                        
                                                         <form action="/profil/edit?=send" method="post">
-                                                            <textarea id="story" name="story" rows="5" cols="33">
-It was a dark and stormy night...
-</textarea>
+
+                                                           <strong><label for="description" style="color: #cc7f7d;">Describe yourself so other members know you better.</label></strong>
+                                                           <br>   <br>
+                                                            <textarea id="description" name="description" placeholder="{{.Descedit}}" rows="4" cols="50" maxlength="50">
+                                                            
+                                                             </textarea>
+
+                                                             <br><button
+                                                            class="registerbuttonrelou" style="width: 100%;"type="submit"
+                                                            value="description">
+                                                            <a class="btn btn-primary btn-sm me-2"><i
+                                                            class="bx bx-edit-alt"></i>Send new description</a></button>
+
                                                         </form>
-                                                        <td>{{.Desc}}</td>
+                                                     
                                                     </tr>
                                                 </tbody>
 
@@ -112,11 +125,8 @@ It was a dark and stormy night...
                                     </div>
 
                                     <div class="col-md-12 px-2 mt-2 d-flex justify-content-end">
-                                        <a href="" class="btn btn-danger btn-sm me-2"><i class="bx bx-trash"></i>
-                                            Supprimer mon compte</a>
-                                        <a href="/profil/edit" class="btn btn-primary btn-sm me-2"><i
-                                                class="bx bx-edit-alt"></i>
-                                            Éditer</a>
+                                       
+                                        
                                     </div>
 
                                 </div>
@@ -151,6 +161,19 @@ It was a dark and stormy night...
     <script src="https://cdn.tiny.cloud/1/a1oa0uw4ffrixbzpelg35rdxmzpx9imirkgfbkz5d62qcnuj/tinymce/6/tinymce.min.js"
         referrerpolicy="origin"></script>
     <script src="../assets_global/js/main.js"></script>
+    <!DOCTYPE html>
+
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: '',
+            toolbar: '',
+            toolbar_mode: 'floating',
+            tinycomments_mode: 'embedded',
+            tinycomments_author: 'Author name',
+        });
+    </script>
+
 </body>
 
 </html>

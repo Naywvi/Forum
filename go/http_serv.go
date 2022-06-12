@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 	"text/template"
+
+	"github.com/k3a/html2text"
 )
 
 type Connected_Status struct {
@@ -70,9 +72,10 @@ func forum(w http.ResponseWriter, r *http.Request) {
 func edit_desc(w http.ResponseWriter, r *http.Request) {
 	query := r.FormValue("")
 	type Statement_of_user struct {
-		User string
-		Rank string
-		Desc string
+		User     string
+		Rank     string
+		Desc     string
+		Descedit string
 	}
 	//<<< --- Check rank
 
@@ -90,6 +93,7 @@ func edit_desc(w http.ResponseWriter, r *http.Request) {
 				result_profil = Return_Profil(result)
 			)
 			//<<<<
+			pos.Descedit = html2text.HTML2Text(result_profil[6])
 			pos.Desc = result_profil[6]
 			pos.Rank = statement
 			pos.User = User
@@ -98,7 +102,16 @@ func edit_desc(w http.ResponseWriter, r *http.Request) {
 			template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/managed_pages/edit_desc_profile.html"))).Execute(w, pos)
 
 		} else if r.Method == "POST" {
-			if query == "edit" {
+			if query == "send" {
+				desc_edit := r.Form["description"][0]
+				fmt.Println(len(desc_edit))
+				if len(desc_edit) > 2000 || len(desc_edit) == 0 {
+					fmt.Fprint(w, "<script> window.alert('Description too long.'); </script>")
+					fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/profil/edit"; </script>`)
+					return
+				}
+				Update_Field("profil", "Desc", "user", User, desc_edit)
+				fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/profil?=`+User+`"; </script>`)
 
 			}
 
