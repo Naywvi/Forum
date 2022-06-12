@@ -21,7 +21,7 @@ func Create_Post(w http.ResponseWriter, r *http.Request) {
 	pos.Rank = statement
 	if r.Method == "GET" {
 		template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/create_post.html"))).Execute(w, pos)
-		Return_To_Page(w, r, "../static/templates/create_post.html")
+
 	} else if r.Method == "POST" {
 		r.ParseForm()
 		var (
