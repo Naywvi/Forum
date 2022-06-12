@@ -79,7 +79,6 @@ func profildeleted(w http.ResponseWriter, r *http.Request) {
 
 			Delete_Account(user)
 			logout(w, r)
-			fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
 
 		} else {
 

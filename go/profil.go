@@ -63,7 +63,6 @@ func edit_desc(w http.ResponseWriter, r *http.Request) {
 		} else if r.Method == "POST" {
 			if query == "send" {
 				desc_edit := r.Form["description"][0]
-				fmt.Println(len(desc_edit))
 				if len(desc_edit) > 2000 || len(desc_edit) == 0 {
 					fmt.Fprint(w, "<script> window.alert('Description too long.'); </script>")
 					fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/profil/edit"; </script>`)
@@ -137,6 +136,7 @@ func profil(w http.ResponseWriter, r *http.Request) {
 			pos.Email = result_profil[5]
 			pos.Desc = result_profil[6]
 			pos.Rank = result_profil[7]
+
 			//<<<<
 			template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/profil.html"))).Execute(w, pos)
 
