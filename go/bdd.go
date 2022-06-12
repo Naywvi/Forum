@@ -349,7 +349,7 @@ func post() {
 	Is_Ok("Post", "Test_post")
 }
 func comment() {
-	Inser_In_To_DB(Init_Database("comment", Extract_File("../bdd/comment_table.sql", 0, 6)), Extract_File("../bdd/comment_table.sql", 13, 14), "comment", Extract_File("../bdd/comment_table.sql", 9, 10))
+	Inser_In_To_DB(Init_Database("comment", Extract_File("../bdd/comment_table.sql", 0, 11)), Extract_File("../bdd/comment_table.sql", 18, 19), "comment", Extract_File("../bdd/comment_table.sql", 14, 15))
 	Is_Ok("Comment", "Comment")
 }
 func user() {
@@ -365,9 +365,6 @@ func email_verification() {
 	Inser_In_To_DB(Init_Database("email_owner", Extract_File("../bdd/email_verification_table.sql", 0, 2)), Terminal_Init_Table("email_verification_table"), "email_owner", Extract_File("../bdd/email_verification_table.sql", 5, 6)) //<-- Os.Args email verification
 }
 func profilt() {
-	fmt.Println(Extract_File("../bdd/profil_table.sql", 0, 8))
-	fmt.Println(Extract_File("../bdd/profil_table.sql", 11, 12))
-	fmt.Println(Extract_File("../bdd/profil_table.sql", 15, 16))
 	Inser_In_To_DB(Init_Database("profil", Extract_File("../bdd/profil_table.sql", 0, 8)), Extract_File("../bdd/profil_table.sql", 15, 16), "profil", Extract_File("../bdd/profil_table.sql", 11, 12))
 	Is_Ok("profil", "")
 }

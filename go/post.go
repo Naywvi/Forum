@@ -27,11 +27,26 @@ func Show_Post(w http.ResponseWriter, r *http.Request) {
 		User_connected      string
 		User_connected_rank string
 	}
+	type Comment struct {
+		Id               int
+		Id_post          string
+		Date_comment     string
+		User_posted      string
+		Rank_User_Posted string
+		Title_comment    string
+		Reply_user       string
+		Reply_user_rank  string
+		Reply_content    string
+		Content_comment  string
+		Likes            string
+	}
+
 	type Statement_of_user struct {
 		User    string
 		Rank    string
 		Post_Id string
 		Post    []Post
+		Comment []Comment
 	}
 
 	var (
@@ -40,6 +55,7 @@ func Show_Post(w http.ResponseWriter, r *http.Request) {
 		rows               = Select_column("post", "Id", query)
 		instance           all_bd
 		POST               = Post{}
+		//COMMENT            = Comment{}
 	)
 	pos.User = User
 	pos.Rank = statement
@@ -88,7 +104,13 @@ func Show_Post(w http.ResponseWriter, r *http.Request) {
 		template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/post.html"))).Execute(w, pos)
 
 	} else if r.Method == "POST" {
-		// r.ParseForm()
+		r.ParseForm()
+		var (
+			a = r.FormValue("id")
+			b = r.FormValue("reply-to")
+			c = r.FormValue("comment")
+		)
+		fmt.Print(a, " ", b, " ", c)
 		// if query == "send" {
 		// 	var (
 		// 		db, err  = sql.Open(Bdd.Langage, Bdd.Name)
@@ -100,9 +122,9 @@ func Show_Post(w http.ResponseWriter, r *http.Request) {
 		// 		var_p    = []string{"'" + cat + "','" + Title + "','" + Content + "','0','" + User + "','" + timestr[0:10] + "','0'"}
 		// 		var_pstr = strings.Join(var_p, "")
 		// 	)
-		// 	if err != nil {
-		// 		log.Fatal(err)
-		// 	}
+		// 		if err != nil {
+		// 			log.Fatal(err)
+		// }
 		// 	Inser_In_To_DB(db, var_pstr, "post", Extract_File("../bdd/post_table.sql", 11, 12)) //<-- Redirect to post
 		// 	fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
 	} else {

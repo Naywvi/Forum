@@ -59,11 +59,16 @@ type all_bd struct {
 	}
 
 	Comment struct {
-		Id       int
-		Id_post  string
-		User     string
-		Reply_to string
-		Content  string
-		Likes    string
+		Id               int
+		Id_post          string
+		Date_comment     string
+		User_posted      string
+		Rank_User_Posted string
+		Title_comment    string
+		Reply_user       string
+		Reply_user_rank  string
+		Reply_content    string
+		Content_comment  string
+		Likes            string
 	}
 }
