@@ -42,9 +42,22 @@
                         class="bx bx-bell"></i></a>
                 <span class="position-absolute top-0 end-0 badge rounded-pill bg-warning text-dark">2</span>
             </li>
+            {{if eq .Rank "4"}}
+            <li class="nav-item">
+                <a class="nav-link" href="/login">Login</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/register">Register</a>
+            </li>
+            {{end}}
+            {{if ne .Rank "4"}}
             <li class="nav-item">
                 <a class="nav-link" href="/profil?={{.User}}">{{.User}}</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Log out</a>
+            </li>
+            {{end}}
         </ul>
     </div>
 
@@ -78,6 +91,12 @@
                                 </nav>
 
                             </div>
+                            {{if eq .Rank "4"}}
+                            <h1 style="text-align: center;color: #c2504c;">Tu n'es pas autorisé à poster de sujet !
+                                Commence par te
+                                connecter d'abord.</h1>
+                            {{end}}
+                            {{if ne .Rank "4"}}
                             <!--post-->
                             <form action="create_post?=send" method="post">
                                 <div id="post" class="container mt-4 py-3 px-4">
@@ -112,9 +131,10 @@
                              </textarea>
                                         </div>
 
+
                                     </div>
                                     <!---->
-
+                                    {{end}}
                                 </div>
 
 
