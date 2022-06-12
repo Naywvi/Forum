@@ -10,7 +10,81 @@ import (
 	"strings"
 	"text/template"
 	"time"
+
+	"github.com/k3a/html2text"
 )
+
+//#------------------------------------------------------------------------------------------------------------# ↓ Delete account ↓
+
+func Delete_Account(user string) {
+	db, err := sql.Open(Bdd.Langage, Bdd.Name)
+	if err != nil {
+		log.Fatal(err)
+	}
+	db.Exec("DELETE FROM profil WHERE user = " + "'" + user + "'")
+	db.Exec("DELETE FROM user WHERE name = " + "'" + user + "'")
+}
+
+//#------------------------------------------------------------------------------------------------------------# ↓ Edit desc ↓
+
+func edit_desc(w http.ResponseWriter, r *http.Request) {
+	query := r.FormValue("")
+	type Statement_of_user struct {
+		User     string
+		Rank     string
+		Desc     string
+		Descedit string
+	}
+	//<<< --- Check rank
+
+	var (
+		_, statement, User = Check_Cookie(w, r)
+		pos                = Statement_of_user{}
+	)
+
+	//<<< --- Check rank
+	if statement != "4" {
+
+		if r.Method == "GET" {
+			var (
+				result        = Select_column("profil", "user", User) //Rows
+				result_profil = Return_Profil(result)
+			)
+
+			//<<<<
+			pos.Descedit = html2text.HTML2Text(result_profil[6])
+			pos.Desc = result_profil[6]
+			pos.Rank = statement
+			pos.User = User
+
+			//<<<<
+			template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/managed_pages/edit_desc_profile.html"))).Execute(w, pos)
+
+		} else if r.Method == "POST" {
+			if query == "send" {
+				desc_edit := r.Form["description"][0]
+				fmt.Println(len(desc_edit))
+				if len(desc_edit) > 2000 || len(desc_edit) == 0 {
+					fmt.Fprint(w, "<script> window.alert('Description too long.'); </script>")
+					fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/profil/edit"; </script>`)
+					return
+				}
+				Update_Field("profil", "Desc", "user", User, desc_edit)
+				fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/profil?=`+User+`"; </script>`)
+
+			}
+
+		} else {
+
+			Send_Error(w, r)
+
+			return
+		}
+	} else {
+		fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
+		return
+	}
+}
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Init profil ↓
 //Profil Page
@@ -50,6 +124,7 @@ func profil(w http.ResponseWriter, r *http.Request) {
 	if statement != "4" {
 
 		if r.Method == "GET" {
+
 			var (
 				result        = Select_column("profil", "user", query) //Rows
 				result_profil = Return_Profil(result)
@@ -65,8 +140,6 @@ func profil(w http.ResponseWriter, r *http.Request) {
 			//<<<<
 			template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/profil.html"))).Execute(w, pos)
 
-		} else if r.Method == "POST" {
-
 		} else {
 
 			Send_Error(w, r)
@@ -80,11 +153,11 @@ func profil(w http.ResponseWriter, r *http.Request) {
 }
 
 //Create Default profil
-func New_Profil(User, Email string) { //User,Joined,Last_time_connected,Subjet_submit,Email,Desc
+func New_Profil(User, Email, rank_id string) { //User,Joined,Last_time_connected,Subjet_submit,Email,Desc
 	var (
 		db, err            = sql.Open(Bdd.Langage, Bdd.Name)
 		joined             = time.Now()
-		Default_profil_arr = []string{"'" + User + "','" + joined.String() + "','" + joined.String() + "','0','" + Email + "','none_desc','3'"}
+		Default_profil_arr = []string{"'" + User + "','" + joined.String() + "','" + joined.String() + "','0','" + Email + "','none_desc','" + rank_id + "'"}
 		Default_profil     = strings.Join(Default_profil_arr, "")
 	)
 	if err != nil {

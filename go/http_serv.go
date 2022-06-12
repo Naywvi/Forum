@@ -6,8 +6,6 @@ import (
 	"os"
 	"path/filepath"
 	"text/template"
-
-	"github.com/k3a/html2text"
 )
 
 type Connected_Status struct {
@@ -69,51 +67,19 @@ func forum(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-func edit_desc(w http.ResponseWriter, r *http.Request) {
-	query := r.FormValue("")
-	type Statement_of_user struct {
-		User     string
-		Rank     string
-		Desc     string
-		Descedit string
-	}
-	//<<< --- Check rank
-
+func profildeleted(w http.ResponseWriter, r *http.Request) {
 	var (
-		_, statement, User = Check_Cookie(w, r)
-		pos                = Statement_of_user{}
+		_, statement, user = Check_Cookie(w, r)
 	)
 
 	//<<< --- Check rank
 	if statement != "4" {
 
 		if r.Method == "GET" {
-			var (
-				result        = Select_column("profil", "user", User) //Rows
-				result_profil = Return_Profil(result)
-			)
-			//<<<<
-			pos.Descedit = html2text.HTML2Text(result_profil[6])
-			pos.Desc = result_profil[6]
-			pos.Rank = statement
-			pos.User = User
 
-			//<<<<
-			template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/managed_pages/edit_desc_profile.html"))).Execute(w, pos)
-
-		} else if r.Method == "POST" {
-			if query == "send" {
-				desc_edit := r.Form["description"][0]
-				fmt.Println(len(desc_edit))
-				if len(desc_edit) > 2000 || len(desc_edit) == 0 {
-					fmt.Fprint(w, "<script> window.alert('Description too long.'); </script>")
-					fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/profil/edit"; </script>`)
-					return
-				}
-				Update_Field("profil", "Desc", "user", User, desc_edit)
-				fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/profil?=`+User+`"; </script>`)
-
-			}
+			Delete_Account(user)
+			logout(w, r)
+			fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
 
 		} else {
 
@@ -125,6 +91,7 @@ func edit_desc(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
 		return
 	}
+
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Pages Selection & init http_serv ↓
@@ -132,6 +99,7 @@ func edit_desc(w http.ResponseWriter, r *http.Request) {
 func httpServ() {
 	fs := http.FileServer(http.Dir("../static")) // <- ce qu'on envoie en static vers le serv
 	http.Handle("/", fs)
+	http.HandleFunc("/delete-account", profildeleted)
 	http.HandleFunc("/profil/edit", edit_desc)
 	http.HandleFunc("/profil", profil)
 	http.HandleFunc("/forum", forum)

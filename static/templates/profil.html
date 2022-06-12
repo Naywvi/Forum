@@ -113,16 +113,15 @@
                                                     <div class="col-md-1 p-2 text-end"><strong>Groupe(s)</strong></div>
                                                     <div class="col-md-3 p-2">
                                                         {{if eq .Rank "1"}}
-                                                        <span class="badge bg-warning text-dark">Développeur</span>
-                                                        <span class="badge bg-danger">Administrateur</span>
-                                                        <span class="badge bg-success">Certifié</span>
+                                                   
+                                                        <span class="badge bg-success">Admin</span>
                                                         {{end}}
                                                         {{if eq .Rank "2"}}
                                                         <span class="badge bg-danger">Modérateur</span>
-                                                        <span class="badge bg-success">Certifié</span>
+                                                        <span class="badge bg-success">Moderator</span>
                                                         {{end}}
                                                         {{if eq .Rank "3"}}
-                                                        <span class="badge bg-success">Certifié</span>
+                                                        <span class="badge bg-success">Member</span>
                                                         {{end}}
                                                     </div>
                                                 </div>
@@ -159,13 +158,15 @@
                                     </div>
 
                                     <div class="col-md-12 px-2 mt-2 d-flex justify-content-end">
-                                        <a href="" class="btn btn-danger btn-sm me-2"><i class="bx bx-trash"></i>
-                                            Supprimer mon compte</a>
+                                        <a href="/delete-account" class="btn btn-danger btn-sm me-2"><i class="bx bx-trash"></i>
+                                            Delete your account</a>
                                         <a href="/profil/edit" class="btn btn-primary btn-sm me-2"><i class="bx bx-edit-alt"></i>
-                                            Éditer</a>
+                                            Edit your description</a>
                                     </div>
 
                                 </div>
+                               <strong style="color: #ffc106;font-style:italic;"><p>If you decide to delete your account, this is done instantly. You cannot go back.</p></strong>
+                                
                             </div>
                         </div>
                     </div>

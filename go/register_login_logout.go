@@ -64,7 +64,6 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 			if Check == true {
 				SettCookie(w, r) //send cookie first
-				fmt.Fprint(w, `<script> window.alert('Your are connected') </script>`)
 				fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
 				//--> redirect to index
 

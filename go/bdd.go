@@ -115,7 +115,7 @@ func Update_Field(Table, field_table, field_table_two, Last_input, New_input str
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("UPDATE " + Table + " SET " + field_table + " = '" + New_input + "' WHERE " + field_table_two + " = '" + Last_input + "';")
+
 	db.Exec("UPDATE " + Table + " SET " + field_table + " = '" + New_input + "' WHERE " + field_table_two + " = '" + Last_input + "';")
 }
 
@@ -182,7 +182,7 @@ func ADD_User_To_BDD(name, pswd, email, rank_id string) {
 	}
 
 	Inser_In_To_DB(db, Default_user, "user", Extract_File("../bdd/user_table.sql", 11, 12))
-	New_Profil(name, email)
+	New_Profil(name, email, rank_id)
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Select on table ↓
