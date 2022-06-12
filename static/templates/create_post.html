@@ -26,14 +26,15 @@
     <div class="topbar px-2 py-1 d-flex justify-content-between align-items-center position-relative">
         <ul class="nav me-4 d-flex justify-content-center align-items-center">
             <li class="nav-item">
-                <a class="nav-link" href="#">NagWebSite</a>
+                <a class="nav-link" href="/forum">Forum</a>
             </li>
+
+            {{if eq .Rank "1"}}
             <li class="nav-item">
-                <a class="nav-link" href="#">FAQ</a>
+                <a class="nav-link" href="/admin_panel">Admin panel</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Me contacter</a>
-            </li>
+            {{end}}
+
         </ul>
         <ul class="nav me-4 d-flex justify-content-center align-items-center">
             <li class="nav-item position-relative">
@@ -42,7 +43,7 @@
                 <span class="position-absolute top-0 end-0 badge rounded-pill bg-warning text-dark">2</span>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">test</a>
+                <a class="nav-link" href="/profil?={{.User}}">{{.User}}</a>
             </li>
         </ul>
     </div>
@@ -89,16 +90,21 @@
                                                     it</a>
                                             </div>
                                             <div class="mb-3 mt-3 p-0">
-                                                <input type="text" class="form-control" id="title" aria-describedby="postTitle" placeholder="Title" name="Post_Title">
+                                                <input type="text" class="form-control" id="title"
+                                                    aria-describedby="postTitle" placeholder="Title" name="Post_Title">
                                             </div>
 
                                             <!---->
                                             <div class="rows" style="margin-bottom: 2rem;">
-                                                
-                                                <a class="btn btn-primary btn-sm me-2"><i class="bx bx-edit-alt"></i><button class="registerbuttonrelou" type="submit" value="Login">cat1</button></a>
-                                                <a class="btn btn-primary btn-sm me-2"><i class="bx bx-edit-alt"></i><button class="registerbuttonrelou" type="submit" value="Login">cat2</button></a>
+
+                                                <a class="btn btn-primary btn-sm me-2"><i
+                                                        class="bx bx-edit-alt"></i><button class="registerbuttonrelou"
+                                                        type="submit" value="Login">cat1</button></a>
+                                                <a class="btn btn-primary btn-sm me-2"><i
+                                                        class="bx bx-edit-alt"></i><button class="registerbuttonrelou"
+                                                        type="submit" value="Login">cat2</button></a>
                                             </div>
-                                            
+
                                             <!---->
                                             <textarea
                                                 placeholder="Please respect the spelling as much as possible. Any post put in the wrong section can be moved to the appropriate category. Non-compliance with the rules leads to the deletion of the post, and the permanent banishment of the creator of the post. 🙂">
