@@ -72,50 +72,65 @@
                             <li class="breadcrumb-item"><a class="active" href="#">Titre 1</a></li>
                         </ol>
                     </nav>
-                    <a href="#" class="btn btn-primary btn-sm"><small><i class="bx bx-notepad"></i> Répondre</small></a>
+                  
                 </div>
                 <div id="details" class="container mt-4 py-3 px-4">
                     <div class="row g-3">
-
+                        {{range $p := .Post}}
                         <div class="d-flex flex-row justify-content-center align-items-center">
                             <div class="col-md-1">
                                 <img class="w-75 rounded-circle shadow mt-2" src="https://picsum.photos/200/200" alt="">
                             </div>
                             <div class="col-md-11 pb-3">
                                 <h1 class="text-white details">
-                                    <i class="bx bx-spreadsheet"></i> <strong class="text-yellow">Titre 1 : Lorem ipsum
-                                        dolor sit amet consectetur adipisicing elit.</strong><br>
+                                    <i class="bx bx-spreadsheet"></i> <strong class="text-yellow">
+                                        {{$p.Title}}
+                                    </strong><br>
                                     <small>
-                                        Posté le 1 juin 2022 à 10:54 par <a class="text-yellow" href="#">UserName</a>
-                                        <span class="badge bg-success">Certifié</span>
-                                        <span class="badge bg-danger">Administrateur</span>
-                                        <span class="badge bg-warning text-dark">Développeur</span>
+                                        Posted {{$p.Last_Posted}} by
+                                        <!--Date--> <a class="text-yellow" href="/profil?=">
+                                            {{$p.Posted_user}}
+                                        </a>
+                                
+                                        {{ if eq .Posted_user_rank  "3" }}
+                                        <span class="badge bg-success">Member</span>
+                                        {{else if eq .Posted_user_rank "2" }}
+                                        <span class="badge bg-danger">Moderator</span>
+                                        {{else if eq .Posted_user_rank "1"}}
+                                        <span class="badge bg-warning text-dark">Admin</span>
+                                        {{end}}
+
+                                        <br><br>
+
                                     </small>
                                 </h1>
                             </div>
                         </div>
 
+
                         <div class="col-md-12 px-2">
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita hic in optio impedit
-                                asperiores vitae, sint laborum, quis laboriosam, repudiandae neque magni voluptatibus
-                                saepe. Dolore sit vel fugit laudantium aperiam.</p>
-                            <figure class="figure p-1">
-                                <img src="./assets_global/img/header.jpg" class="figure-img img-fluid rounded"
-                                    alt="...">
-                                <figcaption class="figure-caption">A caption for the above image.</figcaption>
-                            </figure>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita hic in optio impedit
-                                asperiores vitae, sint laborum, quis laboriosam, repudiandae neque magni voluptatibus
-                                saepe. Dolore sit vel fugit laudantium aperiam.</p>
+
+                            {{$p.Content}}
+
                         </div>
                         <div class="col-md-12 px-2 mt-2 d-flex justify-content-end">
                             <!-- SI AUTEUR DU POST-->
+                            {{ if eq .User_connected .Posted_user }}
                             <a href="" class="btn btn-danger btn-sm me-2"><i class="bx bx-trash"></i> Supprimer</a>
                             <a href="" class="btn btn-primary btn-sm me-2"><i class="bx bx-edit-alt"></i> Éditer</a>
+                            {{else if eq .User_connected_rank "1"}}
+                            <a href="" class="btn btn-danger btn-sm me-2"><i class="bx bx-trash"></i> Supprimer</a>
+                            <a href="" class="btn btn-primary btn-sm me-2"><i class="bx bx-edit-alt"></i> Éditer</a>
+                            {{else if eq .User_connected_rank "2"}}
+                            <a href="" class="btn btn-danger btn-sm me-2"><i class="bx bx-trash"></i> Supprimer</a>
+                            <a href="" class="btn btn-primary btn-sm me-2"><i class="bx bx-edit-alt"></i> Éditer</a>
+                            
+                            {{end}}
+{{end}}
                             <!-- SI NON-->
+                            {{if ne .Rank "4"}}
                             <a href="" class="btn btn-primary btn-sm me-2"><i class="bx bx-notepad"></i> Répondre</a>
-                            <a href="" class="btn btn-success btn-sm me-2"><i class="bx bxs-quote-alt-right"></i>
-                                Citer</a>
+                            {{end}}
                         </div>
 
                         <!-- DEBUT - Réponses -->
@@ -145,334 +160,14 @@
                                 <!-- SI NON-->
                                 <a href="" class="btn btn-primary btn-sm me-2"><i class="bx bx-notepad"></i>
                                     Répondre</a>
-                                <a href="" class="btn btn-success btn-sm me-2"><i class="bx bxs-quote-alt-right"></i>
-                                    Citer</a>
+                                
                             </div>
                         </div>
                         <!-- FIN - Réponse -->
 
-                        <!-- DEBUT - Réponses -->
-                        <div class="item">
-                            <div class="col-md-12 d-flex flex-row align-items-start p-2" href="#">
-                                <div id="user" class="col-md-2 text-center">
-                                    <h5 class="text-yellow">UserName</h5>
-                                    <img class="w-50 rounded-circle shadow mt-2" src="https://picsum.photos/200/200"
-                                        alt="">
-                                    <p class="lastresp mt-2">Postée le 4 juin à 21:54</p>
-                                    <span class="badge bg-success">Certifié</span>
-                                    <span class="badge bg-danger">Administrateur</span>
-                                    <span class="badge bg-warning text-dark">Développeur</span>
-                                </div>
-                                <div class="col-md-10 ps-5 pe-2">
-                                    <h5>Réponse #2 : Titre 2</h5>
-                                    <p class="border-top pt-3 my-4">Lorem ipsum dolor sit amet consectetur adipisicing
-                                        elit. Expedita hic in optio impedit asperiores vitae, sint laborum, quis
-                                        laboriosam, repudiandae neque magni voluptatibus saepe. Dolore sit vel fugit
-                                        laudantium aperiam.</p>
-                                </div>
-                            </div>
-                            <div class="col-md-12 px-2 py-4 mt-2 d-flex justify-content-end border-top">
-                                <!-- SI AUTEUR DU POST-->
-                                <a href="" class="btn btn-danger btn-sm me-2"><i class="bx bx-trash"></i> Supprimer</a>
-                                <a href="" class="btn btn-primary btn-sm me-2"><i class="bx bx-edit-alt"></i> Éditer</a>
-                                <!-- SI NON-->
-                                <a href="" class="btn btn-primary btn-sm me-2"><i class="bx bx-notepad"></i>
-                                    Répondre</a>
-                                <a href="" class="btn btn-success btn-sm me-2"><i class="bx bxs-quote-alt-right"></i>
-                                    Citer</a>
-                            </div>
-                        </div>
-                        <!-- FIN - Réponse -->
 
-                        <!-- DEBUT - Réponses -->
-                        <div class="item">
-                            <div class="col-md-12 d-flex flex-row align-items-start p-2" href="#">
-                                <div id="user" class="col-md-2 text-center">
-                                    <h5 class="text-yellow">UserName</h5>
-                                    <img class="w-50 rounded-circle shadow mt-2" src="https://picsum.photos/200/200"
-                                        alt="">
-                                    <p class="lastresp mt-2">Postée le 4 juin à 21:54</p>
-                                    <span class="badge bg-success">Certifié</span>
-                                    <span class="badge bg-danger">Administrateur</span>
-                                    <span class="badge bg-warning text-dark">Développeur</span>
-                                </div>
-                                <div class="col-md-10 ps-5 pe-2">
-                                    <h5>Réponse #3 : Titre 2</h5>
-                                    <p class="border-top pt-3 my-4">Lorem ipsum dolor sit amet consectetur adipisicing
-                                        elit. Expedita hic in optio impedit asperiores vitae, sint laborum, quis
-                                        laboriosam, repudiandae neque magni voluptatibus saepe. Dolore sit vel fugit
-                                        laudantium aperiam.</p>
-                                </div>
-                            </div>
-                            <div class="col-md-12 px-2 py-4 mt-2 d-flex justify-content-end border-top">
-                                <!-- SI AUTEUR DU POST-->
-                                <a href="" class="btn btn-danger btn-sm me-2"><i class="bx bx-trash"></i> Supprimer</a>
-                                <a href="" class="btn btn-primary btn-sm me-2"><i class="bx bx-edit-alt"></i> Éditer</a>
-                                <!-- SI NON-->
-                                <a href="" class="btn btn-primary btn-sm me-2"><i class="bx bx-notepad"></i>
-                                    Répondre</a>
-                                <a href="" class="btn btn-success btn-sm me-2"><i class="bx bxs-quote-alt-right"></i>
-                                    Citer</a>
-                            </div>
-                        </div>
-                        <!-- FIN - Réponse -->
+                        <!--FORM-->
 
-                        <form class="col-md-12 p-0">
-                            <div class="header p-2">
-                                Réponse rapide
-                            </div>
-                            <div class="mb-3 mt-3 p-0">
-                                <textarea id="editor" class="form-control" rows="3" style="display: none;"
-                                    aria-hidden="true"></textarea>
-                                <div role="application" class="tox tox-tinymce"
-                                    style="visibility: hidden; height: 400px; transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s; border-color: rgb(194, 80, 76); background-color: rgb(23, 33, 41);"
-                                    aria-disabled="false">
-                                    <div class="tox-editor-container">
-                                        <div data-alloy-vertical-dir="toptobottom" class="tox-editor-header">
-                                            <div role="group" class="tox-toolbar-overlord" aria-disabled="false">
-                                                <div role="group" class="tox-toolbar__primary">
-                                                    <div title="" role="toolbar" data-alloy-tabstop="true" tabindex="-1"
-                                                        class="tox-toolbar__group"><button aria-label="Titre&nbsp;1"
-                                                            title="Titre&nbsp;1" type="button" tabindex="-1"
-                                                            class="tox-tbtn tox-tbtn--select" aria-disabled="false"
-                                                            aria-pressed="false"><span
-                                                                class="tox-tbtn__select-label">H1</span></button><button
-                                                            aria-label="Titre 2" title="Titre 2" type="button"
-                                                            tabindex="-1" class="tox-tbtn tox-tbtn--select"
-                                                            aria-disabled="false" aria-pressed="false"><span
-                                                                class="tox-tbtn__select-label">H2</span></button><button
-                                                            aria-label="Gras" title="Gras" type="button" tabindex="-1"
-                                                            class="tox-tbtn" aria-disabled="false"
-                                                            aria-pressed="false"><span
-                                                                class="tox-icon tox-tbtn__icon-wrap"><svg width="20px"
-                                                                    height="20px" class="bi bi-type-bold"
-                                                                    viewBox="0 0 16 16" focusable="false">
-                                                                    <path
-                                                                        d="M8.2 13c2.1 0 3.4-1 3.4-2.8 0-1.3-1-2.3-2.3-2.4a2.2 2.2 0 001.8-2.2c0-1.5-1.1-2.5-3-2.5H3.8V13h4.4zM6 4.7h1.7c1 0 1.5.4 1.5 1.2 0 .9-.6 1.3-1.7 1.3H5.9V4.7zm0 6.8V8.6h1.7c1.3 0 2 .5 2 1.4 0 1-.7 1.5-2 1.5H6z">
-                                                                    </path>
-                                                                </svg></span></button><button aria-label="Italique"
-                                                            title="Italique" type="button" tabindex="-1"
-                                                            class="tox-tbtn" aria-disabled="false"
-                                                            aria-pressed="false"><span
-                                                                class="tox-icon tox-tbtn__icon-wrap"><svg width="20px"
-                                                                    height="20px" class="bi bi-type-italic"
-                                                                    viewBox="0 0 16 16" focusable="false">
-                                                                    <path
-                                                                        d="M8 11.7l1.5-7.2c.2-.6.3-.8 1.4-.9v-.5H7.3l-.1.5c1 .1 1.1.3 1 .9l-1.5 7.2c-.2.6-.3.7-1.4.8v.5h3.7l.1-.5c-1-.1-1.1-.2-1-.8z">
-                                                                    </path>
-                                                                </svg></span></button><button aria-label="Barré"
-                                                            title="Barré" type="button" tabindex="-1" class="tox-tbtn"
-                                                            aria-disabled="false" aria-pressed="false"><span
-                                                                class="tox-icon tox-tbtn__icon-wrap"><svg width="20px"
-                                                                    height="20px" class="bi bi-type-strikethrough"
-                                                                    viewBox="0 0 16 16" focusable="false">
-                                                                    <path
-                                                                        d="M6.3 5.7c0 .3.1.6.3.8H5.2a2.8 2.8 0 01-.1-.8C5 4.1 6.5 3 8.5 3S12 4 12 5.8h-1.2c-.1-1-1-1.7-2.3-1.7-1.2 0-2.2.6-2.2 1.6zm2.2 7.5c-2.1 0-3.6-1.1-3.7-2.8h1.3c.1 1 1 1.7 2.5 1.7 1.3 0 2.3-.7 2.3-1.7 0-.8-.5-1.4-2-1.7L8 8.5H1v-1h14v1h-3.5c.5.4.7 1 .7 1.7 0 1.8-1.5 3-3.7 3z">
-                                                                    </path>
-                                                                </svg></span></button><button aria-label="Blockquote"
-                                                            title="Blockquote" type="button" tabindex="-1"
-                                                            class="tox-tbtn" aria-disabled="false"
-                                                            aria-pressed="false"><span
-                                                                class="tox-icon tox-tbtn__icon-wrap"><svg width="20px"
-                                                                    height="20px" viewBox="0 0 16 16" focusable="false">
-                                                                    <path
-                                                                        d="M6.9 6A2.1 2.1 0 104 9c.7.3 1.5.3 2.1-.1-.1.5-.4 1-1 1.5a.5.5 0 00.8.8C8 9.2 7.7 7.2 7 6zm5 0a2.1 2.1 0 10-2.7 3c.6.3 1.5.3 2.1-.1-.2.5-.5 1-1 1.5a.5.5 0 00.8.8c1.9-2 1.6-4 .8-5.2z">
-                                                                    </path>
-                                                                </svg></span></button><button aria-label="Liste à puces"
-                                                            title="Liste à puces" type="button" tabindex="-1"
-                                                            class="tox-tbtn" aria-disabled="false"
-                                                            aria-pressed="false"><span
-                                                                class="tox-icon tox-tbtn__icon-wrap"><svg width="20px"
-                                                                    height="20px" class="bi bi-list-ul"
-                                                                    viewBox="0 0 16 16" focusable="false">
-                                                                    <path fill-rule="evenodd"
-                                                                        d="M5 11.5a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0-4a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0-4a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm-3 1a1 1 0 100-2 1 1 0 000 2zm0 4a1 1 0 100-2 1 1 0 000 2zm0 4a1 1 0 100-2 1 1 0 000 2z">
-                                                                    </path>
-                                                                </svg></span></button><button
-                                                            aria-label="Liste numérotée" title="Liste numérotée"
-                                                            type="button" tabindex="-1" class="tox-tbtn"
-                                                            aria-disabled="false" aria-pressed="false"><span
-                                                                class="tox-icon tox-tbtn__icon-wrap"><svg width="20px"
-                                                                    height="20px" class="bi bi-list-ol"
-                                                                    viewBox="0 0 16 16" focusable="false">
-                                                                    <path fill-rule="evenodd"
-                                                                        d="M5 11.5a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0-4a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0-4a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5z">
-                                                                    </path>
-                                                                    <path
-                                                                        d="M1.7 11.9v-.5H2c.2 0 .4-.1.4-.3 0-.2-.2-.3-.4-.3s-.4.1-.4.3H1c0-.5.4-.8 1-.8s1 .3 1 .7a.6.6 0 01-.5.6.6.6 0 01.6.6c0 .6-.5.8-1 .8-.7 0-1-.3-1.1-.7h.6c0 .1.2.3.4.3.3 0 .4-.2.4-.4S2.3 12 2 12h-.3zm0-4.7h-.6c0-.5.3-1 1-1 .5 0 1 .4 1 .8s-.3.7-.6.9l-.5.6h1V9H1.2v-.4l1-1c.1-.1.3-.3.3-.5s-.2-.3-.3-.3a.3.3 0 00-.4.3zM2.6 5h-.7V3l-.6.3v-.5l.6-.5h.7V5z">
-                                                                    </path>
-                                                                </svg></span></button>
-                                                        <div aria-pressed="false" aria-label="Couleur d'arrière-plan"
-                                                            title="Couleur d'arrière-plan" role="button"
-                                                            aria-haspopup="true" tabindex="-1" unselectable="on"
-                                                            class="tox-split-button" style="user-select: none;"
-                                                            aria-disabled="false" aria-expanded="false"
-                                                            aria-describedby="aria_1768678382121654793956724"><span
-                                                                role="presentation" class="tox-tbtn"
-                                                                aria-disabled="false"><span
-                                                                    class="tox-icon tox-tbtn__icon-wrap"><svg
-                                                                        width="20px" height="20px" viewBox="0 0 16 16"
-                                                                        focusable="false">
-                                                                        <path fill-rule="evenodd"
-                                                                            d="M14.5 0c.8 0 1.5.7 1.5 1.5v13c0 .8-.7 1.5-1.5 1.5h-13C.7 16 0 15.3 0 14.5v-13C0 .7.7 0 1.5 0h13zM8.6 3a.8.8 0 00-1.3.2L3 13h1.6l1.3-2.8h4.4l1.2 2.8H13L8.8 3.2zM8 5.4l1.5 3.5h-3L8 5.3z"
-                                                                            id="tox-icon-highlight-bg-color__color"
-                                                                            fill="#000000"></path>
-                                                                    </svg></span></span><span role="presentation"
-                                                                class="tox-tbtn tox-split-button__chevron"
-                                                                aria-disabled="false"><svg width="20px" height="20px"
-                                                                    viewBox="0 0 16 16" focusable="false">
-                                                                    <path
-                                                                        d="M11.6 5.6l.8.8L8 10.7 3.6 6.4l.8-.8L8 9.3z">
-                                                                    </path>
-                                                                </svg></span><span aria-hidden="true"
-                                                                style="display: none;"
-                                                                id="aria_1768678382121654793956724">Pour ouvrir la
-                                                                popup, appuyez sur Maj+Entrée</span></div>
-                                                    </div>
-                                                    <div title="" role="toolbar" data-alloy-tabstop="true" tabindex="-1"
-                                                        class="tox-toolbar__group"><button
-                                                            aria-label="Insérer/modifier lien"
-                                                            title="Insérer/modifier lien" type="button" tabindex="-1"
-                                                            class="tox-tbtn" aria-disabled="false"
-                                                            aria-pressed="false"><span
-                                                                class="tox-icon tox-tbtn__icon-wrap"><svg width="20px"
-                                                                    height="20px" class="bi bi-link" viewBox="0 0 16 16"
-                                                                    focusable="false">
-                                                                    <path
-                                                                        d="M6.4 5.5H4a3 3 0 000 6h3a3 3 0 002.8-4H9h-.3a2 2 0 01-1.7 3H4a2 2 0 110-4h1.5l.9-1z">
-                                                                    </path>
-                                                                    <path
-                                                                        d="M9 5.5a3 3 0 00-2.8 4h1a2 2 0 011.8-3h3a2 2 0 110 4h-1.5a4 4 0 01-.9 1H12a3 3 0 100-6H9z">
-                                                                    </path>
-                                                                </svg></span></button><button
-                                                            aria-label="Insérer/modifier image"
-                                                            title="Insérer/modifier image" type="button" tabindex="-1"
-                                                            class="tox-tbtn" aria-disabled="false"
-                                                            aria-pressed="false"><span
-                                                                class="tox-icon tox-tbtn__icon-wrap"><svg width="20px"
-                                                                    height="20px" class="bi bi-image"
-                                                                    viewBox="0 0 16 16" focusable="false">
-                                                                    <path d="M6 5.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z">
-                                                                    </path>
-                                                                    <path
-                                                                        d="M2 1a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V3a2 2 0 00-2-2H2zm12 1a1 1 0 011 1v6.5l-3.8-2a.5.5 0 00-.6.1L7 11.4 4.3 9.6a.5.5 0 00-.7 0L1 12V3a1 1 0 011-1h12z">
-                                                                    </path>
-                                                                </svg></span></button><button
-                                                            aria-label="Insérer/modifier un média"
-                                                            title="Insérer/modifier un média" type="button"
-                                                            tabindex="-1" class="tox-tbtn" aria-disabled="false"
-                                                            aria-pressed="false"><span
-                                                                class="tox-icon tox-tbtn__icon-wrap"><svg width="20px"
-                                                                    height="20px" viewBox="0 0 16 16" focusable="false">
-                                                                    <g fill-rule="evenodd">
-                                                                        <path fill-rule="nonzero"
-                                                                            d="M14 1a2 2 0 012 2v10a2 2 0 01-2 2H2a2 2 0 01-2-2V3c0-1.1.9-2 2-2h12zm0 1H2a1 1 0 00-1 .9V13c0 .5.4 1 .9 1H14c.5 0 1-.4 1-.9V3c0-.5-.4-1-.9-1H14z">
-                                                                        </path>
-                                                                        <path
-                                                                            d="M6.8 4.6L11 8l-4.2 3.4A.5.5 0 016 11V5a.5.5 0 01.8-.4z">
-                                                                        </path>
-                                                                    </g>
-                                                                </svg></span></button></div>
-                                                    <div title="" role="toolbar" data-alloy-tabstop="true" tabindex="-1"
-                                                        class="tox-toolbar__group"><button
-                                                            aria-label="Effacer la mise en forme"
-                                                            title="Effacer la mise en forme" type="button" tabindex="-1"
-                                                            class="tox-tbtn" aria-disabled="false"><span
-                                                                class="tox-icon tox-tbtn__icon-wrap"><svg width="20px"
-                                                                    height="20px" viewBox="0 0 16 16" focusable="false">
-                                                                    <g fill-rule="evenodd">
-                                                                        <path fill-rule="nonzero"
-                                                                            d="M12 2H4v2.2h.4c.3-1.4.7-1.6 2.5-1.6h.4l-1.1 8.1c0 .6-.2.7-1.2.8v.5h3.7v-.5c-1 0-1.2-.2-1.2-.8l1.2-8.2H9c1.8.1 2.2.3 2.5 1.7h.4V2z">
-                                                                        </path>
-                                                                        <path
-                                                                            d="M1.5 13h8a.5.5 0 110 1h-8a.5.5 0 110-1z">
-                                                                        </path>
-                                                                        <path fill-rule="nonzero"
-                                                                            d="M11.1 11.1c.2-.1.6-.1.8 0l1.6 1.7 1.6-1.7a.5.5 0 01.8.7l-1.7 1.7 1.7 1.6v.1a.5.5 0 01-.8.7l-1.6-1.7-1.6 1.7a.5.5 0 01-.8-.7l1.7-1.7-1.7-1.6v-.1a.5.5 0 010-.7z">
-                                                                        </path>
-                                                                    </g>
-                                                                </svg></span></button><button aria-label="Aide"
-                                                            title="Aide" type="button" tabindex="-1" class="tox-tbtn"
-                                                            aria-disabled="false"><span
-                                                                class="tox-icon tox-tbtn__icon-wrap"><svg width="20px"
-                                                                    height="20px" class="bi bi-question-circle"
-                                                                    viewBox="0 0 16 16" focusable="false">
-                                                                    <path
-                                                                        d="M8 15A7 7 0 118 1a7 7 0 010 14zm0 1A8 8 0 108 0a8 8 0 000 16z">
-                                                                    </path>
-                                                                    <path
-                                                                        d="M5.3 5.8a.2.2 0 00.2.2h.8c.2 0 .3 0 .3-.2 0-.7.5-1.2 1.3-1.2.7 0 1.3.4 1.3 1.2 0 .7-.3 1-1 1.4-.6.5-1.1 1-1 2v.2a.3.3 0 00.2.2h.8a.3.3 0 00.2-.2v-.1c0-.7.3-1 1-1.5.6-.5 1.3-1 1.3-2 0-1.6-1.3-2.3-2.7-2.3-1.3 0-2.6.6-2.7 2.3zm1.5 5.7c0 .6.4 1 1 1s1-.4 1-1c0-.5-.4-.9-1-.9s-1 .4-1 1z">
-                                                                    </path>
-                                                                </svg></span></button></div>
-                                                </div>
-                                            </div>
-                                            <div class="tox-anchorbar"></div>
-                                        </div>
-                                        <div class="tox-sidebar-wrap">
-                                            <div class="tox-edit-area"><iframe id="editor_ifr" allowtransparency="true"
-                                                    title="Zone de texte enrichi" class="tox-edit-area__iframe"
-                                                    srcdoc="<!DOCTYPE html><html><head><meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot; /></head><body id=&quot;tinymce&quot; class=&quot;mce-content-body &quot; data-id=&quot;editor&quot; aria-label=&quot;Zone de texte enrichi. Appuyez sur ALT-0 pour afficher l'aide.&quot;><br></body></html>"
-                                                    frameborder="0"></iframe></div>
-                                            <div role="complementary" class="tox-sidebar">
-                                                <div data-alloy-tabstop="true" tabindex="-1"
-                                                    class="tox-sidebar__slider tox-sidebar--sliding-closed"
-                                                    style="width: 0px;">
-                                                    <div class="tox-sidebar__pane-container"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="tox-statusbar">
-                                        <div class="tox-statusbar__text-container">
-                                            <div role="navigation" data-alloy-tabstop="true" class="tox-statusbar__path"
-                                                aria-disabled="false">
-                                                <div data-index="0" aria-level="1" role="button" tabindex="-1"
-                                                    class="tox-statusbar__path-item" aria-disabled="false">p</div>
-                                            </div><span class="tox-statusbar__branding"><a
-                                                    href="https://www.tiny.cloud/powered-by-tiny?utm_campaign=editor_referral&amp;utm_medium=poweredby&amp;utm_source=tinymce&amp;utm_content=v6"
-                                                    rel="noopener" target="_blank" aria-label="Propulsé par Tiny"
-                                                    tabindex="-1"><svg width="50px" height="16px" viewBox="0 0 50 16"
-                                                        xmlns="http://www.w3.org/2000/svg">
-                                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                                            d="M10.143 0c2.608.015 5.186 2.178 5.186 5.331 0 0 .077 3.812-.084 4.87-.361 2.41-2.164 4.074-4.65 4.496-1.453.284-2.523.49-3.212.623-.373.071-.634.122-.785.152-.184.038-.997.145-1.35.145-2.732 0-5.21-2.04-5.248-5.33 0 0 0-3.514.03-4.442.093-2.4 1.758-4.342 4.926-4.963 0 0 3.875-.752 4.036-.782.368-.07.775-.1 1.15-.1Zm1.826 2.8L5.83 3.989v2.393l-2.455.475v5.968l6.137-1.189V9.243l2.456-.476V2.8ZM5.83 6.382l3.682-.713v3.574l-3.682.713V6.382Zm27.173-1.64-.084-1.066h-2.226v9.132h2.456V7.743c-.008-1.151.998-2.064 2.149-2.072 1.15-.008 1.987.92 1.995 2.072v5.065h2.455V7.359c-.015-2.18-1.657-3.929-3.837-3.913a3.993 3.993 0 0 0-2.908 1.296Zm-6.3-4.266L29.16 0v2.387l-2.456.475V.476Zm0 3.2v9.132h2.456V3.676h-2.456Zm18.179 11.787L49.11 3.676H46.58l-1.612 4.527-.46 1.382-.384-1.382-1.611-4.527H39.98l3.3 9.132L42.15 16l2.732-.537ZM22.867 9.738c0 .752.568 1.075.921 1.075.353 0 .668-.047.998-.154l.537 1.765c-.23.154-.92.537-2.225.537-1.305 0-2.655-.997-2.686-2.686a136.877 136.877 0 0 1 0-4.374H18.8V3.676h1.612v-1.98l2.455-.476v2.456h2.302V5.9h-2.302v3.837Z">
-                                                        </path>
-                                                    </svg></a></span>
-                                        </div>
-                                        <div title="Redimensionner" data-alloy-tabstop="true" tabindex="-1"
-                                            class="tox-statusbar__resize-handle"><svg width="10" height="10"
-                                                focusable="false">
-                                                <g fill-rule="nonzero">
-                                                    <path
-                                                        d="M8.1 1.1A.5.5 0 119 2l-7 7A.5.5 0 111 8l7-7zM8.1 5.1A.5.5 0 119 6l-3 3A.5.5 0 115 8l3-3z">
-                                                    </path>
-                                                </g>
-                                            </svg></div>
-                                    </div>
-                                    <div aria-hidden="true" class="tox-throbber" style="display: none;"></div>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-sm"><small><i class="bx bx-notepad"></i>
-                                    Poster</small></button>
-                        </form>
-                        <div class="col-md-12 px-2 d-flex justify-content-center">
-                            <nav>
-                                <ul class="pagination">
-                                    <li class="page-item">
-                                        <a class="page-link" href="#" aria-label="Previous">
-                                            <span aria-hidden="true">«</span>
-                                        </a>
-                                    </li>
-                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#" aria-label="Next">
-                                            <span aria-hidden="true">»</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
 
                     </div>
                 </div>

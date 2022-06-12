@@ -71,7 +71,9 @@
                             <li class="breadcrumb-item"><a class="active" href="#">Subcat 1</a></li>
                         </ol>
                     </nav>
-                    <a href="#" class="btn btn-primary btn-sm"><small>Ajouter un sujet</small></a>
+                    {{if ne .Rank "4"}}
+                    <a href="/create_post" class="btn btn-primary btn-sm"><small>Add new post</small></a>
+                    {{end}}
                 </div>
                 <h1 class="text-white mt-3 ms-3"></h1>
                 <div id="post" class="container mt-4 py-3 px-4">
@@ -87,7 +89,7 @@
                         <!-- DEBUT - Partie à répéter -->
          {{range $p := .Post}}
      
-                        <a class="item d-flex align-items-center p-2" href="#">
+                        <a class="item d-flex align-items-center p-2" href="/post?={{$p.Id}}">
                             <div class="col-md-1 d-flex justify-content-center align-items-center">
                                 <div class="rounded position-relative">
                                     <i class="bx bx-spreadsheet bx-md"></i>

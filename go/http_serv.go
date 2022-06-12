@@ -92,6 +92,7 @@ func httpServ() {
 	//<<<
 
 	//<<< post.go
+	http.HandleFunc("/post", Show_Post)
 	http.HandleFunc("/create_post", Create_Post)
 	//<<<
 
