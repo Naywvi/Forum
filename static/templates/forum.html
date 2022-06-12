@@ -107,7 +107,7 @@
                 <!--NEW POST-->
 
 
-
+                {{if ne .Rank "4"}}
                 <div id="profil" class="col-md-12 mt-4 p-4 border-profil position-relative">
                     <div class="subtitle px-1" style="background-color: #fff0;">
                         <a class="btn btn-primary btn-sm me-2" href="/create_post"><i class="bx bx-edit-alt"></i>Post
@@ -145,9 +145,9 @@
                     </div>
 
 
-
+                    </div>
                 </div>
-
+{{end}}
             </div>
                 
                 
@@ -179,7 +179,7 @@
 
                             <!-- DEBUT - Sous-catégorie -->
                             <div class="col-md-4">
-                                <a class="item position-relative" href="#">
+                                <a class="item position-relative" href="/categorie?=apple">
                                     <div class="icon d-flex justify-content-center align-items-start">
                                         <img class="mt-4" src="./assets_global/img/icons/position.png" alt="Invest">
                                     </div>

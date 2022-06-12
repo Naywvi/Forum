@@ -25,6 +25,32 @@ func Delete_Account(user string) {
 	db.Exec("DELETE FROM user WHERE name = " + "'" + user + "'")
 }
 
+func profildeleted(w http.ResponseWriter, r *http.Request) {
+	var (
+		_, statement, user = Check_Cookie(w, r)
+	)
+
+	//<<< --- Check rank
+	if statement != "4" {
+
+		if r.Method == "GET" {
+
+			Delete_Account(user)
+			logout(w, r)
+
+		} else {
+
+			Send_Error(w, r)
+
+			return
+		}
+	} else {
+		fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
+		return
+	}
+
+}
+
 //#------------------------------------------------------------------------------------------------------------# ↓ Edit desc ↓
 
 func edit_desc(w http.ResponseWriter, r *http.Request) {

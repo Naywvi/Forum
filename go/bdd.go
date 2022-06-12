@@ -60,7 +60,7 @@ func Print_Rows(rows *sql.Rows, table string) []all_bd {
 				log.Fatal(err)
 			}
 		} else if table == "post" {
-			err := rows.Scan(&u.Post.Id, &u.Post.Id_catego, &u.Post.Name, &u.Post.User_id, &u.Post.Likes, &u.Post.Contenu)
+			err := rows.Scan(&u.Post.Id, &u.Post.Id_cat, &u.Post.Title_post, &u.Post.Content, &u.Post.Likes, &u.Post.Posted_user, &u.Post.Nb_Reply, &u.Post.Last_Posted)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -345,8 +345,12 @@ func categorie() {
 }
 
 func post() {
-	Inser_In_To_DB(Init_Database("post", Extract_File("../bdd/post_table.sql", 0, 6)), Extract_File("../bdd/post_table.sql", 13, 14), "post", Extract_File("../bdd/post_table.sql", 9, 10))
+	Inser_In_To_DB(Init_Database("post", Extract_File("../bdd/post_table.sql", 0, 8)), Extract_File("../bdd/post_table.sql", 15, 16), "post", Extract_File("../bdd/post_table.sql", 11, 12))
 	Is_Ok("Post", "Test_post")
+}
+func comment() {
+	Inser_In_To_DB(Init_Database("comment", Extract_File("../bdd/comment_table.sql", 0, 6)), Extract_File("../bdd/comment_table.sql", 13, 14), "comment", Extract_File("../bdd/comment_table.sql", 9, 10))
+	Is_Ok("Comment", "Comment")
 }
 func user() {
 	Inser_In_To_DB(Init_Database("user", Extract_File("../bdd/user_table.sql", 0, 8)), Terminal_Init_Table("add_user_table"), "user", Extract_File("../bdd/user_table.sql", 11, 12))
@@ -382,6 +386,7 @@ func InitBDD() {
 		user()
 		categorie()
 		post()
+		comment()
 		profilt()
 		fmt.Println("Bdd, " + Bdd.Name + " was successfully created, you are ready :)\n")
 	}

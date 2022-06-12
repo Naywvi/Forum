@@ -1,12 +1,21 @@
 package main
 
 import (
+	"database/sql"
+	"fmt"
+	"log"
 	"net/http"
 	"path/filepath"
+	"strings"
 	"text/template"
+	"time"
 )
 
+//#------------------------------------------------------------------------------------------------------------# ↓ Create post ↓
+
+//Creat post func
 func Create_Post(w http.ResponseWriter, r *http.Request) {
+	query := r.FormValue("")
 	type Statement_of_user struct {
 		User string
 		Rank string
@@ -19,23 +28,43 @@ func Create_Post(w http.ResponseWriter, r *http.Request) {
 	)
 	pos.User = User
 	pos.Rank = statement
-	if r.Method == "GET" {
-		template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/create_post.html"))).Execute(w, pos)
+	if statement != "4" {
 
-	} else if r.Method == "POST" {
-		r.ParseForm()
-		var (
-		//Titre := r.Form["Post_Title"][0]
-		//Categorie := r.FormValue("Category_Post")
-		//fmt.Println(Categorie)
-		//fmt.Println(Titre)
+		if r.Method == "GET" {
+			template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/create_post.html"))).Execute(w, pos)
 
-		)
+		} else if r.Method == "POST" {
+			r.ParseForm()
+			if query == "send" {
+				var (
+					db, err  = sql.Open(Bdd.Langage, Bdd.Name)
+					Title    = r.Form["Post_Title"][0]
+					Content  = r.Form["Post_Content"][0]
+					cat      = r.Form["categorie_id"][0]
+					time     = time.Now()
+					timestr  = time.String()
+					var_p    = []string{"'" + cat + "','" + Title + "','" + Content + "','0','" + User + "','" + timestr[0:10] + "','0'"}
+					var_pstr = strings.Join(var_p, "")
+				)
+				if err != nil {
+					log.Fatal(err)
+				}
+				Inser_In_To_DB(db, var_pstr, "post", Extract_File("../bdd/post_table.sql", 11, 12)) //<-- Redirect to post
+				fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
+			} else {
+				Send_Error(w, r)
+
+				return
+			}
+
+		} else {
+
+			Send_Error(w, r)
+
+			return
+		}
 
 	} else {
-
-		Send_Error(w, r)
-
-		return
+		fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
 	}
 }

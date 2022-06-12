@@ -101,47 +101,58 @@
                             <form action="create_post?=send" method="post">
                                 <div id="post" class="container mt-4 py-3 px-4">
                                     <div class="row g-3">
-                                        <!---->
                                         <div id="profil" class="col-md-12 mt-4 p-4 border-profil position-relative">
+                                            <!--TITRE-->
                                             <div class="subtitle px-1" style="background-color: #fff0;">
-                                                <a class="btn btn-primary btn-sm me-2" href="/create_post"><i
-                                                        class="bx bx-edit-alt"></i>Post
-                                                    it</a>
+                                                <a class="btn btn-primary btn-sm me-2"><i
+                                                        class="bx bx-edit-alt"></i><button class="registerbuttonrelou"
+                                                        type="submit" value="Login">Post it</button></a>
                                             </div>
                                             <div class="mb-3 mt-3 p-0">
                                                 <input type="text" class="form-control" id="title"
                                                     aria-describedby="postTitle" placeholder="Title" name="Post_Title">
                                             </div>
+                                            <!--FIN TITRE-->
+                                            <br>
+                                            <!--CATEGO-->
+                                            <div id="profil" class="col-md-12 mt-4 p-4 border-profil position-relative"
+                                                style="border-color:rgba(232, 188, 117, 0.281);">
+                                                <div class="subtitle px-1" style="background-color: #fff0;">
+                                                    <label class="btn btn-primary btn-sm me-2">Select categorie
+                                                        :</label>
+                                                </div>
+                                                <br>
+                                                <div class="rows">
+                                                    <!--Début-->
+                                                    <div class="radio-toolbar">
 
-                                            <!---->
-                                            <div class="rows" style="margin-bottom: 2rem;">
+                                                        <input type="radio" id="radioApple" name="categorie_id"
+                                                            value="apple">
+                                                        <label for="radioApple">Apple</label>
 
-                                                <a class="btn btn-primary btn-sm me-2"><i
-                                                        class="bx bx-edit-alt"></i><button class="registerbuttonrelou"
-                                                        type="submit" value="Login">cat1</button></a>
-                                                <a class="btn btn-primary btn-sm me-2"><i
-                                                        class="bx bx-edit-alt"></i><button class="registerbuttonrelou"
-                                                        type="submit" value="Login">cat2</button></a>
+                                                        <!-- <input type="radio" id="radioBanana" name="radioFruit"
+                                                            value="banana">
+                                                        <label for="radioBanana">Banana</label>
+
+                                                        <input type="radio" id="radioOrange" name="radioFruit"
+                                                            value="orange">
+                                                        <label for="radioOrange">Orange</label> -->
+                                                    </div>
+                                                </div>
                                             </div>
-
-                                            <!---->
+                                            <br><br>
+                                            <!--FIN CATEGO-->
+                                            <!--CONTENT-->
                                             <textarea
-                                                placeholder="Please respect the spelling as much as possible. Any post put in the wrong section can be moved to the appropriate category. Non-compliance with the rules leads to the deletion of the post, and the permanent banishment of the creator of the post. 🙂">
-
-                             </textarea>
+                                                placeholder="Please respect the spelling as much as possible. Any post put in the wrong section can be moved to the appropriate category. Non-compliance with the rules leads to the deletion of the post, and the permanent banishment of the creator of the post. 🙂"
+                                                name="Post_Content">
+                                             </textarea>
+                                            <!--FIN CONTENT-->
                                         </div>
-
-
                                     </div>
                                     <!---->
-                                    {{end}}
                                 </div>
-
-
-
-
-
-                            </form>
+                            </form> {{end}}
                             <!--post-->
 
 

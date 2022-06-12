@@ -67,50 +67,43 @@ func forum(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-func profildeleted(w http.ResponseWriter, r *http.Request) {
-	var (
-		_, statement, user = Check_Cookie(w, r)
-	)
-
-	//<<< --- Check rank
-	if statement != "4" {
-
-		if r.Method == "GET" {
-
-			Delete_Account(user)
-			logout(w, r)
-
-		} else {
-
-			Send_Error(w, r)
-
-			return
-		}
-	} else {
-		fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
-		return
-	}
-
-}
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Pages Selection & init http_serv ↓
+
 //Server Http
 func httpServ() {
 	fs := http.FileServer(http.Dir("../static")) // <- ce qu'on envoie en static vers le serv
 	http.Handle("/", fs)
-	http.HandleFunc("/delete-account", profildeleted)
-	http.HandleFunc("/profil/edit", edit_desc)
-	http.HandleFunc("/profil", profil)
-	http.HandleFunc("/forum", forum)
-	http.HandleFunc("/validation_mail", Validation_URLbyMail)
-	http.HandleFunc("/resend_mail", Resend_Mail)
-	http.HandleFunc("/admin_panel", Admin_Panel)
+
+	//<<< register_login_logout.go
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/register", register)
 	http.HandleFunc("/logout", logout)
+	http.HandleFunc("/resend_mail", Resend_Mail)
 	http.HandleFunc("/valide_password", valide_password_page)
+	http.HandleFunc("/validation_mail", Validation_URLbyMail)
 	http.HandleFunc("/reset_password_page", reset_password_page)
+	//<<<
+
+	//<<< profil.go
+	http.HandleFunc("/profil", profil)
+	http.HandleFunc("/profil/edit", edit_desc)
+	http.HandleFunc("/delete-account", profildeleted)
+	//<<<
+
+	//<<< post.go
 	http.HandleFunc("/create_post", Create_Post)
+	//<<<
+
+	//<<< admin_panel.go
+	http.HandleFunc("/admin_panel", Admin_Panel)
+	//<<<
+
+	//<<< categorie.go
+	http.HandleFunc("/categorie", Show_Categorie)
+	//<<<
+	http.HandleFunc("/forum", forum)
+
 	fmt.Println("Started https serv successfully on http://localhost:1010")
 	http.ListenAndServe(":1010", nil)
 

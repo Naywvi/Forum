@@ -1,7 +1,8 @@
 package main
 
 type Instance_of_instance struct {
-	I []Instance_Bdd
+	I    []Instance_Bdd
+	Name string
 }
 type Instance_Bdd struct {
 	I []all_bd
@@ -18,12 +19,14 @@ type all_bd struct {
 	}
 
 	Post struct {
-		Id        int
-		Id_catego string
-		Name      string
-		Contenu   string
-		Likes     string
-		User_id   string
+		Id          int
+		Id_cat      string
+		Title_post  string
+		Content     string
+		Likes       string
+		Posted_user string
+		Last_Posted string
+		Nb_Reply    string
 	}
 
 	User struct {
@@ -53,5 +56,14 @@ type all_bd struct {
 		Email               string
 		Desc                string
 		Rank_id_profil      string
+	}
+
+	Comment struct {
+		Id       int
+		Id_post  string
+		User     string
+		Reply_to string
+		Content  string
+		Likes    string
 	}
 }
