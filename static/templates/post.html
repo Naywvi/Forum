@@ -88,11 +88,11 @@
                                     </strong><br>
                                     <small>
                                         Posted {{$p.Last_Posted}} by
-                                        <!--Date--> <a class="text-yellow" href="/profil?=">
+                                        <!--Date--> <a class="text-yellow" href="/profil?={{$p.Posted_user}}">
                                             {{$p.Posted_user}}
                                         </a>
-                                
-                                        {{ if eq .Posted_user_rank  "3" }}
+                          
+                                        {{ if eq .Posted_user_rank "3" }}
                                         <span class="badge bg-success">Member</span>
                                         {{else if eq .Posted_user_rank "2" }}
                                         <span class="badge bg-danger">Moderator</span>
@@ -130,7 +130,7 @@
                             <!-- SI NON-->
                             {{if ne .Rank "4"}}
                             <a href="" class="btn btn-primary btn-sm me-2"><i class="bx bx-notepad"></i> Répondre</a>
-                            {{end}}
+                           {{end}}
                         </div>
 
                         <!-- DEBUT - Réponses -->
