@@ -17,7 +17,8 @@
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
     <link href="./assets_global/css/style.css" rel="stylesheet">
-    <script src="https://cdn.tiny.cloud/1/ftnlqzbd2t8o2rodvb77d87vi27ldv6u39eza432pces5v8l/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/ftnlqzbd2t8o2rodvb77d87vi27ldv6u39eza432pces5v8l/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
     <title>Forum template</title>
 
 </head>
@@ -72,12 +73,12 @@
                             <li class="breadcrumb-item"><a class="active" href="#">Titre 1</a></li>
                         </ol>
                     </nav>
-                  
+
                 </div>
                 <div id="details" class="container mt-4 py-3 px-4">
-                   
-                    
-                        <div class="row g-3">
+
+
+                    <div class="row g-3">
                         {{range $p := .Post}}
                         <div class="d-flex flex-row justify-content-center align-items-center">
                             <div class="col-md-1">
@@ -93,7 +94,7 @@
                                         <!--Date--> <a class="text-yellow" href="/profil?={{$p.Posted_user}}">
                                             {{$p.Posted_user}}
                                         </a>
-                          
+
                                         {{ if eq .Posted_user_rank "3" }}
                                         <span class="badge bg-success">Member</span>
                                         {{else if eq .Posted_user_rank "2" }}
@@ -121,62 +122,161 @@
                             <a href="" class="btn btn-danger btn-sm me-2"><i class="bx bx-trash"></i> Supprimer</a>
                             <a href="" class="btn btn-primary btn-sm me-2"><i class="bx bx-edit-alt"></i> Éditer</a>
                             {{else if eq .User_connected_rank "1"}}
-                            <a href="" class="btn btn-danger btn-sm me-2"><i class="bx bx-trash"></i> Supprimer</a>
-                            <a href="" class="btn btn-primary btn-sm me-2"><i class="bx bx-edit-alt"></i> Éditer</a>
+                            <a href="" class="btn btn-danger btn-sm me-2" style="background-color: green;"><i
+                                    class="bx bx-trash"></i> Supprimer [ADMIN]</a>
+                            <a href="" class="btn btn-primary btn-sm me-2" style="background-color: green;"><i
+                                    class="bx bx-edit-alt"></i> Éditer [ADMIN}</a>
                             {{else if eq .User_connected_rank "2"}}
-                            <a href="" class="btn btn-danger btn-sm me-2"><i class="bx bx-trash"></i> Supprimer</a>
-                            <a href="" class="btn btn-primary btn-sm me-2"><i class="bx bx-edit-alt"></i> Éditer</a>
-                            
+                            <a href="" class="btn btn-danger btn-sm me-2" style="background-color: green;"><i
+                                    class="bx bx-trash"></i> Supprimer</a>
+                            <a href="" class="btn btn-primary btn-sm me-2" style="background-color: green;"><i
+                                    class="bx bx-edit-alt"></i> Éditer</a>
+
                             {{end}}
                             {{end}}
                             <!-- SI NON-->
                             {{if ne .Rank "4"}}
-                            <a href="" class="btn btn-primary btn-sm me-2"><i class="bx bx-notepad"></i> Répondre</a>
-                           {{end}}
+                            <a href="post?={{.Post_Id}}&Reply_to=post&#answer" class="btn btn-primary btn-sm me-2"><i
+                                    class="bx bx-notepad"></i> Répondre</a>
+                            {{end}}
                         </div>
 
-                        <form action="/post?id=IDDUPOST&reply-to=X&comment=ok" method="post">
-                            <button type="submit">test</button>
+
+
                         <!-- DEBUT - Réponses -->
+
                         <div class="item">
-                            <div class="col-md-12 d-flex flex-row align-items-start p-2" href="#">
-                                <div id="user" class="col-md-2 text-center">
-                                    <h5 class="text-yellow">UserName</h5>
-                                    <img class="w-50 rounded-circle shadow mt-2" src="https://picsum.photos/200/200"
-                                        alt="">
-                                    <p class="lastresp mt-2">Postée le 4 juin à 21:54</p>
-                                    <span class="badge bg-success">Certifié</span>
-                                    <span class="badge bg-danger">Administrateur</span>
-                                    <span class="badge bg-warning text-dark">Développeur</span>
+                            <form method="post">
+                                {{range .Comment}}
+
+                                <!--REPLY USERNAME-->
+                                <input hidden type="radio" name="Reply_USER_{{.Id}}" value="{{.User_posted}}" checked>
+                                <!--REPLY USERNAME-->
+                                <!--REPLY USER TANK-->
+                                <input hidden type="radio" name="Reply_USER_RANK_{{.Id}}" value="{{.Rank_User_Posted}}"
+                                    checked>
+                                <!--REPLY USER RANK-->
+                                <!--REPLY CONTENT-->
+                                <input hidden type="radio" name="Reply_content_{{.Id}}" value="{{.Content_comment}}"
+                                    checked>
+                                <!--REPLY CONTENT-->
+
+                                <div class="col-md-12 d-flex flex-row align-items-start p-2" href="#">
+
+                                    <div id="user" class="col-md-2 text-center">
+
+                                        <h5 class="text-yellow">{{.User_posted}}</h5>
+                                        <img class="w-50 rounded-circle shadow mt-2" src="https://picsum.photos/200/200"
+                                            alt="">
+                                        <p class="lastresp mt-2">Posted {{.Date_comment}}</p>
+
+                                        {{ if eq .Rank_User_Posted "3" }}
+                                        <span class="badge bg-success">Member</span>
+                                        {{else if eq .Rank_User_Posted "2"}}
+                                        <span class="badge bg-danger">Moderator</span>
+                                        {{else if eq .Rank_User_Posted "1"}}
+                                        <span class="badge bg-warning text-dark">Admin</span>
+                                        {{end}}
+
+                                    </div>
+
+                                    <div class="col-md-10 ps-5 pe-2">
+
+                                        <!--Reply-->
+                                        {{if ne .Reply_user_rank "no_reply"}}
+                                        <div id="profil" class="col-md-12 mt-4 p-4 border-profil position-relative">
+
+
+                                            <div class="row g-3" style="text-align:center;">
+                                                <div class="col-md-12 d-flex flex-row align-items-start p-2" href="#">
+
+                                                    <div id="user" class="col-md-2 text-center">
+                
+                                                        <h5 class="text-yellow">{{.Reply_user}}</h5>
+                                                        <img class="w-50 rounded-circle shadow mt-2" src="https://picsum.photos/200/200" alt="">
+                                                      
+                
+                                                        
+                                                        {{ if eq .Reply_user_rank "3" }}
+                                        <span class="badge bg-success">Member</span>
+                                        {{else if eq .Reply_user_rank "2"}}
+                                        <span class="badge bg-danger">Moderator</span>
+                                        {{else if eq .Reply_user_rank "1"}}
+                                        <span class="badge bg-warning text-dark">Admin</span>
+                                        {{end}}
+                                                        
+                
+                                                    </div>
+                
+                                                    <div class="col-md-10 ps-5 pe-2">
+                
+                                                        <!--Reply-->
+                                                        
+                                                        
+                                                        <!--Reply-->
+                
+                                                        <p class="border-top pt-3 my-4"></p>
+                {{.Reply_content}}
+                
+                                                    </div>
+                                                </div>
+                                                
+                                                
+                                                
+
+                                            </div>
+                                        </div>{{end}}
+                                        <!--Reply-->
+
+                                        <p class="border-top pt-3 my-4">{{.Content_comment}}</p>
+
+
+                                    </div>
                                 </div>
-                                <div class="col-md-10 ps-5 pe-2">
-                                    <h5>Réponse #1 : Titre 2</h5>
-                                    <p class="border-top pt-3 my-4">Lorem ipsum dolor sit amet consectetur adipisicing
-                                        elit. Expedita hic in optio impedit asperiores vitae, sint laborum, quis
-                                        laboriosam, repudiandae neque magni voluptatibus saepe. Dolore sit vel fugit
-                                        laudantium aperiam.</p>
+                                <div class="col-md-12 px-2 py-4 mt-2 d-flex justify-content-end border-top">
+                                    <!-- SI AUTEUR DU POST-->
+
+                                    {{if eq .User_posted .User_connected}}
+                                    <a href="" class="btn btn-danger btn-sm me-2"><i class="bx bx-trash"></i>
+                                        Supprimer</a>
+                                    <a href="" class="btn btn-primary btn-sm me-2"><i class="bx bx-edit-alt"></i>
+                                        Éditer</a>
+                                    {{else if eq .User_connected_rank "1"}}
+                                    <a href="" class="btn btn-danger btn-sm me-2" style="background-color: green;"><i
+                                            class="bx bx-trash"></i> Supprimer [ADMIN]</a>
+                                    <a href="" class="btn btn-primary btn-sm me-2" style="background-color: green;"><i
+                                            class="bx bx-edit-alt"></i> Éditer [ADMIN]</a>
+                                    {{else if eq .User_connected_rank "2"}}
+                                    <a href="" class="btn btn-danger btn-sm me-2" style="background-color: green;"><i
+                                            class="bx bx-trash"></i> Supprimer [ADMIN]</a>
+                                    <a href="" class="btn btn-primary btn-sm me-2" style="background-color: green;"><i
+                                            class="bx bx-edit-alt"></i> Éditer [ADMIN]</a>
+                                    {{end}}
+
+                                    <!-- SI NON-->
+                                    {{if ne .User_connected_rank "4"}}
+                                    <a href="post?={{.Id_post}}&Reply_to={{.Id}}&#answer"
+                                        class="btn btn-primary btn-sm me-2"><i class="bx bx-notepad"></i>
+                                        Répondre</a>
+                                    {{end}}
+
                                 </div>
-                            </div>
-                            <div class="col-md-12 px-2 py-4 mt-2 d-flex justify-content-end border-top">
-                                <!-- SI AUTEUR DU POST-->
-                                <a href="" class="btn btn-danger btn-sm me-2"><i class="bx bx-trash"></i> Supprimer</a>
-                                <a href="" class="btn btn-primary btn-sm me-2"><i class="bx bx-edit-alt"></i> Éditer</a>
-                                <!-- SI NON-->
-                                <a href="" class="btn btn-primary btn-sm me-2"><i class="bx bx-notepad"></i>
-                                    Répondre</a>
-                                
-                            </div>
-                           
-                             <textarea placeholder="...">
-                            
-                         </textarea>
-                       
-                        </div></form>
+                                {{end}}
+
+
+                                <p id="answer"></p>
+                                <textarea placeholder="..." name="Comment_Content">
+
+                            </textarea>
+                                <button type="submit" value="comment">test</button>
+                        </div>
+
+                        </form>
                         <!-- FIN - Réponse -->
 
 
-                    
-                       
+
+
 
                     </div>
                 </div>
@@ -209,14 +309,14 @@
     <script src="./assets_global/js/main.js"></script>
     <script>
         tinymce.init({
-          selector: 'textarea',
-          plugins: 'a11ychecker advcode casechange export formatpainter image editimage linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tableofcontents tinycomments tinymcespellchecker',
-          toolbar: 'a11ycheck addcomment showcomments casechange checklist code export formatpainter image editimage pageembed permanentpen table tableofcontents',
-          toolbar_mode: 'floating',
-          tinycomments_mode: 'embedded',
-          tinycomments_author: 'Author name',
+            selector: 'textarea',
+            plugins: 'a11ychecker advcode casechange export formatpainter image editimage linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tableofcontents tinycomments tinymcespellchecker',
+            toolbar: 'a11ycheck addcomment showcomments casechange checklist code export formatpainter image editimage pageembed permanentpen table tableofcontents',
+            toolbar_mode: 'floating',
+            tinycomments_mode: 'embedded',
+            tinycomments_author: 'Author name',
         });
-      </script>
+    </script>
 </body>
 
 </html>

@@ -16,7 +16,8 @@ import (
 func Show_Post(w http.ResponseWriter, r *http.Request) {
 	query := r.FormValue("")
 	type Post struct {
-		Id                  string
+		Id                  int
+		Id_cat              string
 		Title               string
 		Content             string
 		Posted_user         string
@@ -28,17 +29,19 @@ func Show_Post(w http.ResponseWriter, r *http.Request) {
 		User_connected_rank string
 	}
 	type Comment struct {
-		Id               int
-		Id_post          string
-		Date_comment     string
-		User_posted      string
-		Rank_User_Posted string
-		Title_comment    string
-		Reply_user       string
-		Reply_user_rank  string
-		Reply_content    string
-		Content_comment  string
-		Likes            string
+		Id                  int
+		Id_post             string
+		Date_comment        string
+		User_posted         string
+		Rank_User_Posted    string
+		Title_comment       string
+		Reply_user          string
+		Reply_user_rank     string
+		Reply_content       string
+		Content_comment     string
+		Likes               string
+		User_connected      string
+		User_connected_rank string
 	}
 
 	type Statement_of_user struct {
@@ -51,15 +54,19 @@ func Show_Post(w http.ResponseWriter, r *http.Request) {
 
 	var (
 		_, statement, User = Check_Cookie(w, r)
+		time               = time.Now()
+		time_str           = time.String()
 		pos                = Statement_of_user{}
 		rows               = Select_column("post", "Id", query)
+		rows_comment       = Select_column("comment", "Id_post", query)
 		instance           all_bd
 		POST               = Post{}
-		//COMMENT            = Comment{}
+		COMMENT            = Comment{}
 	)
 	pos.User = User
 	pos.Rank = statement
 	pos.Post_Id = query
+	//#----------------------------------------------------------------------------#
 	//<<< add post
 	for rows.Next() {
 		err := rows.Scan(&instance.Post.Id, &instance.Post.Id_cat, &instance.Post.Title_post, &instance.Post.Content, &instance.Post.Likes, &instance.Post.Posted_user, &instance.Post.Last_Posted, &instance.Post.Nb_Reply)
@@ -68,7 +75,8 @@ func Show_Post(w http.ResponseWriter, r *http.Request) {
 			log.Fatal(err)
 		}
 
-		POST.Id = strconv.Itoa(instance.Post.Id)
+		POST.Id = instance.Post.Id
+		POST.Id_cat = instance.Post.Id_cat
 		POST.Title = instance.Post.Title_post
 		POST.Content = instance.Post.Content
 		POST.Posted_user = instance.Post.Posted_user
@@ -97,7 +105,33 @@ func Show_Post(w http.ResponseWriter, r *http.Request) {
 		pos.Post = append(pos.Post, POST)
 
 	}
+	//#----------------------------------------------------------------------------#
+	//<<add all comment by post id
 
+	for rows_comment.Next() {
+
+		rows_comment.Scan(&instance.Comment.Id, &instance.Comment.Id_post, &instance.Comment.Date_comment, &instance.Comment.User_posted, &instance.Comment.Rank_User_Posted, &instance.Comment.Title_comment, &instance.Comment.Reply_user, &instance.Comment.Reply_user_rank, &instance.Comment.Reply_content, &instance.Comment.Content_comment, &instance.Comment.Likes)
+		//<< add post
+		COMMENT.Id = instance.Comment.Id
+		COMMENT.Id_post = instance.Comment.Id_post
+		COMMENT.Date_comment = instance.Comment.Date_comment
+		COMMENT.User_posted = instance.Comment.User_posted
+		COMMENT.Rank_User_Posted = instance.Comment.Rank_User_Posted
+		COMMENT.Title_comment = instance.Comment.Title_comment
+		COMMENT.Reply_user = instance.Comment.Reply_user
+		COMMENT.Reply_user_rank = instance.Comment.Reply_user_rank
+		COMMENT.Reply_content = instance.Comment.Reply_content
+		COMMENT.Content_comment = instance.Comment.Content_comment
+		COMMENT.Likes = instance.Comment.Likes
+		COMMENT.User_connected = User
+		COMMENT.User_connected_rank = statement
+		//<< add post
+		//<<Append the post
+		pos.Comment = append(pos.Comment, COMMENT)
+
+	}
+
+	//<<
 	if r.Method == "GET" {
 
 		//<<< add post
@@ -106,27 +140,45 @@ func Show_Post(w http.ResponseWriter, r *http.Request) {
 	} else if r.Method == "POST" {
 		r.ParseForm()
 		var (
-			a = r.FormValue("id")
-			b = r.FormValue("reply-to")
-			c = r.FormValue("comment")
+			db, err               = sql.Open(Bdd.Langage, Bdd.Name)
+			Comment_content_parse = r.Form["Comment_Content"][0]
+			reply_to              = r.FormValue("Reply_to")
+			// c                     = r.FormValue("comment")
 		)
-		fmt.Print(a, " ", b, " ", c)
-		// if query == "send" {
-		// 	var (
-		// 		db, err  = sql.Open(Bdd.Langage, Bdd.Name)
-		// 		Title    = r.Form["Post_Title"][0]
-		// 		Content  = r.Form["Post_Content"][0]
-		// 		cat      = r.Form["categorie_id"][0]
-		// 		time     = time.Now()
-		// 		timestr  = time.String()
-		// 		var_p    = []string{"'" + cat + "','" + Title + "','" + Content + "','0','" + User + "','" + timestr[0:10] + "','0'"}
-		// 		var_pstr = strings.Join(var_p, "")
-		// 	)
-		// 		if err != nil {
-		// 			log.Fatal(err)
-		// }
-		// 	Inser_In_To_DB(db, var_pstr, "post", Extract_File("../bdd/post_table.sql", 11, 12)) //<-- Redirect to post
-		// 	fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if reply_to == "post" { // reply to post >> push comment
+			var (
+				var_p    = []string{"'" + pos.Post_Id + "','" + time_str[0:10] + "','" + User + "','" + statement + "','nil','no_reply','no_reply','no_reply','" + Comment_content_parse + "','0'"}
+				var_pstr = strings.Join(var_p, "")
+			)
+			Inser_In_To_DB(db, var_pstr, "comment", Extract_File("../bdd/comment_table.sql", 14, 15)) //<-- Push the post with no reply
+
+		} else if len(reply_to) > 0 { //reply to user on the post >> push comment
+			var (
+				// Check_user_exist = Check_If_Exist(reply_to, "", "Name", "user", "Register")
+
+				reply_content   = r.Form["Reply_content_"+reply_to][0]
+				reply_user      = r.Form["Reply_USER_"+reply_to][0]
+				reply_user_rank = r.Form["Reply_USER_RANK_"+reply_to][0]
+				var_p           = []string{"'" + pos.Post_Id + "','" + time_str[0:10] + "','" + User + "','" + statement + "','nil','" + reply_user + "','" + reply_user_rank + "','" + reply_content + "','" + Comment_content_parse + "','0'"}
+				var_pstr        = strings.Join(var_p, "")
+			)
+
+			// if Check_user_exist == false {
+			//fmt.Fprint(w, "<script>alert('Wrong user who to reply to'); </script>")
+
+			Inser_In_To_DB(db, var_pstr, "comment", Extract_File("../bdd/comment_table.sql", 14, 15)) //<-- Push the post with reply
+
+		} else {
+
+			Send_Error(w, r)
+			return
+		}
+		fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/post?=`+pos.Post_Id+`"; </script>`)
+
 	} else {
 		Send_Error(w, r)
 
@@ -172,7 +224,7 @@ func Create_Post(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					log.Fatal(err)
 				}
-				Inser_In_To_DB(db, var_pstr, "post", Extract_File("../bdd/post_table.sql", 11, 12)) //<-- Redirect to post
+				Inser_In_To_DB(db, var_pstr, "post", Extract_File("../bdd/post_table.sql", 11, 12)) //<-- Insert new post on bdd
 				fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
 			} else {
 				Send_Error(w, r)
