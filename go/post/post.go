@@ -58,6 +58,7 @@ func Show_Post(w http.ResponseWriter, r *http.Request) {
 
 	var (
 		_, statement, User = User.Check_Cookie(w, r)
+		db, err            = sql.Open(Config.Bdd.Langage, Config.Bdd.Name)
 		time               = time.Now()
 		time_str           = time.String()
 		pos                = Statement_of_user{}
@@ -137,28 +138,52 @@ func Show_Post(w http.ResponseWriter, r *http.Request) {
 
 	//<<
 	if r.Method == "GET" {
+		var (
+			deletePostid = r.FormValue("")
+			deletePost   = r.FormValue("deletep")
+			deletec      = r.FormValue("deletec")
+		)
 
 		//<<< add post
+
+		if deletePost == deletePostid { //Delete post User-poster or admin
+			if (len(deletePost) > 0 && statement == "1") || (len(deletePost) > 0 && statement == "2") || (len(deletePost) > 0 && (User == POST.Posted_user)) {
+				db.Exec("DELETE FROM post WHERE id = " + deletePostid)
+				db.Exec("DELETE FROM comment WHERE id_post = '" + deletePostid + "'")
+			}
+			fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/"; </script>`)
+		} else if (len(deletec) > 0 && deletec == COMMENT.User_posted) || (len(deletec) > 0 && (statement == "1" || statement == "2")) {
+			db.Exec("DELETE FROM comment WHERE Id = '" + deletec + "'")
+			fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/"; </script>`)
+		}
+
 		template.Must(template.ParseFiles(filepath.Join(Config.TemplatesDir, "../static/templates/post.html"))).Execute(w, pos)
 
 	} else if r.Method == "POST" {
 		r.ParseForm()
 		var (
-			db, err                   = sql.Open(Config.Bdd.Langage, Config.Bdd.Name)
 			Comment_content_parse     = r.Form["Comment_Content"][0]
 			Comment_content_parse_sql = strings.Replace(Comment_content_parse, "'", "`", 10000) //<< Replace ' to > `  protect from sql_exploit
 			reply_to                  = r.FormValue("Reply_to")
-			// c                     = r.FormValue("comment")
 		)
 		if err != nil {
 			log.Fatal(err)
 		}
+		//add reply
+		t, _ := strconv.Atoi(POST.Nb_Reply)
+		t += 1
+		POST.Nb_Reply = strconv.Itoa(t)
+		db.Exec("UPDATE post SET Nb_Reply = '" + POST.Nb_Reply + "' WHERE Id = " + strconv.Itoa(POST.Id) + ";")
+		//
 
 		if reply_to == "post" { // reply to post >> push comment
+
 			var (
 				var_p    = []string{"'" + pos.Post_Id + "','" + time_str[0:10] + "','" + User + "','" + statement + "','nil','no_reply','no_reply','no_reply','" + Comment_content_parse_sql + "','0'"}
 				var_pstr = strings.Join(var_p, "")
+				db, _    = sql.Open(Config.Bdd.Langage, Config.Bdd.Name)
 			)
+
 			Database.Inser_In_To_DB(db, var_pstr, "comment", Database.Extract_File("../bdd/comment_table.sql", 14, 15)) //<-- Push the post with no reply
 
 		} else if len(reply_to) > 0 { //reply to user on the post >> push comment

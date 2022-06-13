@@ -116,18 +116,21 @@
                             {{$p.Content}}
 
                         </div>
+                        
                         <div class="col-md-12 px-2 mt-2 d-flex justify-content-end">
                             <!-- SI AUTEUR DU POST-->
+                            
                             {{ if eq .User_connected .Posted_user }}
-                            <a href="" class="btn btn-danger btn-sm me-2"><i class="bx bx-trash"></i> Supprimer</a>
+                            <a href="/post?={{$p.Id}}&deletep={{$p.Id}}" class="btn btn-danger btn-sm me-2"><i class="bx bx-trash"></i> Supprimer</a>
                             <!-- <a href="" class="btn btn-primary btn-sm me-2"><i class="bx bx-edit-alt"></i> Éditer</a> -->
                             {{else if eq .User_connected_rank "1"}}
-                            <a href="" class="btn btn-danger btn-sm me-2" style="background-color: green;"><i
+
+                            <a href="/post?={{$p.Id}}&deletep={{$p.Id}}" class="btn btn-danger btn-sm me-2" style="background-color: green;"><i
                                     class="bx bx-trash"></i> Supprimer [ADMIN]</a>
                             <!-- <a href="" class="btn btn-primary btn-sm me-2" style="background-color: green;"><i
                                     class="bx bx-edit-alt"></i> Éditer [ADMIN}</a> -->
                             {{else if eq .User_connected_rank "2"}}
-                            <a href="" class="btn btn-danger btn-sm me-2" style="background-color: green;"><i
+                            <a href="/post?={{$p.Id}}&deletep={{$p.Id}}" class="btn btn-danger btn-sm me-2" style="background-color: green;"><i
                                     class="bx bx-trash"></i> Supprimer</a>
                             <!-- <a href="" class="btn btn-primary btn-sm me-2" style="background-color: green;"><i
                                     class="bx bx-edit-alt"></i> Éditer</a> -->
@@ -238,24 +241,27 @@
                                 <div class="col-md-12 px-2 py-4 mt-2 d-flex justify-content-end border-top"
                                     style="background-color: #ffc2bf3b;">
                                     <!-- SI AUTEUR DU POST-->
-
+                                    <!-- <input hidden type="radio" name="Reply_content_{{.Id}}" value="{{.Content_comment}}"
+                                    checked>
+                                    <img src="./assets_global/img/icons/pngwing.com.png" style="width: 3%;"> -->
+                                    
                                     {{if eq .User_posted .User_connected}}
-                                    <a href="" class="btn btn-danger btn-sm me-2"><i class="bx bx-trash"></i>
+                                    <a href="/post?={{.Id_post}}&deletec={{.Id}}" class="btn btn-danger btn-sm me-2"><i class="bx bx-trash"></i>
                                         Supprimer</a>
                                     <!-- <a href="" class="btn btn-primary btn-sm me-2"><i class="bx bx-edit-alt"></i>
                                         Éditer</a> -->
                                     {{else if eq .User_connected_rank "1"}}
-                                    <a href="" class="btn btn-danger btn-sm me-2" style="background-color: green;"><i
+                                    <a href="/post?={{.Id_post}}&deletec={{.Id}}" class="btn btn-danger btn-sm me-2" style="background-color: green;"><i
                                             class="bx bx-trash"></i> Supprimer [ADMIN]</a>
                                     <!-- <a href="" class="btn btn-primary btn-sm me-2" style="background-color: green;"><i
                                             class="bx bx-edit-alt"></i> Éditer [ADMIN]</a> -->
                                     {{else if eq .User_connected_rank "2"}}
-                                    <a href="" class="btn btn-danger btn-sm me-2" style="background-color: green;"><i
+                                    <a href="/post?={{.Id_post}}&deletec={{.Id}}" class="btn btn-danger btn-sm me-2" style="background-color: green;"><i
                                             class="bx bx-trash"></i> Supprimer [ADMIN]</a>
                                     <!-- <a href="" class="btn btn-primary btn-sm me-2" style="background-color: green;"><i
                                             class="bx bx-edit-alt"></i> Éditer [ADMIN]</a> -->
                                     {{end}}
-
+                                       
                                     <!-- SI NON-->
                                     {{if ne .User_connected_rank "4"}}
                                     <a href="post?={{.Id_post}}&Reply_to={{.Id}}&#answer"
@@ -300,7 +306,7 @@
                         </form>
                         <!-- FIN - Réponse -->
 
-
+                       
                     </div>
                 </div>
 
