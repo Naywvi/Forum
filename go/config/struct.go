@@ -1,14 +1,21 @@
-package main
+package config
+
+type Bdds struct {
+	Name    string
+	Langage string
+}
+
+var Bdd Bdds
 
 type Instance_of_instance struct {
 	I    []Instance_Bdd
 	Name string
 }
 type Instance_Bdd struct {
-	I []all_bd
+	I []All_bd
 }
 
-type all_bd struct {
+type All_bd struct {
 	Smtp struct {
 		Email string
 		Pass  string
@@ -44,7 +51,7 @@ type all_bd struct {
 		Name       string
 		Email      string
 		Pswd       string
-		validation string
+		Validation string
 	}
 
 	Profil struct {

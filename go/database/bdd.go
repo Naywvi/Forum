@@ -1,4 +1,4 @@
-package main
+package database
 
 import (
 	"bufio"
@@ -7,8 +7,9 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strconv"
 	"strings"
+
+	Config "forum/config"
 )
 
 //Extract sql-file & return it (select interval in file with end/ start)
@@ -35,10 +36,10 @@ func Extract_File(file_sql string, start, end int) string {
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Add user to table ↓
 
-func Print_Rows(rows *sql.Rows, table string) []all_bd {
+func Print_Rows(rows *sql.Rows, table string) []Config.All_bd {
 	var (
-		I Instance_Bdd
-		u = all_bd{}
+		I Config.Instance_Bdd
+		u = Config.All_bd{}
 	)
 
 	for rows.Next() {
@@ -65,7 +66,7 @@ func Print_Rows(rows *sql.Rows, table string) []all_bd {
 				log.Fatal(err)
 			}
 		} else if table == "temp_user" {
-			err := rows.Scan(&u.Temp_user.Id, &u.Temp_user.Name, &u.Temp_user.Email, &u.Temp_user.Pswd, &u.Temp_user.validation)
+			err := rows.Scan(&u.Temp_user.Id, &u.Temp_user.Name, &u.Temp_user.Email, &u.Temp_user.Pswd, &u.Temp_user.Validation)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -92,7 +93,7 @@ WHERE
 */
 func Select_column(Table_name, Table_field, input string) *sql.Rows { //only string
 	var (
-		db, err = sql.Open(Bdd.Langage, Bdd.Name)
+		db, err = sql.Open(Config.Bdd.Langage, Config.Bdd.Name)
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -110,79 +111,13 @@ WHERE Name = 'New_test';
 //Change value on table
 func Update_Field(Table, field_table, field_table_two, Last_input, New_input string) {
 	var (
-		db, err = sql.Open(Bdd.Langage, Bdd.Name)
+		db, err = sql.Open(Config.Bdd.Langage, Config.Bdd.Name)
 	)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	db.Exec("UPDATE " + Table + " SET " + field_table + " = '" + New_input + "' WHERE " + field_table_two + " = '" + Last_input + "';")
-}
-
-//Del user from table
-func Del_User_From_Table(db *sql.DB, rows *sql.Rows, table, name_deleted, who_want string) { //all time send i of deleter
-	var (
-		Rows  []string
-		u     = all_bd{}
-		marge = 0
-		id    = ""
-		index = 0
-	)
-
-	for rows.Next() {
-		marge = 4 // <-- De combien je recule pour avoir l'id dans la table afin de le delect (vérification par la "validation field")
-		if who_want == "validation" {
-			err := rows.Scan(&u.Temp_user.Id, &u.Temp_user.Name, &u.Temp_user.Email, &u.Temp_user.Pswd, &u.Temp_user.validation)
-			if err != nil {
-				log.Fatal(err)
-			}
-			Rows = append(Rows, strconv.Itoa(*&u.Temp_user.Id), *&u.Temp_user.Name, *&u.Temp_user.Email, *&u.Temp_user.Pswd, *&u.Temp_user.validation)
-		}
-
-	}
-
-	for i := range Rows {
-
-		if Rows[i] == name_deleted {
-			index = i
-			id = Rows[i-marge]
-			break
-		}
-
-	}
-	db.Exec("DELETE FROM " + table + " WHERE id = " + id)
-	if who_want == "validation" {
-		ADD_User_To_BDD(Rows[index-3], Rows[index-1], Rows[index-2], "3")
-	}
-}
-
-//Add user to temp_user
-func ADD_User_To_Temp(name, pswd, email, user_hash string) {
-	var (
-		db, err          = sql.Open(Bdd.Langage, Bdd.Name)
-		Default_user_arr = []string{"'" + name + "','" + pswd + "','" + email + "','" + user_hash + "'"}
-		Default_user     = strings.Join(Default_user_arr, "")
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
-	Inser_In_To_DB(db, Default_user, "temp_user", Extract_File("../bdd/temp_user_table.sql", 8, 9))
-}
-
-//Add default user to bdd
-func ADD_User_To_BDD(name, pswd, email, rank_id string) {
-	var (
-		db, err          = sql.Open(Bdd.Langage, Bdd.Name)
-		Default_user_arr = []string{"'" + name + "','" + pswd + "','none_desc','" + email + "','none_picture','" + rank_id + "'"}
-		Default_user     = strings.Join(Default_user_arr, "")
-	)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	Inser_In_To_DB(db, Default_user, "user", Extract_File("../bdd/user_table.sql", 11, 12))
-	New_Profil(name, email, rank_id)
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Select on table ↓
@@ -195,10 +130,10 @@ func Select_Field_From_DB(db *sql.DB, field, table string) *sql.Rows {
 	result, _ := db.Query("SELECT " + field + " FROM " + table)
 	return result
 }
-func Select_All_Rows_Table(db *sql.DB, table []string) Instance_of_instance {
+func Select_All_Rows_Table(db *sql.DB, table []string) Config.Instance_of_instance {
 	var (
-		I   Instance_Bdd
-		I_I Instance_of_instance
+		I   Config.Instance_Bdd
+		I_I Config.Instance_of_instance
 	)
 	for i := range table {
 		I.I = Print_Rows(Select_All_From_DB(db, table[i]), table[i])
@@ -211,7 +146,7 @@ func Select_All_Rows_Table(db *sql.DB, table []string) Instance_of_instance {
 
 //Auto-Create Table
 func Init_Database(table_name, txt string) *sql.DB {
-	db, err := sql.Open(Bdd.Langage, Bdd.Name)
+	db, err := sql.Open(Config.Bdd.Langage, Config.Bdd.Name)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -281,10 +216,10 @@ func Terminal_Init_Table(who_want string) string {
 	} else if who_want == "Bdd_Name" {
 		fmt.Println("Choose name of your Data_Base.")
 		Name_Bd, _ := bufio.NewReader(os.Stdin).ReadString('\n')
-		Bdd.Name = strings.TrimSpace(Name_Bd) + ".db"
-		Bdd.Langage = "sqlite3"
+		Config.Bdd.Name = strings.TrimSpace(Name_Bd) + ".db"
+		Config.Bdd.Langage = "sqlite3"
 
-		fmt.Println(Bdd.Name, "Is the database selected. Do you validate ? [y] [n] ")
+		fmt.Println(Config.Bdd.Name, "Is the database selected. Do you validate ? [y] [n] ")
 
 		Check, _ := bufio.NewReader(os.Stdin).ReadString('\n')
 		Check = strings.TrimSpace(Check)
@@ -300,7 +235,7 @@ func Terminal_Init_Table(who_want string) string {
 		}
 
 	} else if who_want == "temp_user" {
-		fmt.Println("Create a temp user to check the validation table.")
+		fmt.Println("Create a temp user to check the Validation table.")
 		fmt.Print("username ->")
 
 		username, _ := bufio.NewReader(os.Stdin).ReadString('\n')
@@ -310,7 +245,7 @@ func Terminal_Init_Table(who_want string) string {
 
 		mail, _ := bufio.NewReader(os.Stdin).ReadString('\n')
 		mail = strings.TrimSpace(mail)
-		mail_hash := initHashPswd(mail)
+		mail_hash := InitHashPswd(mail)
 
 		fmt.Print("password ->")
 
@@ -373,8 +308,8 @@ func profilt() {
 
 //Init bdd
 func InitBDD() {
-	if _, err := os.Stat("./" + Bdd.Name); err == nil { //<-- If bdd exist
-		fmt.Println("The bdd, " + Bdd.Name + " is already here")
+	if _, err := os.Stat("./" + Config.Bdd.Name); err == nil { //<-- If bdd exist
+		fmt.Println("The bdd, " + Config.Bdd.Name + " is already here")
 
 	} else if errors.Is(err, os.ErrNotExist) { //<-- If bdd not exist > Re create
 		fmt.Println("--->Create a new db<--- ?")
@@ -385,6 +320,6 @@ func InitBDD() {
 		post()
 		comment()
 		profilt()
-		fmt.Println("Bdd, " + Bdd.Name + " was successfully created, you are ready :)\n")
+		fmt.Println("Config.Bdd, " + Config.Bdd.Name + " was successfully created, you are ready :)\n")
 	}
 }

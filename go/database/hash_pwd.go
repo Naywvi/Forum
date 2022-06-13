@@ -1,4 +1,4 @@
-package main
+package database
 
 import (
 	"golang.org/x/crypto/bcrypt"
@@ -14,7 +14,7 @@ func CheckPasswordHash(password, hash string) bool {
 	return err == nil
 }
 
-func initHashPswd(pswd string) string {
+func InitHashPswd(pswd string) string {
 	hash, _ := HashPassword(pswd) // ignore error for the sake of simplicity
 	return hash
 }

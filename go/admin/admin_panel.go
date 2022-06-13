@@ -1,4 +1,4 @@
-package main
+package admin
 
 import (
 	"database/sql"
@@ -12,6 +12,10 @@ import (
 	"strconv"
 	"text/template"
 	"time"
+
+	Config "forum/config"
+	Database "forum/database"
+	User "forum/user"
 )
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Page Admin_Panel ↓
@@ -20,17 +24,17 @@ func Admin_Panel(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == "GET" { // cookie verification to go to admin panel (security)
 
-		s, rank, _ := Check_Cookie(w, r)
+		s, rank, _ := User.Check_Cookie(w, r)
 		if s == true && rank == "1" {
-			Return_To_Page(w, r, "../static/templates/admin/panel_admin.html")
+			Config.Return_To_Page(w, r, "../static/templates/admin/panel_admin.html")
 		} else { //<-- rank == 4
-			Send_Error(w, r)
+			Config.Send_Error(w, r)
 		}
 
 	} else if r.Method == "POST" { // We accept only methods "POST" and "GET" for security
 		var (
-			db, err   = sql.Open(Bdd.Langage, Bdd.Name)
-			I_I       Instance_of_instance
+			db, err   = sql.Open(Config.Bdd.Langage, Config.Bdd.Name)
+			I_I       Config.Instance_of_instance
 			query     = r.FormValue("") // <-- query recuperation
 			all_table = []string{"categorie", "email_owner", "post", "user"}
 		)
@@ -47,15 +51,15 @@ func Admin_Panel(w http.ResponseWriter, r *http.Request) {
 				email          = r.Form["Email_create_by_admin"][0]
 				rank           = r.Form["Rank_id_create_by_admin"][0]
 				pswd           = r.Form["password_create_by_admin"][0]
-				Check_username = Check_If_Exist(username, "", "Name", "user", "Register")
-				Check_email    = Check_If_Exist(email, "", "Email", "user", "Register")
-				pswd_hash      = initHashPswd(pswd)
+				Check_username = User.Check_If_Exist(username, "", "Name", "user", "Register")
+				Check_email    = User.Check_If_Exist(email, "", "Email", "user", "Register")
+				pswd_hash      = Database.InitHashPswd(pswd)
 			)
 
 			if Check_username == true && Check_email == true { // <-- verify if the user we want to create do not exist
 
-				ADD_User_To_BDD(username, pswd_hash, email, rank)
-				Return_To_Page(w, r, "../static/templates/admin/panel_admin.html")
+				User.ADD_User_To_BDD(username, pswd_hash, email, rank)
+				Config.Return_To_Page(w, r, "../static/templates/admin/panel_admin.html")
 
 			} else { // <-- if wrong selection
 
@@ -70,36 +74,36 @@ func Admin_Panel(w http.ResponseWriter, r *http.Request) {
 				}
 
 				fmt.Fprint(w, "<script> window.alert('This "+error_message+" already in use, try again'); </script>")
-				Return_To_Page(w, r, "../static/templates/admin/panel_admin.html")
+				Config.Return_To_Page(w, r, "../static/templates/admin/panel_admin.html")
 			}
 
 		} else if query == "See_Table" {
 
-			I_I = Select_All_Rows_Table(db, all_table)
+			I_I = Database.Select_All_Rows_Table(db, all_table)
 			Return_With_Value_Admin(w, r, I_I)
 
 		} else if query == "Backup" {
 
-			I_I = Select_All_Rows_Table(db, all_table)
+			I_I = Database.Select_All_Rows_Table(db, all_table)
 			Set_Backup(I_I)
 			fmt.Fprint(w, "<script>alert('Backup create Succesfully')</script>")
-			Return_To_Page(w, r, "../static/templates/admin/panel_admin.html")
+			Config.Return_To_Page(w, r, "../static/templates/admin/panel_admin.html")
 
 		} else if query == "Manage_Users" {
 			var (
 				table = []string{"user"}
 			)
-			I_I = Select_All_Rows_Table(db, table)
+			I_I = Database.Select_All_Rows_Table(db, table)
 			Return_With_Value_Admin(w, r, I_I)
 		} else if query == "Create_Category" {
 
 			var (
 				Create_categorie = r.Form["create_category"][0]
-				Check_categorie  = Check_If_Exist(Create_categorie, "", "Name", "categorie", "New_categorie")
+				Check_categorie  = User.Check_If_Exist(Create_categorie, "", "Name", "categorie", "New_categorie")
 			)
 
 			if Check_categorie == true {
-				Inser_In_To_DB(db, "'"+Create_categorie+"'", "categorie", "Name")
+				Database.Inser_In_To_DB(db, "'"+Create_categorie+"'", "categorie", "Name")
 			} else {
 				fmt.Fprint(w, "<script> window.alert('This categorie exist.'); </script>")
 			}
@@ -107,10 +111,10 @@ func Admin_Panel(w http.ResponseWriter, r *http.Request) {
 		} else if query == "Alert" {
 			var (
 				table = []string{"user"}
-				it    = Instance_Bdd{}
+				it    = Config.Instance_Bdd{}
 				to    = []string{}
 			)
-			instance := Select_All_Rows_Table(db, table)
+			instance := Database.Select_All_Rows_Table(db, table)
 			for _, i := range instance.I {
 
 				it.I = append(it.I, i.I...)
@@ -119,20 +123,20 @@ func Admin_Panel(w http.ResponseWriter, r *http.Request) {
 				to = append(to, k.User.Email)
 			}
 			path := "../static/templates/smtp/alert.html"
-			alert_Smtp(to, path) //<-- Send mail to all mails of users
+			User.Alert_Smtp(to, path) //<-- Send mail to all mails of users
 			fmt.Fprint(w, "<script> window.alert('Alert sent.'); </script>")
 		}
 
 	} else {
-		Send_Error(w, r)
+		Config.Send_Error(w, r)
 		return
 	}
 }
-func Return_With_Value_Admin(w http.ResponseWriter, r *http.Request, I Instance_of_instance) {
-	template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/admin/panel_admin.html"))).Execute(w, I)
+func Return_With_Value_Admin(w http.ResponseWriter, r *http.Request, I Config.Instance_of_instance) {
+	template.Must(template.ParseFiles(filepath.Join(Config.TemplatesDir, "../static/templates/admin/panel_admin.html"))).Execute(w, I)
 }
 
-func Set_Backup(I_I Instance_of_instance) {
+func Set_Backup(I_I Config.Instance_of_instance) {
 	var (
 		count        = 0
 		number_files = strconv.Itoa(count)
@@ -153,7 +157,7 @@ func Set_Backup(I_I Instance_of_instance) {
 		number_files = ""
 	}
 
-	f, err := os.Create("../backup/Backup_of_" + Bdd.Name + "_" + date + number_files + ".json")
+	f, err := os.Create("../backup/Backup_of_" + Config.Bdd.Name + "_" + date + number_files + ".json")
 	if err != nil {
 		log.Fatal(err)
 	}

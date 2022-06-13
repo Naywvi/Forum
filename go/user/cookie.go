@@ -1,9 +1,11 @@
-package main
+package user
 
 import (
 	"encoding/base64"
 	"net/http"
 	"time"
+
+	Config "forum/config"
 )
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Encrypt / Decrypt cookie ↓
@@ -124,8 +126,8 @@ func SettCookie(w http.ResponseWriter, r *http.Request) {
 
 	expiration := time.Now().Add(time.Second * 900) //15 minutes
 
-	Name := Connected.User + "_" + Connected.User_Hased //<-- Set personnal token
-	Value := Connected.Rank_Id + "_" + Connected.Rank_Id_Hashed
+	Name := Config.Connected.User + "_" + Config.Connected.User_Hased //<-- Set personnal token
+	Value := Config.Connected.Rank_Id + "_" + Config.Connected.Rank_Id_Hashed
 	cookie := http.Cookie{Name: Name, Value: Value, Expires: expiration}
 
 	http.SetCookie(w, &cookie)

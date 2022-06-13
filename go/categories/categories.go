@@ -1,4 +1,4 @@
-package main
+package categorie
 
 import (
 	"log"
@@ -6,6 +6,12 @@ import (
 	"path/filepath"
 	"strconv"
 	"text/template"
+
+	_ "github.com/mattn/go-sqlite3"
+
+	Config "forum/config"
+	Database "forum/database"
+	User "forum/user"
 )
 
 func Show_Categorie(w http.ResponseWriter, r *http.Request) {
@@ -21,21 +27,21 @@ func Show_Categorie(w http.ResponseWriter, r *http.Request) {
 	}
 
 	type Statement_of_user struct {
-		User      string
+		Username  string
 		Rank      string
 		Categorie string
 		Post      []Post
 	}
-
 	var (
-		_, statement, User = Check_Cookie(w, r)
-		pos                = Statement_of_user{}
-		POST               = Post{}
-		rows               = Select_column("post", "Id_cat", query)
-		instance           all_bd
-		Check_categorie    = Check_If_Exist(query, "", "Name", "categorie", "New_categorie")
+		_, statement, Username = User.Check_Cookie(w, r)
+		pos                    = Statement_of_user{}
+		POST                   = Post{}
+		rows                   = Database.Select_column("post", "Id_cat", query)
+		instance               Config.All_bd
+		Check_categorie        = User.Check_If_Exist(query, "", "Name", "categorie", "New_categorie")
 	)
-	pos.User = User
+
+	pos.Username = Username
 	pos.Rank = statement
 	pos.Categorie = query
 
@@ -57,22 +63,21 @@ func Show_Categorie(w http.ResponseWriter, r *http.Request) {
 
 	}
 	//<<< add post
-	if Check_categorie == false {
+	if !Check_categorie {
 
 		if r.Method == "GET" { //Besoin d'une instance de tout mes posts de cette catégorie
-
-			template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/list_post.html"))).Execute(w, pos)
+			template.Must(template.ParseFiles(filepath.Join(Config.TemplatesDir, "../static/templates/list_post.html"))).Execute(w, pos)
 
 		} else if r.Method == "POST" {
 
 		} else {
 
-			Send_Error(w, r)
+			Config.Send_Error(w, r)
 
 			return
 		}
 	} else {
-		Send_Error(w, r)
+		Config.Send_Error(w, r)
 
 		return
 	}

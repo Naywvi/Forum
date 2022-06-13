@@ -1,4 +1,4 @@
-package main
+package post
 
 import (
 	"database/sql"
@@ -10,6 +10,10 @@ import (
 	"strings"
 	"text/template"
 	"time"
+
+	Config "forum/config"
+	Database "forum/database"
+	User "forum/user"
 )
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Show post ↓
@@ -53,13 +57,13 @@ func Show_Post(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var (
-		_, statement, User = Check_Cookie(w, r)
+		_, statement, User = User.Check_Cookie(w, r)
 		time               = time.Now()
 		time_str           = time.String()
 		pos                = Statement_of_user{}
-		rows               = Select_column("post", "Id", query)
-		rows_comment       = Select_column("comment", "Id_post", query)
-		instance           all_bd
+		rows               = Database.Select_column("post", "Id", query)
+		rows_comment       = Database.Select_column("comment", "Id_post", query)
+		instance           Config.All_bd
 		POST               = Post{}
 		COMMENT            = Comment{}
 	)
@@ -83,7 +87,7 @@ func Show_Post(w http.ResponseWriter, r *http.Request) {
 
 		//flemme intense
 		result := ""
-		flemme := Select_column("user", "name", POST.Posted_user)
+		flemme := Database.Select_column("user", "name", POST.Posted_user)
 		for flemme.Next() {
 			errf := flemme.Scan(&instance.User.Id, &instance.User.Name, &instance.User.Pswd, &instance.User.Desc, &instance.User.Email, &instance.User.Profile_Picture, &instance.User.Rank_id)
 			if errf != nil {
@@ -135,12 +139,12 @@ func Show_Post(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 
 		//<<< add post
-		template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/post.html"))).Execute(w, pos)
+		template.Must(template.ParseFiles(filepath.Join(Config.TemplatesDir, "../static/templates/post.html"))).Execute(w, pos)
 
 	} else if r.Method == "POST" {
 		r.ParseForm()
 		var (
-			db, err                   = sql.Open(Bdd.Langage, Bdd.Name)
+			db, err                   = sql.Open(Config.Bdd.Langage, Config.Bdd.Name)
 			Comment_content_parse     = r.Form["Comment_Content"][0]
 			Comment_content_parse_sql = strings.Replace(Comment_content_parse, "'", "`", 10000) //<< Replace ' to > `  protect from sql_exploit
 			reply_to                  = r.FormValue("Reply_to")
@@ -155,7 +159,7 @@ func Show_Post(w http.ResponseWriter, r *http.Request) {
 				var_p    = []string{"'" + pos.Post_Id + "','" + time_str[0:10] + "','" + User + "','" + statement + "','nil','no_reply','no_reply','no_reply','" + Comment_content_parse_sql + "','0'"}
 				var_pstr = strings.Join(var_p, "")
 			)
-			Inser_In_To_DB(db, var_pstr, "comment", Extract_File("../bdd/comment_table.sql", 14, 15)) //<-- Push the post with no reply
+			Database.Inser_In_To_DB(db, var_pstr, "comment", Database.Extract_File("../bdd/comment_table.sql", 14, 15)) //<-- Push the post with no reply
 
 		} else if len(reply_to) > 0 { //reply to user on the post >> push comment
 			var (
@@ -172,17 +176,17 @@ func Show_Post(w http.ResponseWriter, r *http.Request) {
 			// if Check_user_exist == false {
 			//fmt.Fprint(w, "<script>alert('Wrong user who to reply to'); </script>")
 
-			Inser_In_To_DB(db, var_pstr, "comment", Extract_File("../bdd/comment_table.sql", 14, 15)) //<-- Push the post with reply
+			Database.Inser_In_To_DB(db, var_pstr, "comment", Database.Extract_File("../bdd/comment_table.sql", 14, 15)) //<-- Push the post with reply
 
 		} else {
 
-			Send_Error(w, r)
+			Config.Send_Error(w, r)
 			return
 		}
 		fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/post?=`+pos.Post_Id+`&Reply_to=post"; </script>`)
 
 	} else {
-		Send_Error(w, r)
+		Config.Send_Error(w, r)
 
 		return
 	}
@@ -200,7 +204,7 @@ func Create_Post(w http.ResponseWriter, r *http.Request) {
 	//<<< --- Check rank
 
 	var (
-		_, statement, User = Check_Cookie(w, r)
+		_, statement, User = User.Check_Cookie(w, r)
 		pos                = Statement_of_user{}
 	)
 	pos.User = User
@@ -208,13 +212,13 @@ func Create_Post(w http.ResponseWriter, r *http.Request) {
 	if statement != "4" {
 
 		if r.Method == "GET" {
-			template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/create_post.html"))).Execute(w, pos)
+			template.Must(template.ParseFiles(filepath.Join(Config.TemplatesDir, "../static/templates/create_post.html"))).Execute(w, pos)
 
 		} else if r.Method == "POST" {
 			r.ParseForm()
 			if query == "send" {
 				var (
-					db, err  = sql.Open(Bdd.Langage, Bdd.Name)
+					db, err  = sql.Open(Config.Bdd.Langage, Config.Bdd.Name)
 					Title    = r.Form["Post_Title"][0]
 					Content  = r.Form["Post_Content"][0]
 					cat      = r.Form["categorie_id"][0]
@@ -226,17 +230,17 @@ func Create_Post(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					log.Fatal(err)
 				}
-				Inser_In_To_DB(db, var_pstr, "post", Extract_File("../bdd/post_table.sql", 11, 12)) //<-- Insert new post on bdd
+				Database.Inser_In_To_DB(db, var_pstr, "post", Database.Extract_File("../bdd/post_table.sql", 11, 12)) //<-- Insert new post on bdd
 				fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
 			} else {
-				Send_Error(w, r)
+				Config.Send_Error(w, r)
 
 				return
 			}
 
 		} else {
 
-			Send_Error(w, r)
+			Config.Send_Error(w, r)
 
 			return
 		}

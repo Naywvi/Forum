@@ -1,4 +1,4 @@
-package main
+package user
 
 import (
 	"database/sql"
@@ -12,12 +12,15 @@ import (
 	"time"
 
 	"github.com/k3a/html2text"
+
+	Config "forum/config"
+	Database "forum/database"
 )
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Delete account ↓
 
 func Delete_Account(user string) {
-	db, err := sql.Open(Bdd.Langage, Bdd.Name)
+	db, err := sql.Open(Config.Bdd.Langage, Config.Bdd.Name)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -25,7 +28,7 @@ func Delete_Account(user string) {
 	db.Exec("DELETE FROM user WHERE name = " + "'" + user + "'")
 }
 
-func profildeleted(w http.ResponseWriter, r *http.Request) {
+func Profildeleted(w http.ResponseWriter, r *http.Request) {
 	var (
 		_, statement, user = Check_Cookie(w, r)
 	)
@@ -36,11 +39,11 @@ func profildeleted(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" {
 
 			Delete_Account(user)
-			logout(w, r)
+			Logout(w, r)
 
 		} else {
 
-			Send_Error(w, r)
+			Config.Send_Error(w, r)
 
 			return
 		}
@@ -53,7 +56,7 @@ func profildeleted(w http.ResponseWriter, r *http.Request) {
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Edit desc ↓
 
-func edit_desc(w http.ResponseWriter, r *http.Request) {
+func Edit_desc(w http.ResponseWriter, r *http.Request) {
 	query := r.FormValue("")
 	type Statement_of_user struct {
 		User     string
@@ -73,7 +76,7 @@ func edit_desc(w http.ResponseWriter, r *http.Request) {
 
 		if r.Method == "GET" {
 			var (
-				result        = Select_column("profil", "user", User) //Rows
+				result        = Database.Select_column("profil", "user", User) //Rows
 				result_profil = Return_Profil(result)
 			)
 
@@ -84,7 +87,7 @@ func edit_desc(w http.ResponseWriter, r *http.Request) {
 			pos.User = User
 
 			//<<<<
-			template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/managed_pages/edit_desc_profile.html"))).Execute(w, pos)
+			template.Must(template.ParseFiles(filepath.Join(Config.TemplatesDir, "../static/templates/managed_pages/edit_desc_profile.html"))).Execute(w, pos)
 
 		} else if r.Method == "POST" {
 			if query == "send" {
@@ -94,14 +97,14 @@ func edit_desc(w http.ResponseWriter, r *http.Request) {
 					fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/profil/edit"; </script>`)
 					return
 				}
-				Update_Field("profil", "Desc", "user", User, desc_edit)
+				Database.Update_Field("profil", "Desc", "user", User, desc_edit)
 				fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/profil?=`+User+`"; </script>`)
 
 			}
 
 		} else {
 
-			Send_Error(w, r)
+			Config.Send_Error(w, r)
 
 			return
 		}
@@ -115,7 +118,7 @@ func edit_desc(w http.ResponseWriter, r *http.Request) {
 //Profil Page
 func Return_Profil(rows *sql.Rows) []string {
 	var (
-		test   all_bd
+		test   Config.All_bd
 		result []string
 	)
 	for rows.Next() {
@@ -127,7 +130,7 @@ func Return_Profil(rows *sql.Rows) []string {
 	}
 	return result
 }
-func profil(w http.ResponseWriter, r *http.Request) {
+func Profil(w http.ResponseWriter, r *http.Request) {
 	query := r.FormValue("")
 	type Statement_of_user struct {
 		User                string
@@ -151,7 +154,7 @@ func profil(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" {
 
 			var (
-				result        = Select_column("profil", "user", query) //Rows
+				result        = Database.Select_column("profil", "user", query) //Rows
 				result_profil = Return_Profil(result)
 			)
 			//<<<<
@@ -164,11 +167,11 @@ func profil(w http.ResponseWriter, r *http.Request) {
 			pos.Rank = result_profil[7]
 
 			//<<<<
-			template.Must(template.ParseFiles(filepath.Join(templatesDir, "../static/templates/profil.html"))).Execute(w, pos)
+			template.Must(template.ParseFiles(filepath.Join(Config.TemplatesDir, "../static/templates/profil.html"))).Execute(w, pos)
 
 		} else {
 
-			Send_Error(w, r)
+			Config.Send_Error(w, r)
 
 			return
 		}
@@ -181,7 +184,7 @@ func profil(w http.ResponseWriter, r *http.Request) {
 //Create Default profil
 func New_Profil(User, Email, rank_id string) { //User,Joined,Last_time_connected,Subjet_submit,Email,Desc
 	var (
-		db, err            = sql.Open(Bdd.Langage, Bdd.Name)
+		db, err            = sql.Open(Config.Bdd.Langage, Config.Bdd.Name)
 		joined             = time.Now()
 		Default_profil_arr = []string{"'" + User + "','" + joined.String() + "','" + joined.String() + "','0','" + Email + "','none_desc','" + rank_id + "'"}
 		Default_profil     = strings.Join(Default_profil_arr, "")
@@ -189,7 +192,7 @@ func New_Profil(User, Email, rank_id string) { //User,Joined,Last_time_connected
 	if err != nil {
 		log.Fatal(err)
 	}
-	Inser_In_To_DB(db, Default_profil, "profil", Extract_File("../bdd/profil_table.sql", 11, 12))
+	Database.Inser_In_To_DB(db, Default_profil, "profil", Database.Extract_File("../bdd/profil_table.sql", 11, 12))
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Add desc ↓

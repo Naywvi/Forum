@@ -1,5 +1,5 @@
 //forumnlt@gmail.com	12301230789Aa
-package main
+package user
 
 import (
 	"bytes"
@@ -30,7 +30,7 @@ func Reset_Pswd_Smtp(email_reset string) {
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Send alert to all users smtp ↓
 
-func alert_Smtp(to []string, path string) {
+func Alert_Smtp(to []string, path string) {
 	Init_Smtp(to, path, "", "alert")
 }
 
