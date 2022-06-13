@@ -120,17 +120,17 @@
                             <!-- SI AUTEUR DU POST-->
                             {{ if eq .User_connected .Posted_user }}
                             <a href="" class="btn btn-danger btn-sm me-2"><i class="bx bx-trash"></i> Supprimer</a>
-                            <a href="" class="btn btn-primary btn-sm me-2"><i class="bx bx-edit-alt"></i> Éditer</a>
+                            <!-- <a href="" class="btn btn-primary btn-sm me-2"><i class="bx bx-edit-alt"></i> Éditer</a> -->
                             {{else if eq .User_connected_rank "1"}}
                             <a href="" class="btn btn-danger btn-sm me-2" style="background-color: green;"><i
                                     class="bx bx-trash"></i> Supprimer [ADMIN]</a>
-                            <a href="" class="btn btn-primary btn-sm me-2" style="background-color: green;"><i
-                                    class="bx bx-edit-alt"></i> Éditer [ADMIN}</a>
+                            <!-- <a href="" class="btn btn-primary btn-sm me-2" style="background-color: green;"><i
+                                    class="bx bx-edit-alt"></i> Éditer [ADMIN}</a> -->
                             {{else if eq .User_connected_rank "2"}}
                             <a href="" class="btn btn-danger btn-sm me-2" style="background-color: green;"><i
                                     class="bx bx-trash"></i> Supprimer</a>
-                            <a href="" class="btn btn-primary btn-sm me-2" style="background-color: green;"><i
-                                    class="bx bx-edit-alt"></i> Éditer</a>
+                            <!-- <a href="" class="btn btn-primary btn-sm me-2" style="background-color: green;"><i
+                                    class="bx bx-edit-alt"></i> Éditer</a> -->
 
                             {{end}}
                             {{end}}
@@ -161,7 +161,8 @@
                                     checked>
                                 <!--REPLY CONTENT-->
 
-                                <div class="col-md-12 d-flex flex-row align-items-start p-2" href="#">
+                                <div class="col-md-12 d-flex flex-row align-items-start p-2" href="#"
+                                    style="background-color: #5f5f5f3b;">
 
                                     <div id="user" class="col-md-2 text-center">
 
@@ -191,66 +192,68 @@
                                                 <div class="col-md-12 d-flex flex-row align-items-start p-2" href="#">
 
                                                     <div id="user" class="col-md-2 text-center">
-                
+
                                                         <h5 class="text-yellow">{{.Reply_user}}</h5>
-                                                        <img class="w-50 rounded-circle shadow mt-2" src="https://picsum.photos/200/200" alt="">
-                                                      
-                
-                                                        
+                                                        <img class="w-50 rounded-circle shadow mt-2"
+                                                            src="https://picsum.photos/200/200" alt="">
+
+
+
                                                         {{ if eq .Reply_user_rank "3" }}
-                                        <span class="badge bg-success">Member</span>
-                                        {{else if eq .Reply_user_rank "2"}}
-                                        <span class="badge bg-danger">Moderator</span>
-                                        {{else if eq .Reply_user_rank "1"}}
-                                        <span class="badge bg-warning text-dark">Admin</span>
-                                        {{end}}
-                                                        
-                
+                                                        <span class="badge bg-success">Member</span>
+                                                        {{else if eq .Reply_user_rank "2"}}
+                                                        <span class="badge bg-danger">Moderator</span>
+                                                        {{else if eq .Reply_user_rank "1"}}
+                                                        <span class="badge bg-warning text-dark">Admin</span>
+                                                        {{end}}
+
+
                                                     </div>
-                
-                                                    <div class="col-md-10 ps-5 pe-2">
-                
+
+                                                    <div class="col-md-10 ps-5 pe-2" style="text-align: left;">
+
                                                         <!--Reply-->
-                                                        
-                                                        
+
+
                                                         <!--Reply-->
-                
+
                                                         <p class="border-top pt-3 my-4"></p>
-                {{.Reply_content}}
-                
+                                                        {{.Reply_content}}
+
                                                     </div>
                                                 </div>
-                                                
-                                                
-                                                
+
+
+
 
                                             </div>
                                         </div>{{end}}
                                         <!--Reply-->
 
-                                        <p class="border-top pt-3 my-4">{{.Content_comment}}</p>
-
+                                        <p class="border-top pt-3 my-4"></p>
+                                        {{.Content_comment}}
 
                                     </div>
                                 </div>
-                                <div class="col-md-12 px-2 py-4 mt-2 d-flex justify-content-end border-top">
+                                <div class="col-md-12 px-2 py-4 mt-2 d-flex justify-content-end border-top"
+                                    style="background-color: #ffc2bf3b;">
                                     <!-- SI AUTEUR DU POST-->
 
                                     {{if eq .User_posted .User_connected}}
                                     <a href="" class="btn btn-danger btn-sm me-2"><i class="bx bx-trash"></i>
                                         Supprimer</a>
-                                    <a href="" class="btn btn-primary btn-sm me-2"><i class="bx bx-edit-alt"></i>
-                                        Éditer</a>
+                                    <!-- <a href="" class="btn btn-primary btn-sm me-2"><i class="bx bx-edit-alt"></i>
+                                        Éditer</a> -->
                                     {{else if eq .User_connected_rank "1"}}
                                     <a href="" class="btn btn-danger btn-sm me-2" style="background-color: green;"><i
                                             class="bx bx-trash"></i> Supprimer [ADMIN]</a>
-                                    <a href="" class="btn btn-primary btn-sm me-2" style="background-color: green;"><i
-                                            class="bx bx-edit-alt"></i> Éditer [ADMIN]</a>
+                                    <!-- <a href="" class="btn btn-primary btn-sm me-2" style="background-color: green;"><i
+                                            class="bx bx-edit-alt"></i> Éditer [ADMIN]</a> -->
                                     {{else if eq .User_connected_rank "2"}}
                                     <a href="" class="btn btn-danger btn-sm me-2" style="background-color: green;"><i
                                             class="bx bx-trash"></i> Supprimer [ADMIN]</a>
-                                    <a href="" class="btn btn-primary btn-sm me-2" style="background-color: green;"><i
-                                            class="bx bx-edit-alt"></i> Éditer [ADMIN]</a>
+                                    <!-- <a href="" class="btn btn-primary btn-sm me-2" style="background-color: green;"><i
+                                            class="bx bx-edit-alt"></i> Éditer [ADMIN]</a> -->
                                     {{end}}
 
                                     <!-- SI NON-->
@@ -261,21 +264,41 @@
                                     {{end}}
 
                                 </div>
+                                <br><br>
                                 {{end}}
+                                {{if eq .Rank "4"}}
+                                <div class="col-md-12 px-2 mt-2 d-flex justify-content-end">
+                                    <a class="btn btn-primary btn-sm me-2" href="/login"><i
+                                            class="bx bx-edit-alt"></i>Login</a>
+                                    <a class="btn btn-primary btn-sm me-2" href="/register"><i
+                                            class="bx bx-edit-alt"></i>Register</a>
+                                    <p id="answer"></p>
 
+                                </div>
+                                <br>
+                                <textarea placeholder="..." name="Comment_Content" disable>
 
-                                <p id="answer"></p>
+                            </textarea>
+                                {{else if ne .Rank "4"}}
+                                <div class="col-md-12 px-2 mt-2 d-flex justify-content-end">
+                                    <a class="btn btn-primary btn-sm me-2" href="/login"><i
+                                            class="bx bx-edit-alt"></i><button type="submit" value="comment"
+                                            class="registerbuttonrelou" style="text-align: end;">Post your
+                                            comment</button></a>
+
+                                    <p id="answer"></p>
+                                </div>
+                                <br>
+
                                 <textarea placeholder="..." name="Comment_Content">
 
                             </textarea>
-                                <button type="submit" value="comment">test</button>
+                                {{end}}
+
                         </div>
 
                         </form>
                         <!-- FIN - Réponse -->
-
-
-
 
 
                     </div>
@@ -310,8 +333,8 @@
     <script>
         tinymce.init({
             selector: 'textarea',
-            plugins: 'a11ychecker advcode casechange export formatpainter image editimage linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tableofcontents tinycomments tinymcespellchecker',
-            toolbar: 'a11ycheck addcomment showcomments casechange checklist code export formatpainter image editimage pageembed permanentpen table tableofcontents',
+            plugins: 'a11ychecker casechange linkchecker autolink lists checklist permanentpen powerpaste',
+            toolbar: '',
             toolbar_mode: 'floating',
             tinycomments_mode: 'embedded',
             tinycomments_author: 'Author name',

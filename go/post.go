@@ -140,9 +140,10 @@ func Show_Post(w http.ResponseWriter, r *http.Request) {
 	} else if r.Method == "POST" {
 		r.ParseForm()
 		var (
-			db, err               = sql.Open(Bdd.Langage, Bdd.Name)
-			Comment_content_parse = r.Form["Comment_Content"][0]
-			reply_to              = r.FormValue("Reply_to")
+			db, err                   = sql.Open(Bdd.Langage, Bdd.Name)
+			Comment_content_parse     = r.Form["Comment_Content"][0]
+			Comment_content_parse_sql = strings.Replace(Comment_content_parse, "'", "`", 10000) //<< Replace ' to > `  protect from sql_exploit
+			reply_to                  = r.FormValue("Reply_to")
 			// c                     = r.FormValue("comment")
 		)
 		if err != nil {
@@ -151,7 +152,7 @@ func Show_Post(w http.ResponseWriter, r *http.Request) {
 
 		if reply_to == "post" { // reply to post >> push comment
 			var (
-				var_p    = []string{"'" + pos.Post_Id + "','" + time_str[0:10] + "','" + User + "','" + statement + "','nil','no_reply','no_reply','no_reply','" + Comment_content_parse + "','0'"}
+				var_p    = []string{"'" + pos.Post_Id + "','" + time_str[0:10] + "','" + User + "','" + statement + "','nil','no_reply','no_reply','no_reply','" + Comment_content_parse_sql + "','0'"}
 				var_pstr = strings.Join(var_p, "")
 			)
 			Inser_In_To_DB(db, var_pstr, "comment", Extract_File("../bdd/comment_table.sql", 14, 15)) //<-- Push the post with no reply
@@ -160,10 +161,11 @@ func Show_Post(w http.ResponseWriter, r *http.Request) {
 			var (
 				// Check_user_exist = Check_If_Exist(reply_to, "", "Name", "user", "Register")
 
-				reply_content   = r.Form["Reply_content_"+reply_to][0]
+				reply_content = r.Form["Reply_content_"+reply_to][0]
+
 				reply_user      = r.Form["Reply_USER_"+reply_to][0]
 				reply_user_rank = r.Form["Reply_USER_RANK_"+reply_to][0]
-				var_p           = []string{"'" + pos.Post_Id + "','" + time_str[0:10] + "','" + User + "','" + statement + "','nil','" + reply_user + "','" + reply_user_rank + "','" + reply_content + "','" + Comment_content_parse + "','0'"}
+				var_p           = []string{"'" + pos.Post_Id + "','" + time_str[0:10] + "','" + User + "','" + statement + "','nil','" + reply_user + "','" + reply_user_rank + "','" + reply_content + "','" + Comment_content_parse_sql + "','0'"}
 				var_pstr        = strings.Join(var_p, "")
 			)
 
@@ -177,7 +179,7 @@ func Show_Post(w http.ResponseWriter, r *http.Request) {
 			Send_Error(w, r)
 			return
 		}
-		fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/post?=`+pos.Post_Id+`"; </script>`)
+		fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/post?=`+pos.Post_Id+`&Reply_to=post"; </script>`)
 
 	} else {
 		Send_Error(w, r)
