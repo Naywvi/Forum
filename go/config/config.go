@@ -33,3 +33,10 @@ func Send_Error(w http.ResponseWriter, r *http.Request) {
 	// fmt.Fprint(w, http.StatusBadRequest)
 
 }
+
+func HandleError(err error) error {
+	if err != nil {
+		return err
+	}
+	return nil
+}

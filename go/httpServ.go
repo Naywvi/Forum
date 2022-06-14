@@ -51,7 +51,7 @@ func HttpServ() {
 	http.HandleFunc("/forum", forum)
 
 	fmt.Println("Started https serv successfully on http://localhost:8080")
-	fmt.Print(http.ListenAndServe(":1010", nil))
+	fmt.Print(http.ListenAndServe(":8080", nil))
 
 }
 

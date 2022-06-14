@@ -14,24 +14,27 @@ import (
 	User "forum/user"
 )
 
+type Post struct {
+	Id          string
+	Title       string
+	Content     string
+	Posted_user string
+	Likes       string
+	Last_Posted string
+	Nb_Reply    string
+	Categorie   string
+}
+
+type Statement_of_user struct {
+	Username  string
+	Rank      string
+	Categorie string
+	Post      []Post
+}
+
 func Show_Categorie(w http.ResponseWriter, r *http.Request) {
 	query := r.FormValue("")
-	type Post struct {
-		Id          string
-		Title       string
-		Content     string
-		Posted_user string
-		Likes       string
-		Last_Posted string
-		Nb_Reply    string
-	}
 
-	type Statement_of_user struct {
-		Username  string
-		Rank      string
-		Categorie string
-		Post      []Post
-	}
 	var (
 		_, statement, Username = User.Check_Cookie(w, r)
 		pos                    = Statement_of_user{}

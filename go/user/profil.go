@@ -17,8 +17,6 @@ import (
 	Database "forum/database"
 )
 
-//#------------------------------------------------------------------------------------------------------------# ↓ Delete account ↓
-
 func Delete_Account(user string) {
 	db, err := sql.Open(Config.Bdd.Langage, Config.Bdd.Name)
 	if err != nil {
@@ -59,10 +57,12 @@ func Profildeleted(w http.ResponseWriter, r *http.Request) {
 func Edit_desc(w http.ResponseWriter, r *http.Request) {
 	query := r.FormValue("")
 	type Statement_of_user struct {
-		User     string
-		Rank     string
-		Desc     string
-		Descedit string
+		User                string
+		Rank                string
+		Desc                string
+		Descedit            string
+		User_connected      string
+		User_connected_rank string
 	}
 	//<<< --- Check rank
 
@@ -85,6 +85,8 @@ func Edit_desc(w http.ResponseWriter, r *http.Request) {
 			pos.Desc = result_profil[6]
 			pos.Rank = statement
 			pos.User = User
+			pos.User_connected = User
+			pos.User_connected_rank = statement
 
 			//<<<<
 			template.Must(template.ParseFiles(filepath.Join(Config.TemplatesDir, "../static/templates/managed_pages/edit_desc_profile.html"))).Execute(w, pos)
@@ -140,12 +142,13 @@ func Profil(w http.ResponseWriter, r *http.Request) {
 		Last_time_connected string
 		Subject_submit      string
 		Desc                string
+		User_connected      string
 	}
 	//<<< --- Check rank
 
 	var (
-		_, statement, _ = Check_Cookie(w, r)
-		pos             = Statement_of_user{}
+		_, statement, User_connected = Check_Cookie(w, r)
+		pos                          = Statement_of_user{}
 	)
 
 	//<<< --- Check rank
@@ -165,6 +168,7 @@ func Profil(w http.ResponseWriter, r *http.Request) {
 			pos.Email = result_profil[5]
 			pos.Desc = result_profil[6]
 			pos.Rank = result_profil[7]
+			pos.User_connected = User_connected
 
 			//<<<<
 			template.Must(template.ParseFiles(filepath.Join(Config.TemplatesDir, "../static/templates/profil.html"))).Execute(w, pos)

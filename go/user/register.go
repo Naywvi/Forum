@@ -52,20 +52,20 @@ func Register(w http.ResponseWriter, r *http.Request) { //Register Page
 					Check_temp_email      = Check_If_Exist(Email_Register, "", "Email", "temp_user", "Register")
 				)
 
-				if Email_test_by_dns == false {
+				if !Email_test_by_dns {
 					fmt.Fprint(w, "<script> window.alert('Wrong email "+Email_Register+"'); </script>")
 					template.Must(template.ParseFiles(filepath.Join(Config.TemplatesDir, "../static/templates/register.html"))).Execute(w, pos)
 					return
-				} else if Check_temp_user == false || Check_temp_email == false { // <-- Check if exist in temp_user table
+				} else if !Check_temp_user || !Check_temp_email { // <-- Check if exist in temp_user table
 					var (
 						Error = ""
 					)
 
-					if Check_temp_user == false && Check_temp_email == false {
+					if !Check_temp_user && !Check_temp_email {
 						Error = "Username and email"
-					} else if Check_temp_email == false {
+					} else if !Check_temp_email {
 						Error = "Email"
-					} else if Check_temp_user == false {
+					} else if !Check_temp_user {
 						Error = "Username"
 					}
 
@@ -74,7 +74,7 @@ func Register(w http.ResponseWriter, r *http.Request) { //Register Page
 					return
 				}
 
-				if Check_User == true && Check_Email == true && Pswd_Register == Pswd_Register_Confirm { // <-- If all is ok
+				if Check_User && Check_Email && Pswd_Register == Pswd_Register_Confirm { // <-- If all is ok
 
 					Register_Smtp(Email_Register, User_Register, user_hash)
 					ADD_User_To_Temp(User_Register, Hash_Pswd, Email_Register, user_hash)
@@ -87,11 +87,11 @@ func Register(w http.ResponseWriter, r *http.Request) { //Register Page
 
 					error_message := ""
 					if Pswd_Register == Pswd_Register_Confirm {
-						if Check_Email == false && Check_User == false {
+						if !Check_Email && !Check_User {
 							error_message = "email and username are"
-						} else if Check_Email == false {
+						} else if !Check_Email {
 							error_message = "email is"
-						} else if Check_User == false {
+						} else if !Check_User {
 							error_message = "username is"
 						}
 						fmt.Fprint(w, "<script> window.alert('This "+error_message+" already in use, try again'); </script>")

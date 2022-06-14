@@ -18,8 +18,6 @@ import (
 	User "forum/user"
 )
 
-//#------------------------------------------------------------------------------------------------------------# ↓ Page Admin_Panel ↓
-
 func Admin_Panel(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == "GET" { // cookie verification to go to admin panel (security)
