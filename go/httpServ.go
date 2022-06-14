@@ -10,14 +10,12 @@ import (
 	Categorie "forum/categories"
 	Config "forum/config"
 	Post "forum/post"
+	Security "forum/security"
 	User "forum/user"
 )
 
-//#------------------------------------------------------------------------------------------------------------# ↓ Pages Selection & init http_serv ↓
-
-//Server Http
-func HttpServ() {
-	fs := http.FileServer(http.Dir("../static")) // <- ce qu'on envoie en static vers le serv
+func HttpServ() { // start the http server and configure the routes
+	fs := http.FileServer(http.Dir("../static"))
 	http.Handle("/", fs)
 
 	//<<< register_login_logout.go
@@ -48,17 +46,21 @@ func HttpServ() {
 	//<<< categorie.go
 	http.HandleFunc("/categorie", Categorie.Show_Categorie)
 	//<<<
-	http.HandleFunc("/forum", forum)
+	http.HandleFunc("/forum", home)
 
 	fmt.Println("Started https serv successfully on http://localhost:8080")
-	fmt.Print(http.ListenAndServe(":8080", nil))
+	fmt.Print(http.ListenAndServe(":8080", routehandler(http.DefaultServeMux)))
 
 }
 
-//#------------------------------------------------------------------------------------------------------------# ↓ Home Page ↓
+func routehandler(h http.Handler) http.Handler { // route handler to call the ratelimiter before routing the request
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		Security.Ratelimit(w, r)
+		h.ServeHTTP(w, r)
+	})
+}
 
-//Home page
-func forum(w http.ResponseWriter, r *http.Request) {
+func home(w http.ResponseWriter, r *http.Request) { //Home page
 	type Statement_of_user struct {
 		User string
 		Rank string
