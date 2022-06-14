@@ -1,390 +1,324 @@
-
 <html>
-
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="Forum template">
-        <meta property="og:url" content="">
-        <meta property="og:type" content="website">
-        <meta property="og:title" content="Forum template">
-        <meta property="og:description" content="Forum template">
-        <meta property="og:image" content="">
-        <!-- <link rel="stylesheet" href="././assets_global_global/css/login.css"> -->
-        <link rel="shortcut icon" href="./assets_global/img/favicon.png">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-            integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-        <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet">
-        <link href="../assets_global/css/style.css" rel="stylesheet">
-    
-        <title>Nlt - Login</title>
-    
-    </head>
-    
-    <body cz-shortcut-listen="true">
-    
-        <div class="topbar px-2 py-1 d-flex justify-content-between align-items-center position-relative">
-            <ul class="nav me-4 d-flex justify-content-center align-items-center">
-               
-                <li class="nav-item">
-                    <a class="nav-link" href="/forum">forum</a>
-                 
-                </li>
-    
-            </ul>
-            <ul class="nav me-4 d-flex justify-content-center align-items-center">
-    
-                <li class="nav-item">
-                    <a class="nav-link" href="/profil?=user">Username</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/logout">Log out</a>
-                </li>
-        
-    
-            </ul>
-        </div>
-    
-        <header class="container p-0 mt-5 mx-0 mx-auto">
-            <div class="picture d-flex justify-content-center align-items-center">
-                <div class="text-center">
-                    <img class="logo" src="./assets_global/img/logo.png" alt="NagForum Logo">
-                    <h1 class="text-white">Admin Panel</h1>
-                    <p class="text-white">Manage your forum !</p>
-                </div>
-            </div>
-            <div class="divider"></div>
-        </header>
-        <!---->
-    
-        <!---->
-        <section class="container mx-auto p-4 forum">
-            <div class="row">
-                <div class="col-md-12">
-    
-                    <section class="container mx-auto p-4 forum">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <!---->
-    
-    
-                                <div id="details" class="container mt-4 py-3 px-4">
-                                    <div class="row g-3">
-                                        <div class=" flex-row justify-content-center align-items-top">
-    
-                                            <div class="col-md-11 ps-5 pb-3" style="padding-right: 3rem !important;">
-                                                <h1 class="text-white details">
-                                                    <i class="bx bx-spreadsheet"></i> <strong
-                                                        class="text-yellow">Create user</strong><br>
-                                                </h1>
-    
-                                                <form action="/admin_panel?=Create_user" method="post">
-    
-    
-    
-    
-    
-                                                    <!--End login-->
-    
-    
-    
-    
-    
-                                                    <div id="profil"
-                                                        class="col-md-12 mt-4 p-4 border-profil position-relative">
-                                                        <div class="subtitle px-1">create user, moderator or admin account</div>
-                                                        <div class="row">
-    
-                                                            <!--form register-->
-    
-    
-                                                            <div class="col-md-1 p-2 text-end"
-                                                                style="text-align: left !important;"><strong><label
-                                                                        for="username" style="margin-right: -116px;">Username
-                                                                        </label></strong>
-                                                            </div>
-                                                            <input class="form-control form-control-sm"
-                                                                aria-describedby="nameedit" type="text" required
-                                                                 placeholder=" Give Username" id="username" name="username_create_by_admin">
-    
-                                                            <div class="col-md-1 p-2 text-end"style="text-align: left !important;"><strong><label
-                                                                        for="Email">Email</label></strong>
-                                                            </div>
-                                                            <input class="form-control form-control-sm"
-                                                                aria-describedby="nameedit" type="email"
-                                                                required placeholder="Give Email" id="Email" name="Email_create_by_admin">
-                                                            
-                                                                <div class="col-md-1 p-2 text-end"style="text-align: left !important;"><strong><label
-                                                                    for="password">Password</label></strong>
-                                                        </div>
-                                                        <input class="form-control form-control-sm" 
-                                                        aria-describedby="nameedit" type="password" required placeholder="Give Password" id="password" name="password_create_by_admin">
-                                                        <div class="col-md-1 p-2 text-end"style="text-align: left !important;"><strong><label
-                                                            for="Rank_id">Rank id</label></strong>
-                                                </div>
-                                                <input class="form-control form-control-sm" 
-                                                aria-describedby="nameedit" type="Rank_id" required placeholder=" Give Rank id (1,2,3)" id="Rank_id" name="Rank_id_create_by_admin">
-
-    
-    
-    
-                                                        </div>
-    
-                                                    </div>
-                                
-                                                    <br>
-                                                    <!--create user-->
-                                                    <div class="col-md-12 px-2 mt-2 d-flex justify-content-end">
-                                                        <button class="btn btn-primary btn-sm me-2" type="submit" value="Admin_Create_User"><i
-                                                            class="bx bx-edit-alt"></i>Create</button>
-                                                    </div>
-                                                    <!--button register-->
-                                                </form>
-                                                <!--form rresend pass-->
-    
-                                                <br>
-    
-    
-                                                <!--form rresend pass-->
-                                            </div>
-                                            <div class="col-md-11 ps-5 pb-3" style="padding-right: 3rem !important;">
-                                                <h1 class="text-white details">
-                                                    <i class="bx bx-spreadsheet"></i> <strong
-                                                        class="text-yellow">Create category</strong><br>
-                                                </h1>
-    
-                                                <form action="/admin_panel?=Create_Category" method="post">
-    
-    
-    
-    
-    
-                                                    <!--End login-->
-    
-    
-    
-    
-    
-                                                    <div id="profil"
-                                                        class="col-md-12 mt-4 p-4 border-profil position-relative">
-                                                        <div class="subtitle px-1">Create new category here</div>
-                                                        <div class="row">
-    
-                                                            <!--form register-->
-    
-    
-                                                            <div class="col-md-1 p-2 text-end"
-                                                                style="text-align: left !important;"><strong><label
-                                                                        for="username" style="margin-right: -116px;">Category name
-                                                                        </label></strong>
-                                                            </div>
-                                                            <input class="form-control form-control-sm"
-                                                            type="text" placeholder="Category name.." name="create_category"></input>
-                                                                
-    
-                                                            
-
-    
-    
-    
-                                                        </div>
-    
-                                                    </div>
-                                
-                                                    <br>
-                                                    <!--create user-->
-                                                    <div class="col-md-12 px-2 mt-2 d-flex justify-content-end">
-                                                        <button class="btn btn-primary btn-sm me-2" type="submit" value="Create_Category"><i
-                                                            class="bx bx-edit-alt"></i>Create</button>
-                                                    </div>
-                                                    <!--button register-->
-                                                </form>
-                                                <!--form rresend pass-->
-    
-                                                <br>
-    
-    
-                                                <!--form rresend pass-->
-                                            </div>
-                                            <div class="col-md-11 ps-5 pb-3" style="padding-right: 3rem !important;">
-                                                <h1 class="text-white details">
-                                                    <i class="bx bx-spreadsheet"></i> <strong
-                                                        class="text-yellow">Send alert to all users</strong><br>
-                                                </h1>
-    
-                                                <form action="/admin_panel?=Alert" method="post">
-    
-    
-    
-    
-    
-                                                    <!--End login-->
-    
-    
-    
-    
-    
-                                                    <div id="profil"
-                                                        class="col-md-12 mt-4 p-4 border-profil position-relative">
-                                                        <div class="subtitle px-1">Send Alert by mail to users</div>
-                                                        <div class="row">
-    
-                                                            <!--form register-->
-    
-    
-                                                            <div class="col-md-1 p-2 text-end"
-                                                                style="text-align: left !important;"><strong><label
-                                                                        for="username" style="margin-right: -116px;">Alert Content
-                                                                        </label></strong>
-                                                            </div>
-                                                            <input class="form-control form-control-sm"
-                                                             type="text" placeholder="Insert content here.." name="Alert"></input>
-                                                            
-                                                                
-    
-                                                            
-
-    
-    
-    
-                                                        </div>
-    
-                                                    </div>
-                                
-                                                    <br>
-                                                    <!--create user-->
-                                                    <div class="col-md-12 px-2 mt-2 d-flex justify-content-end">
-                                                        <button class="btn btn-primary btn-sm me-2" type="submit" value="Alert"><i
-                                                            class="bx bx-edit-alt"></i>Send</button>
-                                                    </div>
-                                                    <!--button register-->
-                                                </form>
-                                                <!--form rresend pass-->
-    
-                                                <br>
-    
-    
-                                                <!--form rresend pass-->
-                                            </div>
-                                            
-                                        </div>
-                                        <!---->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-    
-    
-                    <!---->
-                    <footer class="container mb-5">
-                        <div class="row divider"></div>
-                        <div class="row px-2 py-4">
-                            <div class="col-md-5">
-                                <p>Powered by <a href="https://go.dev/">Go </a>Design by <a href="https://github.com/Naywvi">Nagib</a></p>
-                            </div>
-                            <div class="col-md-7 text-end">
-                                <p><a href="#">Contact us</a> | <a href="#">Policy of
-                                        privacy
-    
-                                    </a> | <a href="#">Staff</a></p>
-                            </div>
-                        </div>
-                    </footer>
-    
-                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-                        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-                    <script src="https://unpkg.com/boxicons@2.1.2/dist/boxicons.js"></script>
-                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-                        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-                        crossorigin="anonymous"></script>
-                    <script
-                        src="https://cdn.tiny.cloud/1/a1oa0uw4ffrixbzpelg35rdxmzpx9imirkgfbkz5d62qcnuj/tinymce/6/tinymce.min.js"
-                        referrerpolicy="origin"></script>
-                    <script src="./assets_global/js/main.js"></script>
-    
-    
-                </div>
-            </div>
-        </section>
-        <div id="httpSpyContainer_sq27T8VFex4CtQ623afyMoiYA89kG6UZ" class="bottomRight noMargin noToolbar"></div>
-    </body>
-    
-    </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
-<!DOCTYPE html>
-<html lang="en">
-<link rel="stylesheet" href="../assets_global/css/style.css">
 
 <head>
     <meta charset="UTF-8">
-    <title>Admin panel</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Forum template">
+    <meta property="og:url" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Forum template">
+    <meta property="og:description" content="Forum template">
+    <meta property="og:image" content="">
+    <!-- <link rel="stylesheet" href="././assets_global_global/css/login.css"> -->
+    <link rel="shortcut icon" href="./assets_global/img/favicon.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet">
+    <link href="../assets_global/css/style.css" rel="stylesheet">
+    <title>Nlt - Admin</title>
 </head>
 
-<body>
-    > see Log (activity:
-    - Of server
-    - Of user
-    <form action="/admin_panel?=Create_user" method="post"><!--Récup l'url[0] pour return ici-->
+<body cz-shortcut-listen="true">
+    <div class="topbar px-2 py-1 d-flex justify-content-between align-items-center position-relative">
+        <!-- <ul class="nav me-4 d-flex justify-content-center align-items-center">
+
+            <li class="nav-item">
+                <a class="nav-link" href="/admin_panel">Admin panel</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/forum">forum</a>
+            </li>
+
+        </ul> -->
+        <ul class="nav me-4 d-flex justify-content-center align-items-center">
+        <li class="nav-item">
+            <a class="nav-link" href="/forum">forum</a>
+        </li>
+</ul>
+        <ul class="nav me-4 d-flex justify-content-center align-items-center">
+   
+            <!-- <li class="nav-item position-relative">
+                <a class="nav-link d-flex justify-content-center align-items-center" href="#"><i
+                        class="bx bx-bell"></i></a>
+                <span class="position-absolute top-0 end-0 badge rounded-pill bg-warning text-dark">2</span>
+            </li> -->
+
         
-        <h3>Create user</h3><!--Satrt login-->
+  
+            <!-- <li class="nav-item">
+                <a class="nav-link" href="/login">Login</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/register">Register</a>
+            </li> -->
 
-        <label for="username">Username</label>
-        <input type="text" required placeholder=" Give Username" id="username" name="username_create_by_admin">
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Log out</a>
+            </li>
 
-        <label for="Email">Email</label>
-        <input type="text" required placeholder="Give Email" id="Email" name="Email_create_by_admin">
+        </ul>
+    </div>
 
-        <label for="password">Password</label>
-        <input type="password" required placeholder="Give Password" id="password" name="password_create_by_admin">
+    <header class="container p-0 mt-5 mx-0 mx-auto">
+        <div class="picture d-flex justify-content-center align-items-center">
+            <div class="text-center">
+                <img class="logo" src="./assets_global/img/logo.png" alt="NagForum Logo">
+                <h1 class="text-white">Admin Panel</h1>
+                <p class="text-white">Manage your forum !</p>
+            </div>
+        </div>
+        <div class="divider"></div>
+    </header>
 
-        <label for="Rank_id">Rank_id</label>
-        <input type="Rank_id" required placeholder=" Give Rank id (1,2,3)" id="Rank_id" name="Rank_id_create_by_admin">
+    <!---->
+    <section class="container mx-auto p-4 forum">
+        <div class="row">
+            <div class="col-md-12">
 
-        <button type="submit" value="Admin_Create_User">Create</button>
+                <div class="row">
+                    <div class="col-md-12">
+                        <!---->
+                        <div id="details" class="container mt-4 py-3 px-4">
+                            <div class="row g-3">
+                                <div class=" flex-row justify-content-center align-items-top">
+                                    <div class="col-md-11 ps-5 pb-3" style="padding-right: 3rem !important;">
+                                        <h1 class="text-white details">
+                                            <i class="bx bx-spreadsheet"></i> <strong class="text-yellow">Create
+                                                user</strong><br>
+                                        </h1>
+                                        <form action="/admin_panel?=Create_user" method="post">
+                                            <!--End login-->
+                                            <div id="profil" class="col-md-12 mt-4 p-4 border-profil position-relative">
+                                                <div class="subtitle px-1">create user, moderator or admin account
+                                                </div>
+                                                <div class="row">
+                                                    <!--form register-->
+                                                    <div class="col-md-1 p-2 text-end"
+                                                        style="text-align: left !important;"><strong><label
+                                                                for="username" style="margin-right: -116px;">Username
+                                                            </label></strong>
+                                                    </div>
 
-    </form>
+                                                    <input class="form-control form-control-sm"
+                                                        aria-describedby="nameedit" type="text" required
+                                                        placeholder=" Give Username" id="username"
+                                                        name="username_create_by_admin">
 
-    <form action="/admin_panel?=See_Table" method="post">
-        <button type="submit" value="See_Table">See Table</button>
-    </form>
+                                                    <div class="col-md-1 p-2 text-end"
+                                                        style="text-align: left !important;"><strong><label
+                                                                for="Email">Email</label></strong>
+                                                    </div>
 
-    <form action="/admin_panel?=Backup" method="post">
-        <button type="submit" value="Backup">Backup the forum</button>
-    </form>
+                                                    <input class="form-control form-control-sm"
+                                                        aria-describedby="nameedit" type="email" required
+                                                        placeholder="Give Email" id="Email"
+                                                        name="Email_create_by_admin">
 
-    <form action="/admin_panel?=Manage_Users" method="post">
-        <button type="submit" value="Backup">Manage_Users</button>
-    </form>
-    {{.}}
-    <form action="/admin_panel?=Create_Category" method="post">
-        <input type="text" placeholder="Category name.." name="create_category"></input>
-        <button type="submit" value="Create_Category">Create category</button>
-    </form>
-    <form action="/admin_panel?=Alert" method="post">
-        <input type="text" placeholder="Alert content.." name="Alert"></input>
-        <button type="submit" value="Alert">Send alert to all users</button>
-    </form>
+                                                    <div class="col-md-1 p-2 text-end"
+                                                        style="text-align: left !important;"><strong><label
+                                                                for="password">Password</label></strong>
+                                                    </div>
 
+                                                    <input class="form-control form-control-sm"
+                                                        aria-describedby="nameedit" type="password" required
+                                                        placeholder="Give Password" id="password"
+                                                        name="password_create_by_admin">
+
+                                                    <div class="col-md-1 p-2 text-end"
+                                                        style="text-align: left !important;"><strong><label
+                                                                for="Rank_id">Rank id</label></strong>
+                                                    </div>
+
+
+                                                    <input class="form-control form-control-sm"
+                                                        aria-describedby="nameedit" type="Rank_id" required
+                                                        placeholder=" Give Rank id (1,2,3)" id="Rank_id"
+                                                        name="Rank_id_create_by_admin">
+                                                </div>
+
+                                                <br>
+
+                                                <div class="col-md-12 px-2 mt-2 d-flex justify-content-end">
+                                                    <button class="btn btn-primary btn-sm me-2" type="submit"
+                                                        value="Admin_Create_User"><i
+                                                            class="bx bx-edit-alt"></i>Create</button>
+                                                </div>
+
+                                        </form>
+
+                                        <br>
+
+                                    </div>
+
+                                </div>
+
+
+
+                                <div class="col-md-11 ps-5 pb-3" style="padding-right: 3rem !important;">
+                                    <h1 class="text-white details">
+                                        <i class="bx bx-spreadsheet"></i> <strong class="text-yellow">Create
+                                            category</strong><br>
+                                    </h1>
+                                    <form action="/admin_panel?=Create_Category" method="post">
+                                        <!--End login-->
+                                        <div id="profil" class="col-md-12 mt-4 p-4 border-profil position-relative">
+                                            <div class="subtitle px-1">Create new category here</div>
+                                            <div class="row">
+                                                <!--form register-->
+                                                <div class="col-md-1 p-2 text-end" style="text-align: left !important;">
+                                                    <strong><label for="username" style="margin-right: -116px;">Category
+                                                            name
+                                                        </label></strong>
+                                                </div>
+                                                <input class="form-control form-control-sm" type="text"
+                                                    placeholder="Category name.." name="create_category"></input>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <!--create user-->
+                                        <div class="col-md-12 px-2 mt-2 d-flex justify-content-end">
+                                            <button class="btn btn-primary btn-sm me-2" type="submit"
+                                                value="Create_Category"><i class="bx bx-edit-alt"></i>Create</button>
+                                        </div>
+                                        <!--button register-->
+                                    </form>
+                                    <!--form rresend pass-->
+                                    <br>
+                                    <!--form rresend pass-->
+                                </div>
+
+
+
+
+
+                                <div class="col-md-11 ps-5 pb-3" style="padding-right: 3rem !important;">
+                                    <h1 class="text-white details">
+                                        <i class="bx bx-spreadsheet"></i> <strong class="text-yellow">Send alert
+                                            to all users</strong><br>
+                                    </h1>
+                                    <form action="/admin_panel?=Alert" method="post">
+                                        <!--End login-->
+                                        <div id="profil" class="col-md-12 mt-4 p-4 border-profil position-relative">
+                                            <div class="subtitle px-1">Send Alert by mail to users</div>
+
+                                            <div class="row">
+                                                <!--form register-->
+                                                <div class="col-md-1 p-2 text-end" style="text-align: left !important;">
+                                                    <strong><label for="username" style="margin-right: -116px;">Alert
+                                                            Content
+                                                        </label></strong>
+                                                </div>
+                                                <input class="form-control form-control-sm" type="text"
+                                                    placeholder="Insert content here.." name="Alert"></input>
+                                            </div>
+
+                                        </div>
+                                        <br>
+                                        <!--create user-->
+                                        <div class="col-md-12 px-2 mt-2 d-flex justify-content-end">
+                                            <button class="btn btn-primary btn-sm me-2" type="submit" value="Alert"><i
+                                                    class="bx bx-edit-alt"></i>Send</button>
+                                        </div>
+                                        <!--button register-->
+                                    </form>
+                                    <!--form rresend pass-->
+                                    <br>
+                                    <!--form rresend pass-->
+                                </div>
+
+                                <div class="col-md-11 ps-5 pb-3" style="padding-right: 3rem !important;">
+                                    <h1 class="text-white details">
+                                        <i class="bx bx-spreadsheet"></i> <strong class="text-yellow">Manage
+                                            users / tables</strong><br>
+                                    </h1>
+                                    <form action="/admin_panel?=Manage_Users" method="post">
+                                        <!--End login-->
+                                        <div id="profil" class="col-md-12 mt-4 p-4 border-profil position-relative">
+                                            <div class="subtitle px-1">See users / tables lists</div>
+                                            <div class="row">
+                                                <form action="/admin_panel?=Manage_Users" method="post">
+                                                    <button class="btn btn-primary btn-sm me-2" type="submit"
+                                                        value="Manage_Users"><i class="bx bx-edit-alt"></i>See
+                                                        list of users and tables</button>
+                                                </form>
+                                                <div class="col-md-1 p-2 text-end" style="text-align: left !important;">
+                                                    <strong><label for="username" style="margin-right: -200px;">
+                                                            {{range .I}}
+                                                            {{range $u, $v:= .I}}
+                                                            {{if gt $u 1}}
+                                                            {{if gt .User.Id 0}}
+                                                            <p>Nom : {{.User.Name}} | Rank : {{.User.Rank_id}}
+                                                            <form action="/admin_panel?=Delete_id{{.User.Id}}">
+                                                                <input type="submit" value="X">
+                                                            </form>
+                                    </form>
+                                    </p>
+                                    {{end}}
+                                    {{end}}
+                                    {{end}}
+                                    {{end}}
+                                    {{range .I}}
+                                    {{range .I}}
+                                    {{if ne .Post.Id 0}}
+                                    <p>Titre: {{.Post.Title_post}} Catégorie:
+                                        {{.Categorie}}</p>
+                                    {{end}}
+                                    {{end}}
+                                    {{end}}
+                                    </label></strong>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <br>
+
+                        <br>
+                    </div>
+                </div>
+                <br>
+
+                <br>
+            </div>
+        </div>
+
+        </div>
+    </section>
+    <!---->
+
+    <footer class="container mb-5">
+        <div class="row divider"></div>
+        <div class="row px-2 py-4">
+            <div class="col-md-5">
+                <p>Powered by <a href="https://go.dev/">Go </a>Design by <a href="https://github.com/Naywvi">Nagib</a>
+                </p>
+            </div>
+            <div class="col-md-7 text-end">
+                <p><a href="https://github.com/Naywvi">Contact us</a> | <a href="#">Policy of
+                        privacy
+
+                    </a> | <a href="">Staff :</a> [ <a href="https://github.com/Naywvi">Nagib</a> - <a
+                        href="https://github.com/Luxchar">Luc.C</a> - <a href="https://github.com/LucMartin91">Luc.M</a>
+                    - <a href="https://github.com/ByLife">Léo</a> - <a href="https://github.com/JustZyrow">Terry</a> ]
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/boxicons@2.1.2/dist/boxicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.tiny.cloud/1/a1oa0uw4ffrixbzpelg35rdxmzpx9imirkgfbkz5d62qcnuj/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
+    <script src="./assets_global/js/main.js"></script>
+
+
+    <div id="httpSpyContainer_sq27T8VFex4CtQ623afyMoiYA89kG6UZ" class="bottomRight noMargin noToolbar"></div>
 </body>
 
 </html>

@@ -18,33 +18,51 @@
     <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
     <link href="./assets_global/css/style.css" rel="stylesheet">
 
-    <title>Forum template</title>
+    <title>Nlt - Categorie {{.Categorie}}</title>
 
 </head>
 
 <body>
-
     <div class="topbar px-2 py-1 d-flex justify-content-between align-items-center position-relative">
         <ul class="nav me-4 d-flex justify-content-center align-items-center">
+
+
+            {{if eq .Rank "1"}}
             <li class="nav-item">
-                <a class="nav-link" href="#">NagWebSite</a>
+                <a class="nav-link" href="/admin_panel">Admin panel</a>
             </li>
+            {{end}}
             <li class="nav-item">
-                <a class="nav-link" href="#">FAQ</a>
+                <a class="nav-link" href="/forum">forum</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Me contacter</a>
-            </li>
+
         </ul>
         <ul class="nav me-4 d-flex justify-content-center align-items-center">
+            {{if ne .Rank "4"}}
             <li class="nav-item position-relative">
                 <a class="nav-link d-flex justify-content-center align-items-center" href="#"><i
-                        class='bx bx-bell'></i></a>
+                        class="bx bx-bell"></i></a>
                 <span class="position-absolute top-0 end-0 badge rounded-pill bg-warning text-dark">2</span>
             </li>
+
             <li class="nav-item">
-                <a class="nav-link" href="#">UserName</a>
+                <a class="nav-link" href="/profil?={{.Username}}">{{.Username}}</a>
             </li>
+            {{end}}
+            
+            {{if eq .Rank "4"}}
+            <li class="nav-item">
+                <a class="nav-link" href="/login">Login</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/register">Register</a>
+            </li>
+            {{end}}
+            {{if ne .Rank "4"}}
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Log out</a>
+            </li>
+            {{end}}
         </ul>
     </div>
 
@@ -52,8 +70,8 @@
         <div class="picture d-flex justify-content-center align-items-center">
             <div class="text-center">
                 <img class="logo" src="./assets_global/img/logo.png" alt="NagForum Logo">
-                <h1 class="text-white">Bienvenue sur le forum</h1>
-                <p class="text-white">Je suis heureux de vous accueillir sur mon Forum, profitez bien !</p>
+                <h1 class="text-white">Wemcome to NLT</h1>
+                <p class="text-white">If you have any questions, do not hesitate to contact the staff.                </p>
             </div>
         </div>
         <div class="divider"></div>
@@ -66,9 +84,8 @@
                 <div class="d-flex mt-4 justify-content-between align-items-center">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="#">FORUM</a></li>
-                            <li class="breadcrumb-item"><a href="#">Accueil</a></li>
-                            <li class="breadcrumb-item"><a class="active" href="#">Subcat 1</a></li>
+                            <li class="breadcrumb-item"><a href="/forum">FORUM</a></li>
+                            <li class="breadcrumb-item"><a class="active" href="/categorie?={{.Categorie}}">Categorie: {{.Categorie}}</a></li>
                         </ol>
                     </nav>
                     {{if ne .Rank "4"}}
@@ -89,7 +106,7 @@
                         <!-- DEBUT - Partie à répéter -->
          {{range $p := .Post}}
      
-                        <a class="item d-flex align-items-center p-2" href="/post?={{$p.Id}}&Reply_to=post">
+                        <a class="item d-flex align-items-center p-2" href="/post?={{$p.Id}}&Reply_to=post&categorie={{.Categorie}}">
                             <div class="col-md-1 d-flex justify-content-center align-items-center">
                                 <div class="rounded position-relative">
                                     <i class="bx bx-spreadsheet bx-md"></i>
@@ -135,11 +152,14 @@
         <div class="row divider"></div>
         <div class="row px-2 py-4">
             <div class="col-md-5">
-                <p>Propulsé par <a href="#">GoForum</a> ver-1.0a • Design par <a href="#">NagDesign</a></p>
+                <p>Powered by <a href="https://go.dev/">Go </a>Design by <a href="https://github.com/Naywvi">Nagib</a>
+                </p>
             </div>
             <div class="col-md-7 text-end">
-                <p><a href="#">Nous contacter</a> | <a href="#">Membres</a> | <a href="#">Politique de
-                        confidentialité</a> | <a href="#">Notre équipe</a> | <a href="#">Supprimer les cookies</a></p>
+                <p><a href="https://github.com/Naywvi">Contact us</a> | <a href="#">Policy of
+                        privacy
+
+                    </a> | <a href="">Staff :</a> [ <a href="https://github.com/Naywvi">Nagib</a> - <a href="https://github.com/Luxchar">Luc.C</a> - <a href="https://github.com/LucMartin91">Luc.M</a> - <a href="https://github.com/ByLife">Léo</a> - <a href="https://github.com/JustZyrow">Terry</a> ]</p>
             </div>
         </div>
     </footer>
