@@ -163,7 +163,7 @@ func Show_Post(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		var (
 			Comment_content_parse     = r.Form["Comment_Content"][0]
-			Comment_content_parse_sql = strings.Replace(Comment_content_parse, "'", "`", 10000) //<< Replace ' to > `  protect from sql_exploit
+			Comment_content_parse_sql = strings.Replace(Comment_content_parse, "'", "’", 10000) //<< Replace ' to > `  protect from sql_exploit
 			reply_to                  = r.FormValue("Reply_to")
 		)
 		if err != nil {
@@ -242,15 +242,17 @@ func Create_Post(w http.ResponseWriter, r *http.Request) {
 		} else if r.Method == "POST" {
 			r.ParseForm()
 			if query == "send" {
-				var (
-					db, err  = sql.Open(Config.Bdd.Langage, Config.Bdd.Name)
-					Title    = r.Form["Post_Title"][0]
-					Content  = r.Form["Post_Content"][0]
-					cat      = r.Form["categorie_id"][0]
-					time     = time.Now()
-					timestr  = time.String()
-					var_p    = []string{"'" + cat + "','" + Title + "','" + Content + "','0','" + User + "','" + timestr[0:10] + "','0'"}
-					var_pstr = strings.Join(var_p, "")
+				var ( //Comment_content_parse_sql = strings.Replace(Comment_content_parse, "'", "`", 10000) //<< Replace ' to > `  protect from sql_exploit
+					db, err      = sql.Open(Config.Bdd.Langage, Config.Bdd.Name)
+					Title_html   = r.Form["Post_Title"][0]
+					Title        = strings.Replace(Title_html, "'", "’", 10000) //<< Replace ' to > `  protect from sql_exploit
+					Content_html = r.Form["Post_Content"][0]
+					Content      = strings.Replace(Content_html, "'", "’", 10000)
+					cat          = r.Form["categorie_id"][0]
+					time         = time.Now()
+					timestr      = time.String()
+					var_p        = []string{"'" + cat + "','" + Title + "','" + Content + "','0','" + User + "','" + timestr[0:10] + "','0'"}
+					var_pstr     = strings.Join(var_p, "")
 				)
 				if err != nil {
 					log.Fatal(err)
