@@ -86,7 +86,7 @@ func Check_Cookie(w http.ResponseWriter, r *http.Request) (bool, string, string)
 
 		result2 = Decrypt_Cookie(str_id, str_hash) //<-- value(-> rank_id)
 
-		if result1 == true && result2 == true {
+		if result1 && result2 {
 			add(w, r) //<-- Init + 15 min
 			return true, str_id, strname
 		} else {

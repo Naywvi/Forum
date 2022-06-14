@@ -27,7 +27,7 @@ func Del_User_From_Table(db *sql.DB, rows *sql.Rows, table, name_deleted, who_wa
 			if err != nil {
 				log.Fatal(err)
 			}
-			Rows = append(Rows, strconv.Itoa(*&u.Temp_user.Id), *&u.Temp_user.Name, *&u.Temp_user.Email, *&u.Temp_user.Pswd, *&u.Temp_user.Validation)
+			Rows = append(Rows, strconv.Itoa(u.Temp_user.Id), u.Temp_user.Name, u.Temp_user.Email, u.Temp_user.Pswd, u.Temp_user.Validation)
 		}
 
 	}

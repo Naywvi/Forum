@@ -5,100 +5,13 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"path/filepath"
 	"strconv"
 	"strings"
-	"text/template"
-	"time"
 
 	Config "forum/config"
 	Database "forum/database"
 )
 
-//#------------------------------------------------------------------------------------------------------------# ↓ Logout ↓
-
-//Logout
-func Logout(w http.ResponseWriter, r *http.Request) {
-	var (
-		_, _, User = Check_Cookie(w, r)
-		logout     = time.Now()
-	)
-
-	Database.Update_Field("profil", "Last_time_connected", "User", User, logout.String())
-	del(w, r)
-
-	fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
-}
-
-//#------------------------------------------------------------------------------------------------------------# ↓ Reset password Page ↓
-func Reset_password_page(w http.ResponseWriter, r *http.Request) {
-	type Statement_of_user struct {
-		User string
-		Rank string
-	}
-	//<<< --- Check rank
-
-	var (
-		_, statement, User = Check_Cookie(w, r)
-		pos                = Statement_of_user{}
-	)
-	pos.User = User
-	pos.Rank = statement
-
-	//<<< --- Check rank
-	if pos.Rank == "4" {
-		if r.Method == "GET" {
-
-			template.Must(template.ParseFiles(filepath.Join(Config.TemplatesDir, "../static/templates/reset_password_page.html"))).Execute(w, pos)
-
-		} else if r.Method == "POST" {
-
-			r.ParseForm()
-
-			var (
-				email_to_reset = r.Form["reset_email"][0]
-				email_exist    = Check_If_Exist(email_to_reset, "", "Email", "user", "Register") // true -> don't exist
-			)
-
-			if email_exist {
-
-				template.Must(template.ParseFiles(filepath.Join(Config.TemplatesDir, "../static/templates/reset_password_page.html"))).Execute(w, pos)
-				fmt.Fprint(w, "<script> window.alert('Mail don't exist'); </script>")
-
-			} else {
-
-				var (
-					email_tab       = []string{email_to_reset}
-					validation_hash = Return_From_Table(email_to_reset, "user", "Reset_password")
-				)
-
-				if validation_hash == "error" || len(validation_hash) == 0 {
-
-					template.Must(template.ParseFiles(filepath.Join(Config.TemplatesDir, "../static/templates/reset_password_page.html"))).Execute(w, pos)
-					fmt.Fprint(w, "<script> window.alert('Contact administrator'); </script>")
-
-				} else {
-
-					Init_Smtp(email_tab, "", validation_hash, "Reset")
-					template.Must(template.ParseFiles(filepath.Join(Config.TemplatesDir, "../static/templates/reset_password_page.html"))).Execute(w, pos)
-					fmt.Fprint(w, "<script> window.alert('Sent ! Now check your emails.'); </script>")
-				}
-
-			}
-
-		} else {
-
-			Config.Send_Error(w, r)
-
-			return
-		}
-	} else {
-		fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
-		return
-	}
-}
-
-//#------------------------------------------------------------------------------------------------------------# ↓ Reset password Validation by query ↓
 func Valide_password_page(w http.ResponseWriter, r *http.Request) {
 	type Statement_of_user struct {
 		User string
@@ -147,8 +60,6 @@ func Valide_password_page(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-
-//#------------------------------------------------------------------------------------------------------------# ↓ Select field for register or login ↓
 
 //Multiple func Who_Whant (--> "Register" or "Login")
 //Select field for log/register in bdd
@@ -245,12 +156,6 @@ func Check_If_Exist(input, input2, check_field, In_This_Table, Who_Want string) 
 	return false
 }
 
-//#------------------------------------------------------------------------------------------------------------# ↓ Check func for reset password ↓
-func Reset_Password(New_password, Last_password string) {
-	New_password = Database.InitHashPswd(New_password)
-	Database.Update_Field("user", "Pswd", "Pswd", Last_password, New_password)
-}
-
 func Return_From_Table(input, table_name, who_want string) string {
 
 	var (
@@ -271,13 +176,13 @@ func Return_From_Table(input, table_name, who_want string) string {
 			if err != nil {
 				log.Fatal(err)
 			}
-			Rows = append(Rows, strconv.Itoa(*&u.User.Id), *&u.User.Desc, *&u.User.Email, *&u.User.Name, *&u.User.Profile_Picture, *&u.User.Profile_Picture, *&u.User.Pswd, strconv.Itoa(*&u.User.Rank_id))
+			Rows = append(Rows, strconv.Itoa(u.User.Id), u.User.Desc, u.User.Email, u.User.Name, u.User.Profile_Picture, u.User.Profile_Picture, u.User.Pswd, strconv.Itoa(u.User.Rank_id))
 		} else if who_want == "Email_profil" {
 			err := rows.Scan(&u.User.Id, &u.User.Desc, &u.User.Email, &u.User.Name, &u.User.Profile_Picture, &u.User.Pswd, &u.User.Rank_id)
 			if err != nil {
 				log.Fatal(err)
 			}
-			Rows = append(Rows, strconv.Itoa(*&u.User.Id), *&u.User.Desc, *&u.User.Email, *&u.User.Name, *&u.User.Profile_Picture, *&u.User.Profile_Picture, *&u.User.Pswd, strconv.Itoa(*&u.User.Rank_id))
+			Rows = append(Rows, strconv.Itoa(u.User.Id), u.User.Desc, u.User.Email, u.User.Name, u.User.Profile_Picture, u.User.Profile_Picture, u.User.Pswd, strconv.Itoa(u.User.Rank_id))
 		}
 	}
 	input = strings.ToLower(input)

@@ -86,7 +86,7 @@ func need_validation(email, user string) string {
 		if err != nil {
 			log.Fatal(err)
 		}
-		Rows = append(Rows, strconv.Itoa(*&u.Temp_user.Id), *&u.Temp_user.Name, *&u.Temp_user.Email, *&u.Temp_user.Pswd, *&u.Temp_user.Validation)
+		Rows = append(Rows, strconv.Itoa(u.Temp_user.Id), u.Temp_user.Name, u.Temp_user.Email, u.Temp_user.Pswd, u.Temp_user.Validation)
 	}
 
 	for i := range Rows {
