@@ -53,7 +53,7 @@ func HttpServ() { // start the http server and configure the routes
 
 	fmt.Println("Started https serv successfully on http://localhost:1010")
 
-	fmt.Print(http.ListenAndServe(":8080", nil)) //routehandler(http.DefaultServeMux)
+	fmt.Print(http.ListenAndServe(":1010", routehandler(http.DefaultServeMux)))
 
 }
 
