@@ -1,6 +1,5 @@
 <h1 align="center">NLT Forum</h1>
 
- ## Join us now **[here](https://github.com/Luxchar?tab=repositories)** !
  
 ![Image](./For_readme/Home_page.PNG)
 
