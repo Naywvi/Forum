@@ -40,3 +40,7 @@ func HandleError(err error) error {
 	}
 	return nil
 }
+
+func RedirectHome(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, "/home", http.StatusFound)
+}

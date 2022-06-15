@@ -21,6 +21,9 @@ func HttpServ() { // start the http server and configure the routes
 	fs := http.FileServer(http.Dir("../static"))
 	http.Handle("/", fs)
 
+	// redirect index.html
+	// http.HandleFunc("/", Config.RedirectHome)
+
 	//<<< register_login_logout.go
 	http.HandleFunc("/login", User.Login)
 	http.HandleFunc("/register", User.Register)
