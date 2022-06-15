@@ -38,7 +38,6 @@ func Login(w http.ResponseWriter, r *http.Request) { //Login Page
 				pswd_login = r.Form["password_login"][0]
 				Check      = Check_If_Exist(mail_login, pswd_login, "Pswd", "user", "Login")
 			)
-
 			if Check {
 				SettCookie(w, r) //send cookie first
 				fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)

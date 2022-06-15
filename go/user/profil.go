@@ -30,14 +30,18 @@ func Profildeleted(w http.ResponseWriter, r *http.Request) {
 	var (
 		_, statement, user = Check_Cookie(w, r)
 	)
-
+	query := r.FormValue("User")
 	//<<< --- Check rank
 	if statement != "4" {
 
 		if r.Method == "GET" {
-
-			Delete_Account(user)
-			Logout(w, r)
+			fmt.Println(query)
+			if (len(query) > 0 && statement == "2") || (len(query) > 0 && statement == "1") {
+				fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
+			} else {
+				Delete_Account(user)
+				Logout(w, r)
+			}
 
 		} else {
 
@@ -56,6 +60,8 @@ func Profildeleted(w http.ResponseWriter, r *http.Request) {
 
 func Edit_desc(w http.ResponseWriter, r *http.Request) {
 	query := r.FormValue("")
+	query_other_desc := r.FormValue("User")
+	fmt.Println(query_other_desc)
 	type Statement_of_user struct {
 		User                string
 		Rank                string
@@ -76,9 +82,29 @@ func Edit_desc(w http.ResponseWriter, r *http.Request) {
 
 		if r.Method == "GET" {
 			var (
-				result        = Database.Select_column("profil", "user", User) //Rows
-				result_profil = Return_Profil(result)
+				Check_user_edit_desc = Check_If_Exist(query, "", "name", "user", "Register")
+				result               *sql.Rows
+				result_profil        []string
 			)
+
+			if Check_user_edit_desc == false {
+
+				Config.Send_Error(w, r)
+
+				return
+
+			} else {
+
+				if len(query_other_desc) > 0 {
+					result = Database.Select_column("profil", "user", query_other_desc) //Rows
+				} else {
+					result = Database.Select_column("profil", "user", User) //Rows
+				}
+				fmt.Print("false")
+
+			}
+
+			result_profil = Return_Profil(result)
 
 			//<<<<
 			pos.Descedit = html2text.HTML2Text(result_profil[6])
@@ -114,6 +140,7 @@ func Edit_desc(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
 		return
 	}
+
 }
 
 //#------------------------------------------------------------------------------------------------------------# ↓ Init profil ↓
@@ -132,6 +159,7 @@ func Return_Profil(rows *sql.Rows) []string {
 	}
 	return result
 }
+
 func Profil(w http.ResponseWriter, r *http.Request) {
 	query := r.FormValue("")
 	type Statement_of_user struct {
@@ -143,6 +171,7 @@ func Profil(w http.ResponseWriter, r *http.Request) {
 		Subject_submit      string
 		Desc                string
 		User_connected      string
+		User_connected_rank string
 	}
 	//<<< --- Check rank
 
@@ -156,23 +185,31 @@ func Profil(w http.ResponseWriter, r *http.Request) {
 
 		if r.Method == "GET" {
 
-			var (
-				result        = Database.Select_column("profil", "user", query) //Rows
-				result_profil = Return_Profil(result)
-			)
-			//<<<<
-			pos.User = result_profil[1]
-			pos.Joined = result_profil[2][0:10]
-			pos.Last_time_connected = result_profil[3][0:10]
-			pos.Subject_submit = result_profil[4]
-			pos.Email = result_profil[5]
-			pos.Desc = result_profil[6]
-			pos.Rank = result_profil[7]
-			pos.User_connected = User_connected
+			Check_user := Check_If_Exist(query, "", "name", "user", "Register")
 
-			//<<<<
-			template.Must(template.ParseFiles(filepath.Join(Config.TemplatesDir, "../static/templates/profil.html"))).Execute(w, pos)
+			if Check_user == false {
+				var (
+					result        = Database.Select_column("profil", "user", query) //Rows
+					result_profil = Return_Profil(result)
+				)
+				//<<<<
 
+				pos.User = result_profil[1]
+				pos.Joined = result_profil[2][0:10]
+				pos.Last_time_connected = result_profil[3][0:10]
+				pos.Subject_submit = result_profil[4]
+				pos.Email = result_profil[5]
+				pos.Desc = result_profil[6]
+				pos.Rank = result_profil[7]
+				pos.User_connected = User_connected
+				pos.User_connected_rank = statement
+
+				//<<<<
+				template.Must(template.ParseFiles(filepath.Join(Config.TemplatesDir, "../static/templates/profil.html"))).Execute(w, pos)
+			} else {
+				Config.Send_Error(w, r)
+				return
+			}
 		} else {
 
 			Config.Send_Error(w, r)
@@ -180,9 +217,11 @@ func Profil(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	} else {
+
 		fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
 		return
 	}
+
 }
 
 //Create Default profil

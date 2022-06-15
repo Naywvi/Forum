@@ -53,7 +53,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="/register">Register</a>
             </li> -->
-
+            <li class="nav-item">
+                <a class="nav-link" href="/profil?={{.Name}}">{{.Name}}</a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" href="/logout">Log out</a>
             </li>
@@ -139,19 +141,16 @@
                                                 </div>
 
                                                 <br>
-
-                                                <div class="col-md-12 px-2 mt-2 d-flex justify-content-end">
-                                                    <button class="btn btn-primary btn-sm me-2" type="submit"
-                                                        value="Admin_Create_User"><i
-                                                            class="bx bx-edit-alt"></i>Create</button>
-                                                </div>
-
+                                            </div>
+                                            <br>
+                                            <div class="col-md-12 px-2 mt-2 d-flex justify-content-end">
+                                                <button class="btn btn-primary btn-sm me-2" type="submit"
+                                                    value="Admin_Create_User"><i
+                                                        class="bx bx-edit-alt"></i>Create</button>
+                                            </div>
                                         </form>
-
-                                        <br>
-
                                     </div>
-
+                                    
                                 </div>
 
 
@@ -231,28 +230,38 @@
                                 <div class="col-md-11 ps-5 pb-3" style="padding-right: 3rem !important;">
                                     <h1 class="text-white details">
                                         <i class="bx bx-spreadsheet"></i> <strong class="text-yellow">Manage
-                                            users / tables</strong><br>
+                                            users</strong><br>
                                     </h1>
                                     <form action="/admin_panel?=Manage_Users" method="post">
                                         <!--End login-->
                                         <div id="profil" class="col-md-12 mt-4 p-4 border-profil position-relative">
-                                            <div class="subtitle px-1">See users / tables lists</div>
+                                            <div class="subtitle px-1">Users list</div>
                                             <div class="row">
                                                 <form action="/admin_panel?=Manage_Users" method="post">
                                                     <button class="btn btn-primary btn-sm me-2" type="submit"
                                                         value="Manage_Users"><i class="bx bx-edit-alt"></i>See
-                                                        list of users and tables</button>
+                                                        list of users</button>
                                                 </form>
+
                                                 <div class="col-md-1 p-2 text-end" style="text-align: left !important;">
-                                                    <strong><label for="username" style="margin-right: -200px;">
+                                                    <strong><label for="username" style="margin-right: -350px;">
                                                             {{range .I}}
                                                             {{range $u, $v:= .I}}
                                                             {{if gt $u 1}}
                                                             {{if gt .User.Id 0}}
-                                                            <p>Nom : {{.User.Name}} | Rank : {{.User.Rank_id}}
-                                                            <form action="/admin_panel?=Delete_id{{.User.Id}}">
-                                                                <input type="submit" value="X">
+                                                            <p>Nom : {{.User.Name}} | user ID : {{.User.Id}} | Rank :{{if eq .User.Rank_id 1}}
+                                                                <span class="badge bg-warning text-dark">Admin</span>
+                                                                {{end}}
+                                                                {{if eq .User.Rank_id 2}}
+                                                                <span class="badge bg-danger">Modérateur</span>
+                                                                {{end}}
+                                                                {{if eq .User.Rank_id 3}}
+                                                                <span class="badge bg-success">Member</span>
+                                                                {{end}}
+                                                            <form action="/admin_panel?=Delete_account{{.User.Name}}" method="post">
+                                                                <input type="submit" value="Delete">
                                                             </form>
+                                                    
                                     </form>
                                     </p>
                                     {{end}}
@@ -262,9 +271,18 @@
                                     {{range .I}}
                                     {{range .I}}
                                     {{if ne .Post.Id 0}}
-                                    <p>Titre: {{.Post.Title_post}} Catégorie:
-                                        {{.Categorie}}</p>
+                                    ______________________________________
+                                    <p>Titre: "{{.Post.Title_post}}"" Catégorie: "{{.Post.Id_cat}}"</p>
+                                        <p>Posted User : "{{.Post.Posted_user}}"</p>
+                                        ______________<br>
+                                        Content : <p>{{.Post.Content}}</p>
+                                        ______________
+                                        <p>Likes : {{.Post.Likes}}</p>
+                                        <p>Nb Reply: {{.Post.Last_Posted}}</p>
+                                        <p>Last posted: {{.Post.Nb_Reply}}</p>
+                                       <br>
                                     {{end}}
+                         
                                     {{end}}
                                     {{end}}
                                     </label></strong>
