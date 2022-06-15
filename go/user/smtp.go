@@ -4,8 +4,12 @@ package user
 import (
 	"bytes"
 	"crypto/tls"
+	"database/sql"
 	"errors"
 	"fmt"
+	Config "forum/config"
+	Database "forum/database"
+	"log"
 	"net"
 	"net/smtp"
 	"text/template"
@@ -63,8 +67,26 @@ func (a *loginAuth) Next(fromServer []byte, more bool) ([]byte, error) {
 func Init_Smtp(to []string, Name_User, user_hash, Who_Want string) { //<-- Récup log bdd (retirer hash)
 	//forum.nlt@hotmail.com
 	// Sender data.
-	from := "naj_lak93@hotmail.fr" //à recup
-	password := "123012301230789Aa"
+	type Smtp struct {
+		Email string
+		Pass  string
+	}
+	var (
+		db, err = sql.Open(Config.Bdd.Langage, Config.Bdd.Name)
+		rows    = Database.Select_All_From_DB(db, "email_owner")
+		smtpp   Smtp
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for rows.Next() {
+		err := rows.Scan(&smtpp.Email, &smtpp.Pass)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+	from := smtpp.Email //à recup
+	password := smtpp.Pass
 
 	// Receiver email address.
 

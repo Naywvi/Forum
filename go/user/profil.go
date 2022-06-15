@@ -22,8 +22,18 @@ func Delete_Account(user string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	db.Exec("DELETE FROM profil WHERE user = " + "'" + user + "'")
-	db.Exec("DELETE FROM user WHERE name = " + "'" + user + "'")
+	db.Exec("DELETE FROM profil WHERE user = '" + user + "'")
+	db.Exec("DELETE FROM user WHERE name = '" + user + "'")
+}
+
+func Delete_Category(category string) {
+	db, err := sql.Open(Config.Bdd.Langage, Config.Bdd.Name)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("ok", category)
+	db.Exec("DELETE FROM post WHERE id_cat = '" + category + "'")
+	db.Exec("DELETE FROM categorie WHERE name = '" + category + "'")
 }
 
 func Profildeleted(w http.ResponseWriter, r *http.Request) {
@@ -61,7 +71,8 @@ func Profildeleted(w http.ResponseWriter, r *http.Request) {
 func Edit_desc(w http.ResponseWriter, r *http.Request) {
 	query := r.FormValue("")
 	query_other_desc := r.FormValue("User")
-	fmt.Println(query_other_desc)
+	query_other_send := r.FormValue("send")
+
 	type Statement_of_user struct {
 		User                string
 		Rank                string
@@ -69,7 +80,9 @@ func Edit_desc(w http.ResponseWriter, r *http.Request) {
 		Descedit            string
 		User_connected      string
 		User_connected_rank string
+		Subject_submited    string
 	}
+
 	//<<< --- Check rank
 
 	var (
@@ -81,53 +94,72 @@ func Edit_desc(w http.ResponseWriter, r *http.Request) {
 	if statement != "4" {
 
 		if r.Method == "GET" {
+
 			var (
-				Check_user_edit_desc = Check_If_Exist(query, "", "name", "user", "Register")
+				Check_user_edit_desc = Check_If_Exist(query_other_desc, "", "name", "user", "Register")
 				result               *sql.Rows
 				result_profil        []string
 			)
 
-			if Check_user_edit_desc == false {
+			if len(query_other_desc) > 0 {
 
-				Config.Send_Error(w, r)
+				if Check_user_edit_desc == false {
 
-				return
+					result = Database.Select_column("profil", "user", query_other_desc) //Rows
+
+				} else {
+					Config.Send_Error(w, r)
+
+					return
+				}
 
 			} else {
 
-				if len(query_other_desc) > 0 {
-					result = Database.Select_column("profil", "user", query_other_desc) //Rows
-				} else {
-					result = Database.Select_column("profil", "user", User) //Rows
-				}
-				fmt.Print("false")
+				result = Database.Select_column("profil", "user", User) //Rows
 
 			}
 
 			result_profil = Return_Profil(result)
-
 			//<<<<
 			pos.Descedit = html2text.HTML2Text(result_profil[6])
 			pos.Desc = result_profil[6]
-			pos.Rank = statement
-			pos.User = User
+			pos.Rank = result_profil[7]
+			pos.User = result_profil[1]
 			pos.User_connected = User
 			pos.User_connected_rank = statement
+			pos.Subject_submited = result_profil[4]
 
 			//<<<<
+
 			template.Must(template.ParseFiles(filepath.Join(Config.TemplatesDir, "../static/templates/managed_pages/edit_desc_profile.html"))).Execute(w, pos)
 
 		} else if r.Method == "POST" {
+
+			desc_edit := r.Form["description"][0]
+
 			if query == "send" {
-				desc_edit := r.Form["description"][0]
+
 				if len(desc_edit) > 2000 || len(desc_edit) == 0 {
 					fmt.Fprint(w, "<script> window.alert('Description too long.'); </script>")
 					fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/profil/edit"; </script>`)
 					return
 				}
-				Database.Update_Field("profil", "Desc", "user", User, desc_edit)
+
+				Database.Update_Field("profil", "Desc", desc_edit, "user", User)
+
 				fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/profil?=`+User+`"; </script>`)
 
+			} else if len(query_other_send) > 0 {
+
+				if len(desc_edit) > 2000 || len(desc_edit) == 0 {
+					fmt.Fprint(w, "<script> window.alert('Description too long.'); </script>")
+					fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/profil/edit"; </script>`)
+					return
+				}
+
+				Database.Update_Field("profil", "Desc", desc_edit, "user", query_other_send)
+
+				fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/profil?=`+User+`"; </script>`)
 			}
 
 		} else {
@@ -137,8 +169,10 @@ func Edit_desc(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	} else {
+
 		fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/forum"; </script>`)
 		return
+
 	}
 
 }

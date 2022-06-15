@@ -115,6 +115,27 @@ func Show_Post(w http.ResponseWriter, r *http.Request) {
 			}
 			fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/"; </script>`)
 		} else if (len(deletec) > 0 && deletec == COMMENT.User_posted) || (len(deletec) > 0 && (statement == "1" || statement == "2")) {
+			//Reply -1
+
+			var (
+				rows = Database.Select_column("post", "Id", deletePostid)
+			)
+
+			for rows.Next() {
+				err := rows.Scan(&instance.Post.Id, &instance.Post.Id_cat, &instance.Post.Title_post, &instance.Post.Content, &instance.Post.Likes, &instance.Post.Posted_user, &instance.Post.Last_Posted, &instance.Post.Nb_Reply)
+
+				if err != nil {
+					log.Fatal(err)
+				}
+				POST.Nb_Reply = instance.Post.Nb_Reply
+			}
+
+			reply_int, _ := strconv.Atoi(POST.Nb_Reply)
+			reply_int -= 1
+			POST.Nb_Reply = strconv.Itoa(reply_int)
+
+			// Reply -1
+			Database.Update_Field("post", "Nb_Reply", POST.Nb_Reply, "Id", deletePostid)
 			db.Exec("DELETE FROM comment WHERE Id = '" + deletec + "'")
 			fmt.Fprint(w, `<script language="javascript" type="text/javascript"> window.location="/"; </script>`)
 		}

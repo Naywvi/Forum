@@ -192,6 +192,7 @@
 
 
 
+
                                 <div class="col-md-11 ps-5 pb-3" style="padding-right: 3rem !important;">
                                     <h1 class="text-white details">
                                         <i class="bx bx-spreadsheet"></i> <strong class="text-yellow">Send alert
@@ -230,26 +231,29 @@
                                 <div class="col-md-11 ps-5 pb-3" style="padding-right: 3rem !important;">
                                     <h1 class="text-white details">
                                         <i class="bx bx-spreadsheet"></i> <strong class="text-yellow">Manage
-                                            users</strong><br>
+                                            users / Categories</strong><br>
                                     </h1>
                                     <form action="/admin_panel?=Manage_Users" method="post">
                                         <!--End login-->
                                         <div id="profil" class="col-md-12 mt-4 p-4 border-profil position-relative">
-                                            <div class="subtitle px-1">Users list</div>
+                                            <div class="subtitle px-1">Users / Categories list</div>
                                             <div class="row">
                                                 <form action="/admin_panel?=Manage_Users" method="post">
                                                     <button class="btn btn-primary btn-sm me-2" type="submit"
                                                         value="Manage_Users"><i class="bx bx-edit-alt"></i>See
-                                                        list of users</button>
+                                                        list of users and categories</button>
                                                 </form>
 
-                                                <div class="col-md-1 p-2 text-end" style="text-align: left !important;">
-                                                    <strong><label for="username" style="margin-right: -350px;">
+                                                <div style="text-align: center;">
+                                                    <strong><label for="username">
+                                                        <h1 class="text-white details" style="text-align:center">
+                                                           <strong class="text-yellow">Users : </strong><br>
+                                                        </h1>
                                                             {{range .I}}
                                                             {{range $u, $v:= .I}}
                                                             {{if gt $u 1}}
                                                             {{if gt .User.Id 0}}
-                                                            <p>Nom : {{.User.Name}} | user ID : {{.User.Id}} | Rank :{{if eq .User.Rank_id 1}}
+                                                            <p>[ - Nom : <a href="/profil?={{.User.Name}}">{{.User.Name}}</a> | user ID : {{.User.Id}} | user Email : {{.User.Email}} | User Rank :{{if eq .User.Rank_id 1}}
                                                                 <span class="badge bg-warning text-dark">Admin</span>
                                                                 {{end}}
                                                                 {{if eq .User.Rank_id 2}}
@@ -257,38 +261,42 @@
                                                                 {{end}}
                                                                 {{if eq .User.Rank_id 3}}
                                                                 <span class="badge bg-success">Member</span>
-                                                                {{end}}
+                                                                {{end}} - ]</p>
                                                             <form action="/admin_panel?=Delete_account{{.User.Name}}" method="post">
                                                                 <input type="submit" value="Delete">
                                                             </form>
+                                                            <br>
                                                     
                                     </form>
-                                    </p>
+                                    
                                     {{end}}
                                     {{end}}
                                     {{end}}
                                     {{end}}
+                                   
+                                    <h1 class="text-white details" style="text-align:center">
+                                        <strong class="text-yellow">Categories : </strong><br>
+                                     </h1>
                                     {{range .I}}
                                     {{range .I}}
-                                    {{if ne .Post.Id 0}}
-                                    ______________________________________
-                                    <p>Titre: "{{.Post.Title_post}}"" Catégorie: "{{.Post.Id_cat}}"</p>
-                                        <p>Posted User : "{{.Post.Posted_user}}"</p>
-                                        ______________<br>
-                                        Content : <p>{{.Post.Content}}</p>
-                                        ______________
-                                        <p>Likes : {{.Post.Likes}}</p>
-                                        <p>Nb Reply: {{.Post.Last_Posted}}</p>
-                                        <p>Last posted: {{.Post.Nb_Reply}}</p>
-                                       <br>
-                                    {{end}}
-                         
+                                    {{if ne .Categorie.Name ""}}
+                                    <div class="row">
+                                        <p>{{.Categorie.Name}}</p>  
+                                        <form action="/admin_panel?=Delete_category{{.Categorie.Name}}" method="post">
+                                            <input type="submit" value="Delete">
+                                        </form>
+                                    </div>
                                     {{end}}
                                     {{end}}
+                                    {{end}}
+                                    
                                     </label></strong>
                                 </div>
 
 
+
+
+                            
                             </div>
                         </div>
                         <br>
@@ -314,7 +322,7 @@
                 </p>
             </div>
             <div class="col-md-7 text-end">
-                <p><a href="https://github.com/Naywvi">Contact us</a> | <a href="#">Policy of
+                <p><a href="https://github.com/Naywvi/Forum">Contact us</a> | <a href="#">Policy of
                         privacy
 
                     </a> | <a href="">Staff :</a> [ <a href="https://github.com/Naywvi">Nagib</a> - <a

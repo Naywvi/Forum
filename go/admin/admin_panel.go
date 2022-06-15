@@ -57,8 +57,12 @@ func Admin_Panel(w http.ResponseWriter, r *http.Request) {
 
 				User.ADD_User_To_BDD(username, pswd_hash, email, rank)
 				_, _, I_I.Name = User.Check_Cookie(w, r)
-				Config.Return_To_Page(w, r, "../static/templates/admin/panel_admin.html")
 				fmt.Fprint(w, "<script> window.alert('"+username+" successfully CREATED !'); </script>")
+
+				I_I = Database.Select_All_Rows_Table(db, all_table)
+				_, _, I_I.Name = User.Check_Cookie(w, r)
+				Return_With_Value_Admin(w, r, I_I)
+				return
 
 			} else { // <-- if wrong selection
 
@@ -73,8 +77,10 @@ func Admin_Panel(w http.ResponseWriter, r *http.Request) {
 				}
 
 				fmt.Fprint(w, "<script> window.alert('This "+error_message+" already in use, try again'); </script>")
+				I_I = Database.Select_All_Rows_Table(db, all_table)
 				_, _, I_I.Name = User.Check_Cookie(w, r)
-				Config.Return_To_Page(w, r, "../static/templates/admin/panel_admin.html")
+				Return_With_Value_Admin(w, r, I_I)
+				return
 			}
 
 		} else if query == "See_Table" {
@@ -88,9 +94,11 @@ func Admin_Panel(w http.ResponseWriter, r *http.Request) {
 
 			I_I = Database.Select_All_Rows_Table(db, all_table)
 			Set_Backup(I_I)
-			_, _, I_I.Name = User.Check_Cookie(w, r)
 			fmt.Fprint(w, "<script>alert('Backup create Succesfully')</script>")
-			Config.Return_To_Page(w, r, "../static/templates/admin/panel_admin.html")
+			I_I = Database.Select_All_Rows_Table(db, all_table)
+			_, _, I_I.Name = User.Check_Cookie(w, r)
+			Return_With_Value_Admin(w, r, I_I)
+			return
 
 		} else if query == "Manage_Users" {
 
@@ -108,11 +116,17 @@ func Admin_Panel(w http.ResponseWriter, r *http.Request) {
 
 			if Check_categorie {
 				Database.Inser_In_To_DB(db, "'"+Create_categorie+"'", "categorie", "Name")
+				fmt.Fprint(w, "<script> window.alert('Category created !'); </script>")
 			} else {
 				fmt.Fprint(w, "<script> window.alert('This categorie exist.'); </script>")
 			}
+			I_I = Database.Select_All_Rows_Table(db, all_table)
+			_, _, I_I.Name = User.Check_Cookie(w, r)
+			Return_With_Value_Admin(w, r, I_I)
+			return
 
 		} else if query == "Alert" {
+
 			var (
 				table = []string{"user"}
 				it    = Config.Instance_Bdd{}
@@ -129,10 +143,25 @@ func Admin_Panel(w http.ResponseWriter, r *http.Request) {
 			path := "../static/templates/smtp/alert.html"
 			User.Alert_Smtp(to, path) //<-- Send mail to all mails of users
 			fmt.Fprint(w, "<script> window.alert('Alert sent.'); </script>")
+			I_I = Database.Select_All_Rows_Table(db, all_table)
+			_, _, I_I.Name = User.Check_Cookie(w, r)
+			Return_With_Value_Admin(w, r, I_I)
+			return
 		} else if query[:14] == "Delete_account" {
 			User.Delete_Account(query[14:])
-			Config.Return_To_Page(w, r, "../static/templates/admin/panel_admin.html")
 			fmt.Fprint(w, "<script> window.alert('"+query[14:]+"'s accound successfully DELETED !'); </script>")
+			I_I = Database.Select_All_Rows_Table(db, all_table)
+			_, _, I_I.Name = User.Check_Cookie(w, r)
+			Return_With_Value_Admin(w, r, I_I)
+			return
+
+		} else if query[:15] == "Delete_category" {
+			User.Delete_Category(query[15:])
+			fmt.Fprint(w, "<script> window.alert('"+query[15:]+"'s category successfully DELETED !'); </script>")
+			I_I = Database.Select_All_Rows_Table(db, all_table)
+			_, _, I_I.Name = User.Check_Cookie(w, r)
+			Return_With_Value_Admin(w, r, I_I)
+			return
 		}
 
 	} else {

@@ -15,7 +15,7 @@ func Update_Field(Table, set_attribute, set_attribute_value, where_attribute, wh
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	fmt.Println("UPDATE " + Table + " SET " + set_attribute + " = '" + set_attribute_value + "' WHERE " + where_attribute + " = '" + where_attribute_value + "';")
 	db.Exec("UPDATE " + Table + " SET " + set_attribute + " = '" + set_attribute_value + "' WHERE " + where_attribute + " = '" + where_attribute_value + "';")
 }
 
@@ -28,6 +28,6 @@ func Add_Like_To_DB(Table, set_attribute, set_attribute_value, where_attribute, 
 		log.Fatal(err)
 	}
 	like += 1
-	fmt.Print("UPDATE " + Table + " SET " + set_attribute + " = " + strconv.Itoa(like) + " WHERE " + where_attribute + " = " + where_attribute_value + ";")
+	//fmt.Print("UPDATE " + Table + " SET " + set_attribute + " = " + strconv.Itoa(like) + " WHERE " + where_attribute + " = " + where_attribute_value + ";")
 	db.Exec("UPDATE " + Table + " SET " + set_attribute + " = " + strconv.Itoa(like) + " WHERE " + where_attribute + " = " + where_attribute_value + " ;")
 }

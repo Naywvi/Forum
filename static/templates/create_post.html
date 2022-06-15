@@ -19,7 +19,7 @@
     <link href="./assets_global/css/style.css" rel="stylesheet">
     <script src="https://cdn.tiny.cloud/1/ftnlqzbd2t8o2rodvb77d87vi27ldv6u39eza432pces5v8l/tinymce/6/tinymce.min.js"
         referrerpolicy="origin"></script>
-    <title>Forum template</title>
+    <title>Nlt - Create Post</title>
 </head>
 
 <body>
@@ -66,7 +66,7 @@
             <div class="text-center">
                 <img class="logo" src="./assets_global/img/logo.png" alt="NagForum Logo">
                 <h1 class="text-white">Wemcome to NLT</h1>
-                <p class="text-white">If you have any questions, do not hesitate to contact the staff.                </p>
+                <p class="text-white">If you have any questions, do not hesitate to contact the staff. </p>
             </div>
         </div>
         <div class="divider"></div>
@@ -84,7 +84,8 @@
                                 <nav aria-label="breadcrumb">
                                     <ol class="breadcrumb">
                                         <li class="breadcrumb-item"><a href="/forum">FORUM</a></li>
-                                        <li class="breadcrumb-item"><a class="active" href="/create_post">New post</a></li>
+                                        <li class="breadcrumb-item"><a class="active" href="/create_post">New post</a>
+                                        </li>
                                     </ol>
                                 </nav>
 
@@ -123,10 +124,18 @@
                                                 <div class="rows">
                                                     <!--Début-->
                                                     <div class="radio-toolbar">
+                                                      
+                                                        {{range .Categorie}}
+                                                        {{if ne .Name "test_categorie"}}
+                                                        
+                                                        <input type="radio" id="radio{{.Name}}" name="categorie_id"
+                                                            value="{{.Name}}">
+                                                        <label for="radio{{.Name}}">{{.Name}}</label>
+                                                     
+                                                        {{end}}
 
-                                                        <input type="radio" id="radioApple" name="categorie_id"
-                                                            value="apple">
-                                                        <label for="radioApple">Apple</label>
+
+                                                        {{end}}
 
                                                         <!-- <input type="radio" id="radioBanana" name="radioFruit"
                                                             value="banana">
@@ -174,10 +183,13 @@
                 </p>
             </div>
             <div class="col-md-7 text-end">
-                <p><a href="https://github.com/Naywvi">Contact us</a> | <a href="#">Policy of
+                <p><a href="https://github.com/Naywvi/Forum">Contact us</a> | <a href="#">Policy of
                         privacy
 
-                    </a> | <a href="">Staff :</a> [ <a href="https://github.com/Naywvi">Nagib</a> - <a href="https://github.com/Luxchar">Luc.C</a> - <a href="https://github.com/LucMartin91">Luc.M</a> - <a href="https://github.com/ByLife">Léo</a> - <a href="https://github.com/JustZyrow">Terry</a> ]</p>
+                    </a> | <a href="">Staff :</a> [ <a href="https://github.com/Naywvi">Nagib</a> - <a
+                        href="https://github.com/Luxchar">Luc.C</a> - <a href="https://github.com/LucMartin91">Luc.M</a>
+                    - <a href="https://github.com/ByLife">Léo</a> - <a href="https://github.com/JustZyrow">Terry</a> ]
+                </p>
             </div>
         </div>
     </footer>

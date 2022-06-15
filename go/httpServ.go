@@ -1,7 +1,9 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
+	"log"
 	"net/http"
 	"path/filepath"
 	"text/template"
@@ -9,6 +11,7 @@ import (
 	Admin "forum/admin"
 	Categorie "forum/categories"
 	Config "forum/config"
+	Database "forum/database"
 	Post "forum/post"
 	Security "forum/security"
 	User "forum/user"
@@ -50,7 +53,7 @@ func HttpServ() { // start the http server and configure the routes
 
 	fmt.Println("Started https serv successfully on http://localhost:1010")
 
-	fmt.Print(http.ListenAndServe(":1010", nil)) //routehandler(http.DefaultServeMux)
+	fmt.Print(http.ListenAndServe(":8080", nil)) //routehandler(http.DefaultServeMux)
 
 }
 
@@ -62,17 +65,37 @@ func routehandler(h http.Handler) http.Handler { // route handler to call the ra
 }
 
 func home(w http.ResponseWriter, r *http.Request) { //Home page
+	type Category struct {
+		Id   int
+		Name string
+	}
 	type Statement_of_user struct {
-		User string
-		Rank string
+		User      string
+		Rank      string
+		Categorie []Category
 	}
 	if r.Method == "GET" {
 		//<<< --- Check rank
 
 		var (
+			db, err            = sql.Open(Config.Bdd.Langage, Config.Bdd.Name)
 			_, statement, User = User.Check_Cookie(w, r)
 			pos                = Statement_of_user{}
+			cate               Category
+			rows               = Database.Select_All_From_DB(db, "categorie")
 		)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		for rows.Next() {
+			err := rows.Scan(&cate.Id, &cate.Name)
+			if err != nil {
+				log.Fatal(err)
+			}
+			pos.Categorie = append(pos.Categorie, cate)
+		}
 		pos.User = User
 		pos.Rank = statement
 

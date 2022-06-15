@@ -160,26 +160,45 @@
             </div>
 
 
-            <!--NEW POST-->
-            <h1 class="text-white mt-2 ms-3">Catégorie 1</h1>
+          
+            <h2 style="text-align: center;">Search categorie</h2>
+            <p></p>
+            <form action="/action_page.php">
+                <input style="margin:auto; display:block;" list="listcategories" type="text" placeholder="Search a categorie" onchange="location = this.value;" id="categorie" name="categorie">
+                <datalist id="listcategories">
+                    {{range .Categorie}}
+                    <option value="categorie?={{.Name}}" >{{.Name}}</option>
+                    {{end}}
+                </datalist>
+                <br>
+                <div style="display: flex;align-items: center;justify-content: center;">
+                     <input style="  margin:auto; display:block;border-style: none;" type="submit" value="✔" name="recherche" id="test">
+                </div>
+         
+                
+            </form>
 
             <div id="list" class="container mt-4 py-3 px-4">
                 <div class="row g-3">
-
+                    
+                        
+                    {{range .Categorie}}
+                    {{if ne .Name "test_categorie"}}
 
                     <div class="col-md-4">
-                        <a class="item position-relative" href="/categorie?=apple">
+                        <a class="item position-relative" href="/categorie?={{.Name}}" style="height: auto;">
                             <div class="icon d-flex justify-content-center align-items-start">
                                 <img class="mt-4" src="./assets_global/img/icons/position.png" alt="Invest">
                             </div>
                             <div class="text mt-4">
-                                <h5>Subcat 5</h5>
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam
-                                    consequuntur,
-                                    nulla earum dolorum eaque consectetur</p>
+
+                                <h5>{{.Name}}</h5>
+                                <p>Redirect to {{.Name}} Categorie If you want to publish a post please respect the
+                                    rules</p>
                             </div>
+                            <br>
                             <div class="info row p-2 ps-4 me-5">
-                                <div class="col-md-3 d-flex align-items-center">
+                                <!-- <div class="col-md-3 d-flex align-items-center">
                                     <p class="infotxt"><strong>781</strong><br>sujets</p>
                                 </div>
                                 <div class="col-md-3 d-flex align-items-center">
@@ -187,10 +206,12 @@
                                 </div>
                                 <div class="col-md-6 d-flex align-items-center">
                                     <p class="infotxt"><span>4 juin 2022</span><br>la dernière modification</p>
-                                </div>
+                                </div> -->
                             </div>
                         </a>
                     </div>
+                    {{end}}
+                    {{end}}
                     <!-- FIN - Sous-catégorie -->
 
                 </div>
@@ -209,7 +230,7 @@
                 </p>
             </div>
             <div class="col-md-7 text-end">
-                <p><a href="https://github.com/Naywvi">Contact us</a> | <a href="#">Policy of
+                <p><a href="https://github.com/Naywvi/Forum">Contact us</a> | <a href="#">Policy of
                         privacy
 
                     </a> | <a href="">Staff :</a> [ <a href="https://github.com/Naywvi">Nagib</a> - <a

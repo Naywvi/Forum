@@ -92,7 +92,25 @@
                     <a href="/create_post" class="btn btn-primary btn-sm"><small>Add new post</small></a>
                     {{end}}
                 </div>
-                <h1 class="text-white mt-3 ms-3"></h1>
+                <h2 style="text-align: center;">Search Post</h2>
+  
+
+                <form action="/action_page.php">
+                    <input style="margin:auto; display:block;" list="listPost" type="text" placeholder="Search a Post" onchange="location = this.value;" id="Post" name="Post">
+                    <datalist id="listPost">
+                       
+                        {{range .Post}}
+                        <option value="post?={{.Id}}&Reply_to=post" >{{.Title}}</option>
+                        {{end}}
+                    </datalist>
+                    <br>
+                    <div style="display: flex;align-items: center;justify-content: center;">
+                         <input style="  margin:auto; display:block;border-style: none;" type="submit" value="✔" name="recherche" id="test">
+                    </div>
+             
+                    
+                </form>
+         
                 <div id="post" class="container mt-4 py-3 px-4">
                     <div class="row g-3">
 
@@ -104,8 +122,9 @@
                         </div>
 
                         <!-- DEBUT - Partie à répéter -->
+ 
          {{range $p := .Post}}
-     
+
                         <a class="item d-flex align-items-center p-2" href="/post?={{$p.Id}}&Reply_to=post&categorie={{.Categorie}}">
                             <div class="col-md-1 d-flex justify-content-center align-items-center">
                                 <div class="rounded position-relative">
@@ -118,11 +137,12 @@
                             <div class="col-md-6 px-2">
                           
                                 <h5>{{$p.Title}}</h5>
-                     
-                                <p class="lastresp">{{$p.Content}} <span></span> </p>
+                                {{$p.Content}}
+                                
                             </div>
                             <div class="col-md-1 text-center">
                                 <p>{{$p.Nb_Reply}}</p>
+
                             </div>
                             <div class="col-md-1 text-center">
                                 <p>{{$p.Likes}}</p>
@@ -156,7 +176,7 @@
                 </p>
             </div>
             <div class="col-md-7 text-end">
-                <p><a href="https://github.com/Naywvi">Contact us</a> | <a href="#">Policy of
+                <p><a href="https://github.com/Naywvi/Forum">Contact us</a> | <a href="#">Policy of
                         privacy
 
                     </a> | <a href="">Staff :</a> [ <a href="https://github.com/Naywvi">Nagib</a> - <a href="https://github.com/Luxchar">Luc.C</a> - <a href="https://github.com/LucMartin91">Luc.M</a> - <a href="https://github.com/ByLife">Léo</a> - <a href="https://github.com/JustZyrow">Terry</a> ]</p>

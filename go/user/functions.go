@@ -230,7 +230,6 @@ func Check_Login_Or_Register(I *Config.Instance_Bdd, identifier, pswd, Who_whant
 		return false
 
 	} else if Who_whant == "Register" {
-
 		for i := range Rows {
 			low := strings.ToLower(Rows[i]) //<-- Check in lower case to be sure
 			if low == input {
