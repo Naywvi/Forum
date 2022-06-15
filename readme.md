@@ -1,1 +1,1 @@
-<img src="./For readme/Home_Page.PNG">
+<img src="/For readme/Home_Page.PNG">
