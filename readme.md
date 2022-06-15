@@ -28,6 +28,7 @@
       > hosted on an HTTPS website 
       
     - Moderation
+      > Moderators and Administrators (different level of permission)
       > Admin Panel:
         1. Create a user
         2. Create a category
